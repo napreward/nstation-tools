@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이미지 자동 리사이저</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", sans-serif;
+      background: #f0f2f7;
+      color: #1f2937;
+    }
+
+    .wrap {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 24px 80px;
+    }
+
+    /* ─── Page Header ─── */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+
+    .page-header-sub {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .creator-signature {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #1f2937;
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .creator-signature span { color: #f9fafb; }
+
+    /* ─── Panel ─── */
+    .panel {
+      background: #fff;
+      border-radius: 20px;
+      padding: 22px 24px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+
+    /* ─── Upload Zone ─── */
+    .upload-bar {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .upload-zone {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .drop-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: #fafafa;
+    }
+    .drop-area:hover, .drop-area.dragover {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .drop-area.dragover {
+      border-style: solid;
+    }
+
+    .drop-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+
+    .drop-text {
+      flex: 1;
+    }
+    .drop-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 3px;
+    }
+    .drop-text small {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .drop-text .support-sizes {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .size-arrow {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .size-chip {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #374151;
+      font-family: ui-monospace, monospace;
+      white-space: nowrap;
+    }
+    .size-chip.output {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    #fileInput { display: none; }
+
+    .upload-btn {
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+
+    /* ─── Error list ─── */
+    .error-list {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .error-list.visible { display: flex; }
+    .error-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #dc2626;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .error-item::before { content: "✗"; font-weight: 700; }
+
+    /* ─── Buttons ─── */
+    button {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 11px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      transition: transform 0.1s, opacity 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: #111827;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #6b7280;
+      border: 1px solid #e5e7eb;
+    }
+    .btn-ghost:hover { background: #f9fafb; }
+    .btn-download-zip {
+      background: #111827;
+      color: #fff;
+    }
+
+    select {
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    select:disabled { opacity: 0.4; }
+
+    /* ─── Empty state ─── */
+    .empty {
+      color: #9ca3af;
+      text-align: center;
+      padding: 36px 16px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ─── Auto Resize Table ─── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .table-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 14px;
+      min-width: 600px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 11px 14px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    th {
+      background: #f8f9fb;
+      font-weight: 700;
+      font-size: 12px;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .thumb {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+      display: block;
+    }
+
+    .preview-mini-wrap {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .preview-chip {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fafafa;
+    }
+    .preview-chip-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      margin-bottom: 6px;
+      font-family: ui-monospace, monospace;
+    }
+    .preview-chip canvas {
+      display: block;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    /* ─── Crop Editor Layout ─── */
+    .crop-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 300px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* ─── Image List ─── */
+    .image-list-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .image-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 72vh;
+      overflow-y: auto;
+    }
+
+    .image-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      cursor: pointer;
+      align-items: center;
+      background: #fff;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .image-item:hover { border-color: #9ca3af; background: #fafafa; }
+    .image-item.active {
+      border-color: #111827;
+      background: #f1f3f5;
+    }
+    .image-item img {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .image-item .meta { min-width: 0; flex: 1; }
+    .image-item .name {
+      font-size: 13px;
+      font-weight: 600;
+      word-break: break-all;
+      margin-bottom: 3px;
+      color: #111827;
+    }
+    .image-item .desc {
+      font-size: 11px;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+
+    /* ─── Editor Column ─── */
+    .editor-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .editor-wrap {
+      width: 100%;
+      background: #e8eaed;
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* drag hint overlay */
+    .drag-hint-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 20px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 0.4s;
+    }
+    .drag-hint-overlay.hidden { opacity: 0; }
+    .drag-hint-pill {
+      background: rgba(17, 24, 39, 0.82);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    #editorCanvas {
+      display: block;
+      max-width: 100%;
+      max-height: 72vh;
+      background: #ddd;
+      cursor: default;
+    }
+    #editorCanvas.dragging { cursor: grabbing; }
+
+    /* ─── Side Preview ─── */
+    .side-preview {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 14px;
+      background: #fff;
+    }
+    .side-preview h4 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .preview-frame {
+      width: 100%;
+      background: #edf0f3;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+    .preview-frame canvas {
+      display: block;
+      max-width: 100%;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .preview-output-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    .preview-coords-toggle {
+      font-size: 12px;
+      color: #9ca3af;
+      cursor: pointer;
+      user-select: none;
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .preview-coords-toggle:hover { color: #6b7280; }
+    .preview-coords {
+      display: none;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #9ca3af;
+      font-family: ui-monospace, monospace;
+      line-height: 1.6;
+    }
+    .preview-coords.visible { display: block; }
+
+    /* ─── Hint ─── */
+    .hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.8;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 1100px) {
+      .page-header { flex-direction: column; align-items: flex-start; }
+      .crop-layout { grid-template-columns: 1fr; }
+      .editor-wrap { min-height: 340px; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr { border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+      td { border: none; border-bottom: 1px solid #f0f0f0; }
+      td:last-child { border-bottom: none; }
+      td::before { content: attr(data-label); display: block; font-size: 11px; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; }
+    }
+    @media (max-width: 600px) {
+      .upload-bar { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>이미지 자동 리사이저</h1>
+        <p class="page-header-sub">자동 리사이징 + 박스 크롭 편집기</p>
+      </div>
+      <div class="creator-signature">v1.7.0 · <span>제작: 정호윤</span></div>
+    </div>
+
+    <!-- Auto Resize Panel -->
+    <div class="panel">
+      <h2>자동 리사이징</h2>
+
+      <div class="upload-bar">
+        <div class="upload-zone">
+          <div class="drop-area" id="dropArea">
+            <div class="drop-icon">🖼</div>
+            <div class="drop-text">
+              <strong>이미지를 드래그하거나 클릭해서 업로드</strong>
+              <small>여러 파일 동시 업로드 가능 · PNG, JPG, WEBP</small>
+              <div class="support-sizes">
+                <span class="size-chip">1200 × 600</span>
+                <span class="size-arrow">→</span>
+                <span class="size-chip output">1200 × 627, 720 × 360</span>
+              </div>
+              <div class="support-sizes">
+                <span class="size-chip">720 × 780</span>
+                <span class="size-arrow">→</span>
+                <span class="size-chip output">720 × 720, 627 × 627</span>
+              </div>
+            </div>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" multiple />
+          <div class="error-list" id="errorList"></div>
+        </div>
+      </div>
+
+      <div id="autoResizeArea">
+        <div class="empty">지원 이미지를 업로드하면 자동 리사이징 결과가 표시됩니다.</div>
+      </div>
+
+      <div class="table-footer">
+        <button class="btn-download-zip" id="downloadZipBtn" disabled>ZIP 다운로드</button>
+      </div>
+    </div>
+
+    <!-- Crop Editor Panel -->
+    <div class="panel">
+      <h2>박스 크롭 편집기</h2>
+
+      <div class="crop-layout">
+
+        <!-- Image List -->
+        <div>
+          <div class="image-list-label">업로드한 이미지</div>
+          <div id="imageList" class="image-list">
+            <div class="empty">업로드한 이미지가 여기 표시됩니다.</div>
+          </div>
+        </div>
+
+        <!-- Editor -->
+        <div>
+          <div class="editor-controls">
+            <label for="sizeSelect" style="font-size:14px; font-weight:600; color:#374151;">출력 사이즈</label>
+            <select id="sizeSelect" disabled></select>
+            <button class="btn-ghost" id="resetCropBtn" disabled>초기 위치로 복원</button>
+            <button class="btn-primary" id="downloadManualBtn" disabled>크롭 결과 다운로드</button>
+          </div>
+
+          <div class="editor-wrap" id="editorWrap">
+            <canvas id="editorCanvas"></canvas>
+            <div class="drag-hint-overlay hidden" id="dragHintOverlay">
+              <div class="drag-hint-pill">박스를 드래그해서 위치를 조정하세요</div>
+            </div>
+          </div>
+
+          <div class="hint">
+            크롭 박스는 출력 사이즈에 맞춰 고정<br>
+            이동만 가능 (확대/축소 불가)<br>
+            초기 위치는 자동 크롭 계산값
+          </div>
+        </div>
+
+        <!-- Side Preview -->
+        <div class="side-preview">
+          <h4>크롭 미리보기</h4>
+          <div class="preview-frame" id="manualPreviewFrame"></div>
+          <div class="preview-output-label" id="previewOutputLabel">-</div>
+          <div class="preview-coords-toggle" id="coordsToggle" style="display:none;">
+            ▸ 상세 좌표 보기
+          </div>
+          <div class="preview-coords" id="manualPreviewCoords"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script>
+    // ─── DOM refs ───
+    const fileInput         = document.getElementById('fileInput');
+    const dropArea          = document.getElementById('dropArea');
+    const errorList         = document.getElementById('errorList');
+    const downloadZipBtn    = document.getElementById('downloadZipBtn');
+    const autoResizeArea    = document.getElementById('autoResizeArea');
+    const imageListEl       = document.getElementById('imageList');
+    const sizeSelect        = document.getElementById('sizeSelect');
+    const resetCropBtn      = document.getElementById('resetCropBtn');
+    const downloadManualBtn = document.getElementById('downloadManualBtn');
+    const manualPreviewFrame = document.getElementById('manualPreviewFrame');
+    const previewOutputLabel = document.getElementById('previewOutputLabel');
+    const coordsToggle      = document.getElementById('coordsToggle');
+    const manualPreviewCoords = document.getElementById('manualPreviewCoords');
+    const editorCanvas      = document.getElementById('editorCanvas');
+    const editorCtx         = editorCanvas.getContext('2d');
+    const dragHintOverlay   = document.getElementById('dragHintOverlay');
+
+    const SIZE_PRESETS = {
+      '1200x627': { w: 1200, h: 627 },
+      '720x360':  { w: 720,  h: 360  },
+      '720x720':  { w: 720,  h: 720  },
+      '627x627':  { w: 627,  h: 627  }
+    };
+
+    const state = {
+      images: [],
+      activeIndex: -1,
+      pointerDown: false,
+      dragOffsetX: 0,
+      dragOffsetY: 0,
+      hasDragged: false  // drag hint 제어용
+    };
+
+    // ─── Utilities ───
+    function escapeHtml(str) {
+      return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+                .replaceAll('"','&quot;').replaceAll("'",'&#039;');
+    }
+
+    function getAllowedOutputSizes(imgW, imgH) {
+      if (imgW === 1200 && imgH === 600) return ['1200x627', '720x360'];
+      if (imgW === 720  && imgH === 780) return ['720x720', '627x627'];
+      return [];
+    }
+
+    function calcAutoCropRect(srcW, srcH, targetW, targetH) {
+      const srcRatio = srcW / srcH;
+      const targetRatio = targetW / targetH;
+      if (srcRatio > targetRatio) {
+        const cropH = srcH, cropW = cropH * targetRatio;
+        return { x: (srcW - cropW) / 2, y: 0, w: cropW, h: cropH };
+      } else {
+        const cropW = srcW, cropH = cropW / targetRatio;
+        return { x: 0, y: (srcH - cropH) / 2, w: cropW, h: cropH };
+      }
+    }
+
+    function clampCropMove(crop, imgW, imgH) {
+      if (crop.x < 0) crop.x = 0;
+      if (crop.y < 0) crop.y = 0;
+      if (crop.x + crop.w > imgW) crop.x = imgW - crop.w;
+      if (crop.y + crop.h > imgH) crop.y = imgH - crop.h;
+    }
+
+    function getActiveImage() {
+      return state.activeIndex < 0 ? null : state.images[state.activeIndex];
+    }
+
+    function getCanvasDisplayInfo(img) {
+      const maxW = Math.min(editorCanvas.parentElement.clientWidth - 20, 920);
+      const maxH = Math.min(window.innerHeight * 0.72, 760);
+      const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+      return { scale, drawW: Math.round(img.width * scale), drawH: Math.round(img.height * scale) };
+    }
+
+    function resizeEditorCanvas(img) {
+      const { drawW, drawH } = getCanvasDisplayInfo(img);
+      editorCanvas.width = drawW; editorCanvas.height = drawH;
+      editorCanvas.style.width = `${drawW}px`; editorCanvas.style.height = `${drawH}px`;
+    }
+
+    function getPointerPos(evt) {
+      const rect = editorCanvas.getBoundingClientRect();
+      return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    }
+
+    function pointInRect(px, py, x, y, w, h) {
+      return px >= x && px <= x + w && py >= y && py <= y + h;
+    }
+
+    function makePreviewCanvas(sourceImg, crop, targetW, targetH, maxW = 240, maxH = 180) {
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW; canvas.height = targetH;
+      canvas.getContext('2d').drawImage(sourceImg, crop.x, crop.y, crop.w, crop.h, 0, 0, targetW, targetH);
+      const scale = Math.min(maxW / targetW, maxH / targetH, 1);
+      canvas.style.width  = `${Math.round(targetW * scale)}px`;
+      canvas.style.height = `${Math.round(targetH * scale)}px`;
+      return canvas;
+    }
+
+    function exportCropToBlob(sourceImg, crop, targetW, targetH, fileName = '') {
+      return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = targetW; canvas.height = targetH;
+        const ctx = canvas.getContext('2d');
+        // JPEG 배경색 처리 (투명 없음)
+        const isPng = /\.png$/i.test(fileName);
+        const mimeType = isPng ? 'image/png' : 'image/jpeg';
+        if (!isPng) {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, targetW, targetH);
+        }
+        ctx.drawImage(sourceImg, crop.x, crop.y, crop.w, crop.h, 0, 0, targetW, targetH);
+        canvas.toBlob((blob) => resolve(blob), mimeType, isPng ? undefined : 0.95);
+      });
+    }
+
+    async function loadImageFromFile(file) {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; img.src = url; });
+      const allowedSizes = getAllowedOutputSizes(img.naturalWidth, img.naturalHeight);
+      if (!allowedSizes.length) {
+        URL.revokeObjectURL(url);
+        throw new Error(`지원하지 않는 크기 (${img.naturalWidth} × ${img.naturalHeight})`);
+      }
+      const selectedSize = allowedSizes[0];
+      const autoCrops = {}, manualCrops = {};
+      for (const sizeKey of allowedSizes) {
+        const preset = SIZE_PRESETS[sizeKey];
+        const rect = calcAutoCropRect(img.naturalWidth, img.naturalHeight, preset.w, preset.h);
+        autoCrops[sizeKey] = { ...rect };
+        manualCrops[sizeKey] = { ...rect };
+      }
+      return { id: crypto.randomUUID(), file, name: file.name, url, element: img,
+               width: img.naturalWidth, height: img.naturalHeight,
+               allowedSizes, selectedSize, autoCrops, manualCrops };
+    }
+
+    // ─── Error display ───
+    function showErrors(errors) {
+      if (!errors.length) { errorList.classList.remove('visible'); errorList.innerHTML = ''; return; }
+      errorList.innerHTML = errors.map(e =>
+        `<div class="error-item">${escapeHtml(e)}</div>`
+      ).join('');
+      errorList.classList.add('visible');
+    }
+
+    // ─── File handling ───
+    async function handleFiles(files) {
+      const errors = [];
+      const loaded = [];
+      for (const file of files) {
+        try {
+          loaded.push(await loadImageFromFile(file));
+        } catch (err) {
+          errors.push(`${file.name} — ${err.message}`);
+        }
+      }
+      showErrors(errors);
+      if (!loaded.length) return;
+      state.images.push(...loaded);
+      if (state.activeIndex === -1) state.activeIndex = 0;
+      renderAutoResizeTable();
+      renderImageList();
+      syncControls();
+      renderEditor();
+      renderManualPreview();
+    }
+
+    // ─── Drop zone ───
+    dropArea.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (files.length) await handleFiles(files);
+      fileInput.value = '';
+    });
+
+    dropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropArea.classList.add('dragover');
+    });
+    dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
+    dropArea.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      dropArea.classList.remove('dragover');
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+      if (files.length) await handleFiles(files);
+    });
+
+    // ─── Auto Resize Table ───
+    function renderAutoResizeTable() {
+      if (!state.images.length) {
+        autoResizeArea.innerHTML = `<div class="empty">지원 이미지를 업로드하면 자동 리사이징 결과가 표시됩니다.</div>`;
+        downloadZipBtn.disabled = true;
+        return;
+      }
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>원본</th>
+            <th>파일명</th>
+            <th>원본 크기</th>
+            <th>자동 결과</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+
+      const tbody = table.querySelector('tbody');
+      state.images.forEach((item) => {
+        const tr = document.createElement('tr');
+
+        const tdThumb = document.createElement('td');
+        tdThumb.setAttribute('data-label', '원본');
+        const thumb = document.createElement('img');
+        thumb.src = item.url; thumb.className = 'thumb';
+        tdThumb.appendChild(thumb);
+
+        const tdName = document.createElement('td');
+        tdName.setAttribute('data-label', '파일명');
+        tdName.textContent = item.name;
+
+        const tdSize = document.createElement('td');
+        tdSize.setAttribute('data-label', '원본 크기');
+        tdSize.textContent = `${item.width} × ${item.height}`;
+
+        const tdPreview = document.createElement('td');
+        tdPreview.setAttribute('data-label', '자동 결과');
+        const previewWrap = document.createElement('div');
+        previewWrap.className = 'preview-mini-wrap';
+
+        item.allowedSizes.forEach((sizeKey) => {
+          const preset = SIZE_PRESETS[sizeKey];
+          const crop   = item.autoCrops[sizeKey];
+          const chip   = document.createElement('div');
+          chip.className = 'preview-chip';
+
+          const title = document.createElement('div');
+          title.className = 'preview-chip-title';
+          title.textContent = sizeKey.replace('x', ' × ');
+          chip.appendChild(title);
+
+          // canvas sized to actual aspect ratio
+          const maxW = 140, maxH = 100;
+          const canvas = makePreviewCanvas(item.element, crop, preset.w, preset.h, maxW, maxH);
+          chip.appendChild(canvas);
+          previewWrap.appendChild(chip);
+        });
+
+        tdPreview.appendChild(previewWrap);
+
+        tr.appendChild(tdThumb);
+        tr.appendChild(tdName);
+        tr.appendChild(tdSize);
+        tr.appendChild(tdPreview);
+        tbody.appendChild(tr);
+      });
+
+      autoResizeArea.innerHTML = '';
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      wrap.appendChild(table);
+      autoResizeArea.appendChild(wrap);
+      downloadZipBtn.disabled = false;
+    }
+
+    // ─── Image List ───
+    function renderImageList() {
+      if (!state.images.length) {
+        imageListEl.innerHTML = `<div class="empty">업로드한 이미지가 여기 표시됩니다.</div>`;
+        return;
+      }
+      imageListEl.innerHTML = '';
+      state.images.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'image-item' + (index === state.activeIndex ? ' active' : '');
+        div.innerHTML = `
+          <img src="${item.url}" alt="">
+          <div class="meta">
+            <div class="name">${escapeHtml(item.name)}</div>
+            <div class="desc">${item.width} × ${item.height}</div>
+          </div>
+        `;
+        div.addEventListener('click', () => {
+          state.activeIndex = index;
+          state.hasDragged = false;
+          syncControls();
+          renderImageList();
+          renderEditor();
+          renderManualPreview();
+        });
+        imageListEl.appendChild(div);
+      });
+    }
+
+    // ─── Controls ───
+    function syncControls() {
+      const active = getActiveImage();
+      const enabled = !!active;
+      sizeSelect.disabled = !enabled;
+      resetCropBtn.disabled = !enabled;
+      downloadManualBtn.disabled = !enabled;
+      if (!active) { sizeSelect.innerHTML = ''; return; }
+      sizeSelect.innerHTML = '';
+      active.allowedSizes.forEach((sizeKey) => {
+        const opt = document.createElement('option');
+        opt.value = sizeKey;
+        opt.textContent = sizeKey.replace('x', ' × ');
+        sizeSelect.appendChild(opt);
+      });
+      sizeSelect.value = active.selectedSize;
+    }
+
+    sizeSelect.addEventListener('change', () => {
+      const active = getActiveImage();
+      if (!active) return;
+      active.selectedSize = sizeSelect.value;
+      state.hasDragged = false;
+      renderEditor();
+      renderManualPreview();
+    });
+
+    resetCropBtn.addEventListener('click', () => {
+      const active = getActiveImage();
+      if (!active) return;
+      active.manualCrops[active.selectedSize] = { ...active.autoCrops[active.selectedSize] };
+      state.hasDragged = false;
+      renderEditor();
+      renderManualPreview();
+    });
+
+    // ─── Editor ───
+    function renderEditor() {
+      const active = getActiveImage();
+      if (!active) {
+        editorCanvas.width = 800; editorCanvas.height = 500;
+        editorCtx.clearRect(0, 0, 800, 500);
+        editorCtx.fillStyle = '#9ca3af';
+        editorCtx.font = '15px -apple-system, sans-serif';
+        editorCtx.textAlign = 'center';
+        const msg = state.images.length > 0 ? '← 왼쪽에서 이미지를 선택하세요' : '이미지를 업로드하세요';
+        editorCtx.fillText(msg, 400, 250);
+        dragHintOverlay.classList.add('hidden');
+        return;
+      }
+
+      resizeEditorCanvas(active);
+      const { scale } = getCanvasDisplayInfo(active);
+      const crop = active.manualCrops[active.selectedSize];
+
+      editorCtx.clearRect(0, 0, editorCanvas.width, editorCanvas.height);
+      editorCtx.drawImage(active.element, 0, 0, editorCanvas.width, editorCanvas.height);
+
+      const x = crop.x * scale, y = crop.y * scale;
+      const w = crop.w * scale, h = crop.h * scale;
+
+      editorCtx.save();
+      editorCtx.fillStyle = 'rgba(0,0,0,0.45)';
+      editorCtx.fillRect(0, 0, editorCanvas.width, editorCanvas.height);
+      editorCtx.clearRect(x, y, w, h);
+      editorCtx.drawImage(active.element, crop.x, crop.y, crop.w, crop.h, x, y, w, h);
+      editorCtx.strokeStyle = '#ffffff';
+      editorCtx.lineWidth = 2;
+      editorCtx.strokeRect(x, y, w, h);
+      editorCtx.fillStyle = '#ffffff';
+      editorCtx.font = 'bold 13px -apple-system, sans-serif';
+      editorCtx.textAlign = 'left';
+      editorCtx.fillText(active.selectedSize.replace('x', ' × '), x + 8, y + 20);
+      editorCtx.restore();
+
+      // drag hint: 선택 직후 아직 드래그 안 했으면 표시
+      if (!state.hasDragged) {
+        dragHintOverlay.classList.remove('hidden');
+      } else {
+        dragHintOverlay.classList.add('hidden');
+      }
+    }
+
+    // ─── Manual Preview ───
+    function renderManualPreview() {
+      const active = getActiveImage();
+      if (!active) {
+        manualPreviewFrame.innerHTML = '';
+        previewOutputLabel.textContent = '-';
+        coordsToggle.style.display = 'none';
+        manualPreviewCoords.classList.remove('visible');
+        return;
+      }
+      const sizeKey = active.selectedSize;
+      const preset  = SIZE_PRESETS[sizeKey];
+      const crop    = active.manualCrops[sizeKey];
+
+      manualPreviewFrame.innerHTML = '';
+      manualPreviewFrame.appendChild(
+        makePreviewCanvas(active.element, crop, preset.w, preset.h, 260, 260)
+      );
+
+      previewOutputLabel.textContent = `출력 크기: ${preset.w} × ${preset.h}`;
+      coordsToggle.style.display = 'inline-flex';
+      manualPreviewCoords.textContent =
+        `x=${crop.x.toFixed(1)}, y=${crop.y.toFixed(1)}, w=${crop.w.toFixed(1)}, h=${crop.h.toFixed(1)}`;
+    }
+
+    // coords toggle
+    coordsToggle.addEventListener('click', () => {
+      const open = manualPreviewCoords.classList.toggle('visible');
+      coordsToggle.textContent = (open ? '▾ ' : '▸ ') + '상세 좌표 보기';
+    });
+
+    // ─── Pointer events ───
+    editorCanvas.addEventListener('pointerdown', (e) => {
+      const active = getActiveImage();
+      if (!active) return;
+      const crop = active.manualCrops[active.selectedSize];
+      const { scale } = getCanvasDisplayInfo(active);
+      const pos = getPointerPos(e);
+      const x = crop.x * scale, y = crop.y * scale, w = crop.w * scale, h = crop.h * scale;
+      if (!pointInRect(pos.x, pos.y, x, y, w, h)) return;
+      state.pointerDown = true;
+      state.dragOffsetX = pos.x - x;
+      state.dragOffsetY = pos.y - y;
+      editorCanvas.classList.add('dragging');
+      try { editorCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+
+    editorCanvas.addEventListener('pointermove', (e) => {
+      const active = getActiveImage();
+      if (!active) return;
+      const crop = active.manualCrops[active.selectedSize];
+      const { scale } = getCanvasDisplayInfo(active);
+      const pos = getPointerPos(e);
+      const x = crop.x * scale, y = crop.y * scale, w = crop.w * scale, h = crop.h * scale;
+      if (!state.pointerDown) {
+        editorCanvas.style.cursor = pointInRect(pos.x, pos.y, x, y, w, h) ? 'grab' : 'default';
+        return;
+      }
+      crop.x = (pos.x - state.dragOffsetX) / scale;
+      crop.y = (pos.y - state.dragOffsetY) / scale;
+      clampCropMove(crop, active.width, active.height);
+
+      // 첫 드래그 시 hint 숨김
+      if (!state.hasDragged) {
+        state.hasDragged = true;
+        dragHintOverlay.classList.add('hidden');
+      }
+
+      renderEditor();
+      renderManualPreview();
+    });
+
+    function endPointer(e) {
+      state.pointerDown = false;
+      editorCanvas.classList.remove('dragging');
+      editorCanvas.style.cursor = 'default';
+      if (e?.pointerId != null) {
+        try { editorCanvas.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+    }
+    editorCanvas.addEventListener('pointerup', endPointer);
+    editorCanvas.addEventListener('pointercancel', endPointer);
+    editorCanvas.addEventListener('pointerleave', () => {
+      if (!state.pointerDown) editorCanvas.style.cursor = 'default';
+    });
+
+    // ─── Downloads ───
+    downloadManualBtn.addEventListener('click', async () => {
+      const active = getActiveImage();
+      if (!active) return;
+      const sizeKey = active.selectedSize;
+      const preset = SIZE_PRESETS[sizeKey];
+      const blob = await exportCropToBlob(active.element, active.manualCrops[sizeKey], preset.w, preset.h, active.name);
+      if (!blob) return;
+      const isPng = /\.png$/i.test(active.name);
+      const ext = isPng ? 'png' : 'jpg';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${active.name.replace(/\.[^/.]+$/, '')}_${sizeKey}_manual.${ext}`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    downloadZipBtn.addEventListener('click', async () => {
+      if (!state.images.length) return;
+      const zip = new JSZip();
+      for (const item of state.images) {
+        const baseName = item.name.replace(/\.[^/.]+$/, '');
+        for (const sizeKey of item.allowedSizes) {
+          const preset = SIZE_PRESETS[sizeKey];
+          const blob = await exportCropToBlob(item.element, item.autoCrops[sizeKey], preset.w, preset.h, item.name);
+          const isPng = /\.png$/i.test(item.name);
+          const ext = isPng ? 'png' : 'jpg';
+          if (blob) zip.file(`${baseName}_${sizeKey}_auto.${ext}`, blob);
+        }
+      }
+      const content = await zip.generateAsync({ type: 'blob' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(content);
+      a.download = 'auto_resized_images.zip';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    });
+
+    window.addEventListener('resize', () => renderEditor());
+
+    // ─── Init ───
+    renderAutoResizeTable();
+    renderEditor();
+    renderManualPreview();
+  </script>
+</body>
+</html>

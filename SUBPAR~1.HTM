@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>subparam 변환</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f2f7;
+      --surface: #fff;
+      --primary: #4f6ef7;
+      --primary-dark: #3a57d9;
+      --green: #22c55e;
+      --red: #ef4444;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --tab-bg: #eef0f8;
+      --tab-hover: #e0e4ff;
+      --radius: 12px;
+      --shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Hero Header (이미지 리사이저 스타일) ── */
+    .hero {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 24px 16px;
+    }
+    .hero-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .hero-title {
+      font-size: 26px; font-weight: 700; color: #111827;
+      letter-spacing: -0.52px; line-height: normal;
+    }
+    .hero-badge {
+      background: #1f2937;
+      font-size: 12px; font-weight: 600;
+      padding: 8px 14px; border-radius: 999px;
+      white-space: nowrap; margin-top: 4px; flex-shrink: 0;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .hero-badge-ver { color: #9ca3af; }
+    .hero-badge-name { color: #f9fafb; }
+    .hero-sub {
+      font-size: 13px; color: #6b7280; margin-top: 6px;
+    }
+
+    main { max-width: 1380px; margin: 12px auto; padding: 0 24px; }
+    .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+
+    /* ── 탭 바 ── */
+    .tab-bar {
+      display: flex; align-items: stretch;
+      background: var(--tab-bg); border-bottom: 2px solid var(--border);
+      overflow-x: auto; padding: 0 6px;
+    }
+    .tab-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 12px 16px; border: none; background: transparent;
+      color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      white-space: nowrap; transition: all 0.14s; border-radius: 6px 6px 0 0;
+      flex-shrink: 0;
+    }
+    .tab-btn:hover { background: var(--tab-hover); color: var(--primary); }
+    .tab-btn.active { background: var(--surface); color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+    .tab-close { width: 15px; height: 15px; border-radius: 50%; border: none; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tab-close:hover { background: #fee2e2; color: var(--red); }
+    .tab-add { margin-left: 4px; padding: 12px 14px; border: none; background: transparent; color: var(--muted); font-size: 18px; cursor: pointer; flex-shrink: 0; }
+    .tab-add:hover { color: var(--primary); }
+
+    /* ── 패널 ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: flex; flex-direction: column; }
+
+    /* ── 패널 내부 레이아웃 ── */
+    .panel-top {
+      display: grid; grid-template-columns: 1fr 320px;
+      gap: 0; border-bottom: 1.5px solid var(--border);
+    }
+
+    /* 왼쪽: 검색 영역 */
+    .search-area { padding: 20px 22px; border-right: 1.5px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+    .url-bar { font-size: 11px; color: var(--muted); background: #f9fafb; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border); font-family: monospace; word-break: break-all; }
+    .search-row { display: flex; gap: 8px; }
+    .s-input { flex: 1; padding: 10px 13px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; font-family: monospace; outline: none; transition: border-color 0.18s; }
+    .s-input:focus { border-color: var(--primary); }
+    .btn-search { padding: 10px 22px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .btn-search:hover { background: var(--primary-dark); }
+    .hist-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .hist-label { font-size: 11px; color: var(--muted); width: 100%; }
+    .hist-chip { padding: 3px 10px; background: #eef0ff; color: var(--primary); border-radius: 20px; font-size: 11px; font-family: monospace; cursor: pointer; border: 1px solid #c7ccff; }
+    .hist-chip:hover { background: #d4d9ff; }
+
+    /* 오른쪽: 파일 업로드 */
+    .upload-area { padding: 22px 22px; display: flex; flex-direction: column; gap: 12px; }
+    .upload-title { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .upload-title span { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
+    .btn-example { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--surface); color: var(--primary); border: 1.5px solid var(--primary); border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: 6px; }
+    .btn-example:hover { background: var(--tab-hover); }
+    .drop-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 14px 10px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fafbff; font-size: 11px; color: var(--muted); }
+    .drop-zone:hover, .drop-zone.over { border-color: var(--primary); background: var(--tab-hover); color: var(--primary); }
+    .drop-zone .dz-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+    .dz-note { font-size: 10px; margin-top: 4px; color: var(--muted); }
+    .fname-display { font-size: 11px; color: var(--primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; display: none; }
+    #csvFileInput { display: none; }
+    .sp-count-row { display: flex; align-items: center; justify-content: space-between; }
+    .sp-count-badge { font-size: 11px; color: var(--primary); font-weight: 600; }
+    .btn-run-all { flex: 1; padding: 9px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .btn-run-all:hover { background: var(--primary-dark); }
+    .btn-run-all:disabled { background: #a5b4fc; cursor: not-allowed; }
+
+    /* 진행 바 */
+    .prog-wrap { display: none; flex-direction: column; gap: 4px; }
+    .prog-bg { height: 6px; background: #e5e7eb; border-radius: 20px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--primary); border-radius: 20px; transition: width 0.25s; width: 0%; }
+    .prog-txt { font-size: 10px; color: var(--muted); text-align: right; }
+
+    /* ── 결과 영역 ── */
+    .result-area { display: flex; flex-direction: column; }
+
+    /* 결과 툴바 */
+    .result-toolbar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 18px; border-bottom: 1px solid var(--border);
+      background: #f9fafb;
+    }
+    .stats-pills { display: flex; gap: 7px; flex: 1; }
+    .pill { padding: 3px 11px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .pill.total { background: #eef0ff; color: var(--primary); }
+    .pill.ok    { background: #dcfce7; color: #166534; }
+    .pill.fail  { background: #fee2e2; color: #991b1b; }
+    .btn-csv { padding: 7px 16px; background: var(--green); color: #fff; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+    .btn-csv:hover { background: #16a34a; }
+    .btn-csv:disabled { background: #86efac; cursor: not-allowed; }
+
+    /* 결과 테이블 */
+    .table-outer { overflow: auto; max-height: 480px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead { position: sticky; top: 0; z-index: 2; }
+    thead th { padding: 9px 12px; text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1.5px solid var(--border); white-space: nowrap; }
+    th.h-no  { background: #f3f4f6; width: 36px; text-align: center; }
+    th.h-sp  { background: #eef0ff; color: var(--primary); }
+    th.h-adid{ background: #fff7ed; color: #c2410c; font-weight: 700; }
+    th.h-d   { background: #f0fdf4; color: #15803d; }
+    th.h-st  { background: #f3f4f6; min-width: 72px; white-space: nowrap; }
+    td.st    { white-space: nowrap; min-width: 72px; }
+    tbody tr { border-bottom: 1px solid #f0f0f0; }
+    tbody tr:hover { background: #fafbff; }
+    tbody td { padding: 8px 12px; vertical-align: middle; }
+    td.no   { text-align: center; color: var(--muted); font-size: 11px; }
+    td.sp   { font-size: 11px; color: var(--primary); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: default; }
+    /* ADID: 가장 중요 — 잘리지 않게 넓게, 굵고 강조 */
+    td.adid {
+      font-size: 13px; font-weight: 600; color: #c2410c;
+      background: #fff7ed;
+      white-space: nowrap;
+      min-width: 320px;
+      letter-spacing: 0.02em;
+    }
+    td.d    { font-size: 12px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: default; }
+    .badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge.ok      { background: #dcfce7; color: #166534; }
+    .badge.fail    { background: #fee2e2; color: #991b1b; }
+    .badge.pending { background: #fef9c3; color: #854d0e; }
+    .empty-state { padding: 70px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+    .empty-state .ico { font-size: 40px; display: block; margin-bottom: 10px; }
+
+    /* ── 모달 ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--surface); border-radius: 14px; width: min(800px,94vw); max-height: 86vh; box-shadow: 0 8px 40px rgba(0,0,0,0.22); display: flex; flex-direction: column; overflow: hidden; animation: fadeUp 0.2s ease; }
+    @keyframes fadeUp { from{transform:translateY(14px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 14px; border-bottom: 1px solid var(--border); }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-x { width: 30px; height: 30px; border-radius: 50%; border: none; background: #f3f4f6; color: var(--muted); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .modal-x:hover { background: #fee2e2; color: var(--red); }
+    .modal-body { padding: 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+    .ex-table-wrap { border: 1.5px solid var(--border); border-radius: 8px; overflow: auto; }
+    .ex-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .ex-table thead th { background: #f3f4f6; padding: 9px 13px; text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1.5px solid var(--border); white-space: nowrap; }
+    .ex-table thead th.col-sp { background: #eef0ff; color: var(--primary); }
+    .ex-table thead th.col-res { background: #f0fdf4; color: #15803d; }
+    .ex-table tbody td { padding: 9px 13px; border-bottom: 1px solid #f0f0f0; font-size: 11px; }
+    .ex-table tbody tr:last-child td { border-bottom: none; }
+    .mt { color: var(--muted); font-style: italic; }
+    .notes-box { background: #f8faff; border: 1.5px solid #d0d9ff; border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 7px; }
+    .ni { font-size: 12px; color: var(--text); line-height: 1.6; display: flex; gap: 6px; }
+    .ni::before { content:'*'; color: var(--primary); flex-shrink: 0; font-weight: 700; }
+    .modal-foot { padding: 13px 22px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+    .btn-md-dl { padding: 9px 18px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-md-dl:hover { background: var(--primary-dark); }
+    .btn-md-cl { padding: 9px 18px; background: var(--red); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-md-cl:hover { background: #c53030; }
+
+    footer { text-align: center; padding: 20px 0 14px; font-size: 11px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <span class="hero-title">subparam 변환</span>
+    <span class="hero-badge"><span class="hero-badge-ver">v1.1.0 ·</span><span class="hero-badge-name">제작: 이소정</span></span>
+  </div>
+  <div class="hero-sub">subparam 값으로 캠페인 정보(adid · camp_id · channel_id · user_id 등)를 조회하고 CSV로 내보냅니다</div>
+</div>
+
+<main>
+  <div class="card">
+    <!-- 탭 바 -->
+    <div class="tab-bar" id="tabBar">
+      <button class="tab-add" id="btnAddTab" title="새 탭">＋</button>
+    </div>
+    <!-- 패널 컨테이너 -->
+    <div id="panelContainer"></div>
+  </div>
+</main>
+
+<footer>subparam 변환 · nstation · v1.0 · 제작: 이소정</footer>
+
+<!-- ═══ CSV 양식 예시 모달 ═══ -->
+<div class="modal-overlay" id="exModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">📄 CSV 업로드 양식</span>
+      <button class="modal-x" id="modalX">✕</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">📊 예시 데이터 — 헤더 없이 1행부터 바로 입력</div>
+        <div class="ex-table-wrap">
+          <table class="ex-table">
+            <thead><tr>
+              <th class="col-sp">subparam <span style="font-size:10px;font-weight:400">(1열 · 1행부터 바로 입력)</span></th>
+              <th class="col-res">adid</th>
+              <th class="col-res">camp_id</th>
+              <th class="col-res">channel_id</th>
+              <th class="col-res">ctvid</th>
+              <th class="col-res">user_id</th>
+              <th class="col-res">nst_key</th>
+              <th class="col-res">callback</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td>3zwU9NU2y_PAmGjHIV3TcfFO134E-eUPO…</td>
+                <td class="mt">← 자동 수집</td><td class="mt">←</td><td class="mt">←</td>
+                <td class="mt">←</td><td class="mt">←</td><td class="mt">←</td><td class="mt">←</td>
+              </tr>
+              <tr>
+                <td>Abc123XyZ_BPnHkLMQ2rTgUI456F-vWRE…</td>
+                <td class="mt"></td><td class="mt"></td><td class="mt"></td>
+                <td class="mt"></td><td class="mt"></td><td class="mt"></td><td class="mt"></td>
+              </tr>
+              <tr>
+                <td>Xyz789MnO_CQoIlNRP3sTjVK567G-wXSF…</td>
+                <td class="mt"></td><td class="mt"></td><td class="mt"></td>
+                <td class="mt"></td><td class="mt"></td><td class="mt"></td><td class="mt"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notes-box">
+        <div class="ni">CSV 파일만 가능합니다. <b>1번째 열</b>을 subparam 값으로 읽습니다.</div>
+        <div class="ni"><b>헤더 없이 1행부터 바로 subparam 값을 입력</b>하면 됩니다. 헤더 행은 필요 없습니다.</div>
+        <div class="ni">빈 줄과 중복 값은 <b>자동 제거</b>됩니다.</div>
+        <div class="ni">나머지 열(adid, camp_id 등)은 <b>수집 후 자동으로 채워집니다.</b></div>
+        <div class="ni">출력 열 순서: <b>subparam → adid → camp_id → channel_id → ctvid → user_id → nst_key → callback</b></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-md-dl" id="btnDlSample">⬇ 샘플 CSV 다운로드</button>
+      <button class="btn-md-cl" id="modalClose">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════ */
+const BASE_URL    = 'http://test.nstation.co.kr:11080/dec_sub?subparam=';
+const CONCURRENCY = 3;
+const TIMEOUT_MS  = 10000;
+// 출력 컬럼 순서 (subparam은 앞에 별도 고정)
+const COLS = ['adid','camp_id','channel_id','ctvid','user_id','nst_key','callback'];
+
+/* ════════════════════════════════════════
+   TAB 관리
+════════════════════════════════════════ */
+let tabCount = 0;
+let activeTab = null;
+
+function createTab() {
+  tabCount++;
+  const id = 'tab' + tabCount;
+
+  // 탭 버튼
+  const tabBar = document.getElementById('tabBar');
+  const addBtn = document.getElementById('btnAddTab');
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn'; btn.id = 'tbtn-'+id; btn.dataset.tab = id;
+  btn.innerHTML = `<span class="tl">검색 ${tabCount}</span><button class="tab-close">✕</button>`;
+  tabBar.insertBefore(btn, addBtn);
+  btn.querySelector('.tab-close').addEventListener('click', e => { e.stopPropagation(); removeTab(id); });
+  btn.addEventListener('click', () => switchTab(id));
+
+  // 패널 생성
+  const panel = document.createElement('div');
+  panel.className = 'tab-panel'; panel.id = 'panel-'+id;
+  panel.dataset.hist = '[]';
+  panel.dataset.results = '[]';
+
+  panel.innerHTML = `
+  <div class="panel-top">
+    <!-- 왼쪽: 검색 -->
+    <div class="search-area">
+      <div class="url-bar" id="urlbar-${id}">${BASE_URL}<b style="color:var(--primary)">{값}</b></div>
+      <div class="search-row">
+        <input class="s-input" id="inp-${id}" type="text" placeholder="subparam 값 입력 (예: 3zwU9NU2y_PAmGj…)" autocomplete="off" spellcheck="false"/>
+        <button class="btn-search" id="bsearch-${id}">검색</button>
+      </div>
+      <div id="hist-${id}" style="display:none">
+        <div class="hist-row">
+          <span class="hist-label">최근 검색</span>
+        </div>
+        <div class="hist-row" id="histlist-${id}"></div>
+      </div>
+    </div>
+
+    <!-- 오른쪽: 파일 업로드 -->
+    <div class="upload-area">
+      <div class="upload-title">
+        <span>📁 CSV 파일 일괄 업로드</span>
+        <button class="btn-example" data-tab="${id}">❓ 양식 예시</button>
+      </div>
+      <div class="drop-zone" id="dz-${id}">
+        <span class="dz-icon">📂</span>
+        CSV 파일을 <b>드래그</b>하거나 <b>클릭</b>
+        <div class="dz-note">첫 번째 열을 subparam으로 읽음 · 1행부터 바로 시작</div>
+      </div>
+      <input type="file" id="csvfile-${id}" accept=".csv,text/csv"/>
+      <div class="sp-count-row">
+        <span class="sp-count-badge" id="spcount-${id}">0개 로드됨</span>
+        <span class="fname-display" id="fname-${id}"></span>
+      </div>
+      <div class="prog-wrap" id="prog-${id}">
+        <div class="prog-bg"><div class="prog-fill" id="progfill-${id}"></div></div>
+        <div class="prog-txt" id="progtxt-${id}">0 / 0</div>
+      </div>
+      <button class="btn-run-all" id="btnrun-${id}" disabled>▶ subparam 변환</button>
+    </div>
+  </div>
+
+  <!-- 결과 -->
+  <div class="result-area" id="ra-${id}">
+    <div class="empty-state">
+      <span class="ico">🔎</span>
+      값을 입력해 검색하거나<br>CSV 파일을 업로드하세요
+    </div>
+  </div>`;
+
+  document.getElementById('panelContainer').appendChild(panel);
+
+  // 단일 검색 이벤트
+  const inp  = panel.querySelector('.s-input');
+  const bsrch= panel.querySelector('.btn-search');
+  bsrch.addEventListener('click', () => runSingle(id));
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') runSingle(id); });
+
+  // 드롭존
+  const dz   = panel.querySelector('.drop-zone');
+  const fi   = panel.querySelector('input[type=file]');
+  dz.addEventListener('click', () => fi.click());
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); if(e.dataTransfer.files[0]) loadCsv(id, e.dataTransfer.files[0]); });
+  fi.addEventListener('change', () => { if(fi.files[0]) loadCsv(id, fi.files[0]); });
+
+  // 일괄 수집 버튼
+  panel.querySelector('.btn-run-all').addEventListener('click', () => runBatch(id));
+
+  // 예시 모달 버튼
+  panel.querySelector('.btn-example').addEventListener('click', openModal);
+
+  switchTab(id);
+  return id;
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tbtn-'+id)?.classList.add('active');
+  document.getElementById('panel-'+id)?.classList.add('active');
+  activeTab = id;
+}
+
+function removeTab(id) {
+  document.getElementById('tbtn-'+id)?.remove();
+  document.getElementById('panel-'+id)?.remove();
+  if(activeTab === id) {
+    const rem = document.querySelectorAll('.tab-btn[data-tab]');
+    rem.length > 0 ? switchTab(rem[rem.length-1].dataset.tab) : createTab();
+  }
+}
+
+document.getElementById('btnAddTab').addEventListener('click', createTab);
+createTab();
+
+/* ════════════════════════════════════════
+   응답 파싱 (JSON 키 trim)
+════════════════════════════════════════ */
+function parseData(text, res) {
+  const ct = (res.headers.get('content-type')||'').toLowerCase();
+  const isJson = ct.includes('json') || text.trimStart().startsWith('{') || text.trimStart().startsWith('[');
+  if (isJson) {
+    try {
+      const raw = JSON.parse(text);
+      if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+        const out = {};
+        for (const [k,v] of Object.entries(raw)) out[k.trim()] = v;
+        return out;
+      }
+    } catch(_) {}
+  }
+  if (ct.includes('html') || text.trimStart().startsWith('<')) {
+    const d = document.createElement('div'); d.innerHTML = text;
+    return { content: (d.querySelector('body')||d).innerText.replace(/\s+/g,' ').trim().slice(0,400) };
+  }
+  return { content: text.trim().slice(0,400) };
+}
+
+/* ════════════════════════════════════════
+   단일 검색
+════════════════════════════════════════ */
+async function runSingle(id) {
+  const inp = document.getElementById('inp-'+id);
+  const v   = inp.value.trim();
+  if (!v) { inp.style.borderColor='#ef4444'; setTimeout(()=>inp.style.borderColor='',800); return; }
+
+  // 탭 레이블
+  document.getElementById('tbtn-'+id).querySelector('.tl').textContent = v.slice(0,14);
+  // URL bar
+  document.getElementById('urlbar-'+id).innerHTML = BASE_URL + '<b style="color:var(--primary)">' + v + '</b>';
+
+  // 히스토리
+  const panel = document.getElementById('panel-'+id);
+  let hist = JSON.parse(panel.dataset.hist || '[]');
+  hist = [v, ...hist.filter(h=>h!==v)].slice(0,8);
+  panel.dataset.hist = JSON.stringify(hist);
+  renderHist(id, hist);
+
+  // 수집
+  const ra = document.getElementById('ra-'+id);
+  ra.innerHTML = '<div class="empty-state"><span class="ico" style="font-size:28px">⏳</span>수집 중...</div>';
+  const url = BASE_URL + encodeURIComponent(v);
+  let result;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(()=>ctrl.abort(), TIMEOUT_MS);
+    const res = await fetch(url, {signal: ctrl.signal});
+    clearTimeout(timer);
+    const text = await res.text();
+    result = { subparam: v, status: res.ok?'ok':'fail', data: parseData(text,res), error: null };
+  } catch(e) {
+    result = { subparam: v, status: 'fail', data: null, error: e.name==='AbortError'?'타임아웃':e.message };
+  }
+  panel.dataset.results = JSON.stringify([result]);
+  renderResultTable(id, [result]);
+}
+
+function renderHist(id, hist) {
+  const wrap = document.getElementById('hist-'+id);
+  const list = document.getElementById('histlist-'+id);
+  if (!hist.length) { wrap.style.display='none'; return; }
+  wrap.style.display='';
+  list.innerHTML = hist.map(h =>
+    `<span class="hist-chip" onclick="loadHist('${id}','${CSS.escape(h)}')">${h.slice(0,18)}${h.length>18?'…':''}</span>`
+  ).join('');
+}
+function loadHist(id, v) {
+  const inp = document.getElementById('inp-'+id);
+  if(inp) { inp.value = v; runSingle(id); }
+}
+
+/* ════════════════════════════════════════
+   CSV 파일 로드
+════════════════════════════════════════ */
+function loadCsv(id, file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const buf = e.target.result;
+
+    // 인코딩 자동 감지
+    const bytes = new Uint8Array(buf);
+    let text = '';
+
+    // 1) UTF-16 BOM 감지
+    if (bytes[0] === 0xFF && bytes[1] === 0xFE) {
+      text = new TextDecoder('utf-16le').decode(buf);
+    } else if (bytes[0] === 0xFE && bytes[1] === 0xFF) {
+      text = new TextDecoder('utf-16be').decode(buf);
+    } else {
+      // 2) UTF-8 BOM (EF BB BF) 감지
+      let start = 0;
+      if (bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF) {
+        start = 3;
+      }
+      // 3) UTF-8 strict 시도
+      try {
+        const slice = start > 0 ? buf.slice(start) : buf;
+        text = new TextDecoder('utf-8', { fatal: true }).decode(slice);
+      } catch(_) {
+        // UTF-8 실패 → EUC-KR
+        text = '';
+      }
+      // 4) UTF-8로 디코딩했어도 첫 줄 값에 비ASCII 문자가 있으면 EUC-KR
+      if (text) {
+        const firstVal = text.split(/\r?\n/)[0].split(',')[0].trim().replace(/^"|"$/g,'');
+        // subparam는 순수 ASCII (base64url 등)여야 함
+        if (/[^\x00-\x7F]/.test(firstVal)) {
+          text = ''; // EUC-KR 재시도
+        }
+      }
+      if (!text) {
+        try { text = new TextDecoder('euc-kr').decode(buf); } catch(_) {}
+      }
+      if (!text) {
+        text = new TextDecoder('utf-8', { fatal: false }).decode(buf);
+      }
+    }
+    // BOM 제거 (혹시 남아있으면)
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+
+
+    const lines = text.split(/\r?\n/);
+    const vals = [];
+    lines.forEach((line,i) => {
+      if (!line.trim()) return;
+      let first = line.startsWith('"') ? line.slice(1, line.indexOf('"',1)) : line.split(',')[0].trim();
+      if (i===0 && first.toLowerCase()==='subparam') return;
+      if (first) vals.push(first);
+    });
+    const unique = [...new Set(vals)];
+    const panel  = document.getElementById('panel-'+id);
+    panel.dataset.csvLines = JSON.stringify(unique);
+
+    const dz    = document.getElementById('dz-'+id);
+    const count = document.getElementById('spcount-'+id);
+    const fnEl  = document.getElementById('fname-'+id);
+
+    // 파일명 저장 (다운로드 시 사용)
+    panel.dataset.csvFileName = file.name;
+
+    count.textContent = unique.length + '개 로드됨';
+
+    // 파일명 영구 표시
+    fnEl.textContent = '📄 ' + file.name;
+    fnEl.style.display = 'block';
+
+    dz.style.borderColor='var(--green)';
+    dz.innerHTML = `<span class="dz-icon">✅</span>${file.name}<div class="dz-note"><b>${unique.length}개</b> subparam 로드됨</div>`;
+    document.getElementById('btnrun-'+id).disabled = unique.length===0;
+
+    setTimeout(()=>{
+      dz.style.borderColor='';
+      dz.innerHTML = `<span class="dz-icon">📂</span>CSV 파일을 <b>드래그</b>하거나 <b>클릭</b><div class="dz-note">첫 번째 열을 subparam으로 읽음 · 1행부터 바로 시작</div>`;
+    }, 4000);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ════════════════════════════════════════
+   일괄 수집
+════════════════════════════════════════ */
+async function runBatch(id) {
+  const panel = document.getElementById('panel-'+id);
+  const lines = JSON.parse(panel.dataset.csvLines || '[]');
+  if (!lines.length) return;
+
+  const btnRun = document.getElementById('btnrun-'+id);
+  const progW  = document.getElementById('prog-'+id);
+  const progF  = document.getElementById('progfill-'+id);
+  const progT  = document.getElementById('progtxt-'+id);
+
+  btnRun.disabled = true;
+  progW.style.display = 'flex';
+
+  const results = lines.map(sp => ({subparam:sp, status:'pending', data:null, error:null}));
+  panel.dataset.results = JSON.stringify(results);
+  renderResultTable(id, results);
+
+  let done = 0;
+  const total = lines.length;
+
+  async function fetchOne(idx) {
+    const sp = lines[idx];
+    const url = BASE_URL + encodeURIComponent(sp);
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(()=>ctrl.abort(), TIMEOUT_MS);
+      const res = await fetch(url, {signal: ctrl.signal});
+      clearTimeout(timer);
+      const text = await res.text();
+      results[idx].data   = parseData(text, res);
+      results[idx].status = res.ok ? 'ok' : 'fail';
+    } catch(e) {
+      results[idx].status = 'fail';
+      results[idx].error  = e.name==='AbortError'?'타임아웃':e.message;
+    }
+    done++;
+    progF.style.width = Math.round(done/total*100)+'%';
+    progT.textContent = `${done} / ${total}`;
+    renderResultTable(id, results);
+  }
+
+  const queue = [...Array(total).keys()];
+  async function worker() { while(queue.length) await fetchOne(queue.shift()); }
+  await Promise.all(Array.from({length:Math.min(CONCURRENCY,total)},worker));
+
+  btnRun.disabled = false;
+  panel.dataset.results = JSON.stringify(results);
+}
+
+/* ════════════════════════════════════════
+   결과 테이블 렌더
+   열 순서: #, subparam, adid, camp_id, channel_id, ctvid, user_id, nst_key, callback, 상태
+════════════════════════════════════════ */
+function renderResultTable(id, results) {
+  const ra = document.getElementById('ra-'+id);
+  if (!results || !results.length) {
+    ra.innerHTML = '<div class="empty-state"><span class="ico">🔎</span>결과 없음</div>';
+    return;
+  }
+
+  // 추가 컬럼 감지
+  const extra = new Set();
+  results.forEach(r => {
+    if (r.data && typeof r.data==='object')
+      Object.keys(r.data).forEach(k => { if(!COLS.includes(k)) extra.add(k); });
+  });
+  const allCols = [...COLS, ...extra];
+
+  const total = results.length;
+  const ok    = results.filter(r=>r.status==='ok').length;
+  const fail  = results.filter(r=>r.status==='fail').length;
+
+  const hasOk = ok > 0;
+
+  const badge = s => {
+    if(s==='ok')      return '<span class="badge ok">✔ 성공</span>';
+    if(s==='fail')    return '<span class="badge fail">✕ 실패</span>';
+    return '<span class="badge pending">⏳</span>';
+  };
+
+  let html = `
+  <div class="result-toolbar">
+    <div class="stats-pills">
+      <span class="pill total">전체 ${total}</span>
+      <span class="pill ok">성공 ${ok}</span>
+      ${fail>0?`<span class="pill fail">실패 ${fail}</span>`:''}
+    </div>
+    <button class="btn-csv" id="btncsv-${id}" ${hasOk?'':'disabled'} onclick="downloadCsv('${id}')">
+      💾 CSV 다운로드
+    </button>
+  </div>
+  <div class="table-outer">
+    <table>
+      <thead><tr>
+        <th class="h-no">#</th>
+        <th class="h-sp">subparam</th>
+        ${allCols.map(c=>`<th class="${c==='adid'?'h-adid':'h-d'}">${c}</th>`).join('')}
+        <th class="h-st">상태</th>
+      </tr></thead>
+      <tbody>
+  `;
+
+  results.forEach((r, i) => {
+    const cells = allCols.map(c => {
+      const v = r.data?.[c] ?? '';
+      let cls = 'd';
+      if (c === 'adid') cls = 'adid';
+      // adid는 전체 표시, 나머지는 80자 제한
+      const display = c === 'adid' ? String(v) : String(v).slice(0, 80);
+      return `<td class="${cls}" title="${String(v).replace(/"/g,'&quot;')}">${display}</td>`;
+    }).join('');
+    html += `<tr>
+      <td class="no">${i+1}</td>
+      <td class="sp" title="${r.subparam}">${r.subparam}</td>
+      ${cells}
+      <td class="st">${badge(r.status)}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table></div>`;
+  ra.innerHTML = html;
+}
+
+/* ════════════════════════════════════════
+   CSV 다운로드
+   열: subparam, adid, camp_id, channel_id, ctvid, user_id, nst_key, callback, status
+════════════════════════════════════════ */
+function downloadCsv(id) {
+  const panel   = document.getElementById('panel-'+id);
+  const results = JSON.parse(panel.dataset.results || '[]');
+
+  const extra = new Set();
+  results.forEach(r => {
+    if(r.data && typeof r.data==='object')
+      Object.keys(r.data).forEach(k=>{if(!COLS.includes(k)) extra.add(k);});
+  });
+  const allCols = [...COLS, ...extra];
+  const headers = ['subparam', ...allCols, 'status'];
+
+  const rows = results.map(r => [
+    r.subparam,
+    ...allCols.map(c => r.data?.[c] ?? ''),
+    r.status
+  ]);
+
+  const esc = v => {
+    const s = String(v??'').replace(/"/g,'""');
+    return (s.includes(',')||s.includes('"')||s.includes('\n')) ? `"${s}"` : s;
+  };
+  const csv = [headers,...rows].map(row=>row.map(esc).join(',')).join('\r\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const rawName = panel.dataset.csvFileName || '';
+  const baseName = rawName
+    ? rawName.replace(/\.csv$/i, '') + '_변환.csv'
+    : 'subparam_변환.csv';
+  a.download = baseName;
+  a.click();
+}
+
+/* ================================================================
+   예시 모달
+================================================================ */
+const exModal = document.getElementById('exModal');
+function openModal() { exModal.style.display='flex'; }
+function closeModal() { exModal.style.display='none'; }
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+exModal.addEventListener('click', e => { if(e.target===exModal) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+document.getElementById('btnDlSample').addEventListener('click', () => {
+  const samples = [
+    '3zwU9NU2y_PAmGjHIV3TcfFO134E-eUPOivd07W39OIs-sample001',
+    'Abc123example002',
+    'Xyz789sample003'
+  ];
+  const csv = '\ufeff' + 'subparam\n' + samples.join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'subparam_sample.csv';
+  a.click();
+});
+</script>
+</body>
+</html>

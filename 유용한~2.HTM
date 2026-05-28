@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>유용한 기능</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Malgun Gothic', sans-serif;
+      background: #f0f0f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── 상단 탭 내비게이션 ── */
+    .top-nav {
+      display: flex;
+      gap: 4px;
+      padding: 10px 16px 0;
+      background: #1e1e2e;
+      flex-shrink: 0;
+    }
+
+    .top-tab {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Malgun Gothic', sans-serif;
+      cursor: pointer;
+      background: #2e2e42;
+      color: #aaa;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .top-tab:hover {
+      background: #3a3a55;
+      color: #ddd;
+    }
+
+    .top-tab.active {
+      background: #f0f0f0;
+      color: #1e1e2e;
+    }
+
+    /* ── iframe 패널 ── */
+    .panel {
+      display: none;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .panel.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel iframe {
+      width: 100%;
+      flex: 1;
+      border: none;
+    }
+
+    /* ── 경고 배너 ── */
+    .warn-banner { text-align: center;
+      background: #2d0a0a;
+      color: #f87171;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 20px;
+      flex-shrink: 0;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Tab 2 아직 미연결 안내 ── */
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 16px;
+      color: #555;
+      background: #f9f9f9;
+    }
+
+    .placeholder .icon { font-size: 48px; }
+    .placeholder h2 { font-size: 20px; color: #333; }
+    .placeholder p { font-size: 14px; color: #777; line-height: 1.7; text-align: center; }
+    .placeholder code {
+      background: #eee;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 탭 -->
+  <nav class="top-nav">
+    <button class="top-tab active" id="tabIr" onclick="switchTab('ir')">🖼 이미지 자동 리사이저</button>
+    <button class="top-tab"        id="tabSp" onclick="switchTab('sp')">🔍 subparam 변환</button>
+    <button class="top-tab"        id="tabTv" onclick="switchTab('tv')">🔗 트래킹 링크 검증</button>
+  </nav>
+
+  <!-- Tab 1: 이미지 자동 리사이저 (정호윤님 링크) -->
+  <div class="panel active" id="panelIr">
+    <iframe
+      src="image_resizer_v1_7_0.html"
+      title="이미지 자동 리사이저"
+      allow="clipboard-write">
+    </iframe>
+  </div>
+
+  <!-- Tab 3: 트래킹 링크 검증 (정호윤님 링크) -->
+  <div class="panel" id="panelTv">
+    <div class="warn-banner">※ URL 직접 분석 필요 / 트래커 링크 검증은 숙련 후 사용 권장</div>
+    <iframe
+      src="%ED%8A%B8%EB%9E%98%EC%BB%A4_%EA%B2%80%EC%A6%9Dv8_%EA%B0%9C%EC%84%A0.html"
+      title="트래킹 링크 검증"
+      allow="clipboard-write">
+    </iframe>
+  </div>
+
+  <!-- Tab 2: subparam 변환 -->
+  <div class="panel" id="panelSp">
+    <iframe
+      src="subparam%20%EB%B3%80%ED%99%98/subparam%20%EB%B3%80%ED%99%98.html"
+      title="subparam 변환">
+    </iframe>
+  </div>
+
+  <script>
+    function switchTab(name) {
+      document.getElementById('panelTv').classList.toggle('active', name === 'tv');
+      document.getElementById('tabTv').classList.toggle('active', name === 'tv');
+      document.getElementById('panelIr').classList.toggle('active', name === 'ir');
+      document.getElementById('panelSp').classList.toggle('active', name === 'sp');
+      document.getElementById('tabIr').classList.toggle('active', name === 'ir');
+      document.getElementById('tabSp').classList.toggle('active', name === 'sp');
+    }
+  </script>
+
+</body>
+</html>

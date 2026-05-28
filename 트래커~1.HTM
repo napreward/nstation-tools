@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tracking Link Validator</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+      background: #f0f2f7;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* ─── Topbar ─── */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .title-wrap h1 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+
+    .title-wrap p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .version-tag {
+      white-space: nowrap;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: #1f2937;
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .version-tag span {
+      color: #f9fafb;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+
+    .sub-text {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    /* ─── Tracker Select Card ─── */
+    .tracker-card-inner {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .tracker-select-panel {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .tracker-select-panel .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    select {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fff;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .tracker-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #ecfdf5;
+      color: #047857;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tracker-status-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .tracker-rule-panel {
+      padding: 4px 0;
+    }
+
+    .tracker-rule-panel .rule-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .tracker-rule-panel h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .rule-count-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .sub-text-rule {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .required-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .required-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 12px;
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+    .required-item strong {
+      color: #111827;
+    }
+    .required-item .param-value {
+      color: #6b7280;
+      margin-left: 2px;
+    }
+
+    /* ─── URL Input Card ─── */
+    textarea {
+      width: 100%;
+      min-height: 200px;
+      resize: vertical;
+      padding: 14px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.7;
+      background: #fafafa;
+      color: #1f2937;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      background: #fff;
+    }
+    textarea.input-error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .inline-error {
+      display: none;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .inline-error.visible {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .inline-error::before {
+      content: "⚠";
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.15s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-text {
+      background: transparent;
+      color: #6b7280;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .btn-text:hover {
+      color: #374151;
+      background: #f3f4f6;
+    }
+
+    .btn-sample {
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 13px;
+    }
+    .btn-sample:hover {
+      background: #dbeafe;
+    }
+
+    /* ─── Summary Bar ─── */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .summary-box {
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .summary-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+      transition: color 0.3s;
+    }
+    .summary-value.pass { color: #16a34a; }
+    .summary-value.fail { color: #dc2626; }
+    .summary-value.zero { color: #9ca3af; }
+
+    /* ─── Filter Bar ─── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-bar .filter-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .filter-btn {
+      background: #f3f4f6;
+      color: #374151;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { background: #e5e7eb; transform: none; }
+    .filter-btn.active-all {
+      background: #1f2937;
+      color: #fff;
+      border-color: #1f2937;
+    }
+    .filter-btn.active-pass {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #16a34a;
+    }
+    .filter-btn.active-fail {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #ef4444;
+    }
+
+    /* ─── Result Card ─── */
+    .result-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 14px;
+      background: #fff;
+      transition: opacity 0.2s;
+    }
+    .result-card.filtered-out {
+      display: none;
+    }
+    .result-card.result-fail {
+      border-color: #fca5a5;
+    }
+    .result-card.result-pass {
+      border-color: #86efac;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .result-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .status-pass {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .status-fail {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* ─── Original URL box ─── */
+    .result-url-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .result-url {
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.7;
+      word-break: break-all;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    .result-url.expanded {
+      cursor: default;
+    }
+    .result-url-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .url-toggle-btn {
+      background: transparent;
+      border: 0;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 0;
+      cursor: pointer;
+      transform: none !important;
+    }
+    .url-toggle-btn:hover { color: #374151; }
+    .copy-url-btn {
+      background: #374151;
+      color: #d1d5db;
+      border: 0;
+      border-radius: 7px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: auto;
+      transition: background 0.15s;
+      transform: none !important;
+    }
+    .copy-url-btn:hover { background: #4b5563; }
+
+    /* ─── Grid panels ─── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel {
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .panel h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .macro-panel {
+      border-color: #fde68a;
+      background: #fffbeb;
+    }
+    .macro-panel h4 { color: #92400e; }
+
+    .macro-note {
+      margin: 0 0 10px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #92400e;
+    }
+
+    /* ─── List ─── */
+    .list {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .list li {
+      word-break: break-all;
+    }
+
+    .empty-text {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    /* ─── Param Table ─── */
+    .param-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      position: relative;
+    }
+    .param-table-wrap::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
+      pointer-events: none;
+      border-radius: 0 12px 12px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+      background: #fff;
+    }
+
+    th, td {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    th {
+      background: #f8f9fb;
+      font-weight: 700;
+      color: #374151;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .cell-pass { color: #16a34a; font-weight: 700; }
+    .cell-fail { color: #dc2626; font-weight: 700; }
+
+    /* ─── Error detail (replaces 비고 column) ─── */
+    .error-detail {
+      display: none;
+      margin-top: 4px;
+      font-size: 12px;
+      color: #dc2626;
+    }
+    .has-issue .error-detail { display: block; }
+
+    /* ─── Final URL Box ─── */
+    .final-url-box {
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      padding: 14px 16px;
+    }
+
+    .final-url-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .final-url-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: #1d4ed8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .final-url-text {
+      font-size: 12px;
+      line-height: 1.7;
+      word-break: break-all;
+      color: #1f2937;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .final-url-fail-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    /* ─── Footer note (global, not per-card) ─── */
+    /* ─── Tracker note ─── */
+    .tracker-note {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      font-size: 13px;
+      color: #78350f;
+      line-height: 1.6;
+    }
+    .tracker-note.visible { display: flex; gap: 8px; align-items: flex-start; }
+    .tracker-note .note-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+    .tracker-note code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: rgba(0,0,0,0.07);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .global-footer-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      padding: 10px 14px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* ─── Copy button ─── */
+    .copy-btn {
+      background: #1e40af;
+      color: #fff;
+      border: 0;
+      border-radius: 9px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      transform: none !important;
+    }
+    .copy-btn:hover { background: #1d4ed8; }
+    .copy-btn.copied {
+      background: #16a34a;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .hidden { display: none; }
+
+    /* ─── Confirm overlay ─── */
+    .confirm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-overlay.visible {
+      display: flex;
+    }
+    .confirm-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 28px 28px 22px;
+      max-width: 380px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .confirm-box h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      font-weight: 800;
+      color: #111827;
+    }
+    .confirm-box p {
+      margin: 0 0 20px;
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+    .confirm-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .confirm-cancel {
+      background: #f3f4f6;
+      color: #374151;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .confirm-ok {
+      background: #2563eb;
+      color: #fff;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .tracker-card-inner {
+        grid-template-columns: 1fr;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        flex-direction: column;
+      }
+      .summary-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 560px) {
+      .summary-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="title-wrap">
+        <h1>Tracking Link Validator</h1>
+        <p>트래커 기준으로 필수 파라미터를 검증하고, 어드민 입력용 URL을 생성합니다.</p>
+      </div>
+      <div class="version-tag">v1.8.0 · <span>제작: 정호윤</span></div>
+    </div>
+
+    <!-- Tracker Select Card -->
+    <div class="card">
+      <div class="tracker-card-inner">
+
+        <div class="tracker-select-panel">
+          <label class="field-label" for="trackerSelect">트래커 선택</label>
+          <select id="trackerSelect">
+            <option value="airbridge">Airbridge</option>
+            <option value="adbrix">Adbrix</option>
+            <option value="branch">Branch</option>
+            <option value="appsflyer">Appsflyer</option>
+            <option value="singular">Singular</option>
+          </select>
+          <div class="tracker-status-pill" id="trackerPill">
+            <span class="dot"></span>
+            <span id="pillText">Airbridge 기준으로 검증합니다</span>
+          </div>
+        </div>
+
+        <div class="tracker-rule-panel">
+          <div class="rule-header">
+            <h2 id="ruleTitle">현재 검증 기준</h2>
+            <span class="rule-count-badge" id="ruleCount">0개 파라미터</span>
+          </div>
+          <p class="sub-text-rule" id="trackerDescription">선택한 트래커의 필수 파라미터 규칙으로 검증합니다.</p>
+          <div class="required-list" id="requiredList"></div>
+          <div class="tracker-note" id="trackerNote">
+            <span class="note-icon">⚠</span>
+            <span id="trackerNoteText"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- URL Input Card -->
+    <div class="card">
+      <h2 class="section-title">원본 URL 입력</h2>
+      <p class="sub-text">여러 개를 한 번에 검사하려면 줄바꿈으로 구분해서 입력하세요.</p>
+      <textarea id="urlInput" placeholder=""></textarea>
+      <div class="inline-error" id="urlError">URL을 1개 이상 입력해 주세요.</div>
+
+      <div class="button-row">
+        <button class="btn-primary" id="validateBtn">검사하기</button>
+        <button class="btn-sample" id="sampleBtn">샘플 넣기</button>
+        <button class="btn-text" id="clearBtn">입력 초기화</button>
+      </div>
+    </div>
+
+    <!-- Summary + Results -->
+    <div class="card hidden" id="summaryCard">
+      <h2 class="section-title">검사 요약</h2>
+      <div class="summary-bar">
+        <div class="summary-box">
+          <div class="summary-label">총 URL</div>
+          <div class="summary-value" id="totalCount">0</div>
+        </div>
+        <div class="summary-box">
+          <div class="summary-label">통과</div>
+          <div class="summary-value" id="passCount">0</div>
+        </div>
+        <div class="summary-box">
+          <div class="summary-label">실패</div>
+          <div class="summary-value" id="failCount">0</div>
+        </div>
+        <div class="summary-box">
+          <div class="summary-label">매크로 발견</div>
+          <div class="summary-value" id="macroCount">0</div>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <span class="filter-label">필터</span>
+        <button class="filter-btn active-all" data-filter="all">전체</button>
+        <button class="filter-btn" data-filter="pass">통과만</button>
+        <button class="filter-btn" data-filter="fail">실패만</button>
+      </div>
+
+      <div id="results"></div>
+
+      <div class="global-footer-note">
+        ℹ 최종 URL에는 <strong>필수 파라미터</strong>와 <strong>추가 매크로 파라미터</strong>가 제외되고, 일반 파라미터만 유지됩니다.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Confirm overlay (트래커 변경 시) -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+      <h3>트래커를 변경하시겠습니까?</h3>
+      <p>트래커를 변경하면 현재 검사 결과가 초기화됩니다.</p>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" id="confirmCancel">취소</button>
+        <button class="confirm-ok" id="confirmOk">변경하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TRACKER_RULES = {
+      airbridge: {
+        trackerName: "Airbridge",
+        requiredParams: {
+          click_id: "[nstkey]",
+          sub_id: "[mckey]",
+          ad_id: "[adid]",
+          custom_param1: "[subparam]"
+        },
+        removableParams: ["click_id", "sub_id", "ad_id", "custom_param1"],
+        sampleUrls: [
+          "https://example.com/landing?click_id=[nstkey]&sub_id=[mckey]&ad_id=[adid]&custom_param1=[subparam]&site=naver&utm_source=meta",
+          "https://example.com/landing?click_id=[nstkey]&sub_id=[mckey]&ad_id=[adid]&custom_param1=[subparam]&campaign={campaign_name}&creative={creative_id}&site=kakao",
+          "https://example.com/landing?click_id=[nstkey]&sub_id=[wrongkey]&campaign={campaign_name}"
+        ],
+        note: "Airbridge는 매크로 형식으로 <strong>중괄호 {} 대신 대괄호 []</strong>를 사용합니다. 필수 파라미터 값이 <code>[nstkey]</code> 형태로 들어가야 검증을 통과합니다. 다른 트래커의 <code>{}</code> 형식과 혼용하지 않도록 주의하세요."
+      },
+      adbrix: {
+        trackerName: "Adbrix",
+        requiredParams: {
+          cb_1: "{subparam}"
+        },
+        removableParams: ["cb_1"],
+        sampleUrls: [
+          "https://example.com/landing?cb_1={subparam}&site=naver&utm_source=meta",
+          "https://example.com/landing?cb_1={subparam}&campaign={campaign_name}&creative={creative_id}&utm_medium=cpc",
+          "https://example.com/landing?cb_1={wrongparam}&site=kakao",
+          "https://example.com/landing?campaign={campaign_name}&utm_source=test"
+        ]
+      },
+      branch: {
+        trackerName: "Branch",
+        requiredParams: {
+          "$aaid": "{gaid}",
+          "$idfa": "{idfa}",
+          "~secondary_publisher": "{mckey}",
+          custom_data_sub1: "custom_data.sub1"
+        },
+        removableParams: ["$aaid", "$idfa", "~secondary_publisher", "custom_data_sub1"],
+        sampleUrls: [
+          "https://example.com/landing?%24aaid={gaid}&%24idfa={idfa}&~secondary_publisher={mckey}&custom_data_sub1=custom_data.sub1&site=naver",
+          "https://example.com/landing?%24aaid={gaid}&%24idfa={idfa}&~secondary_publisher={mckey}&custom_data_sub1=custom_data.sub1&campaign={campaign_name}",
+          "https://example.com/landing?%24aaid={gaid}&%24idfa={wrong}&~secondary_publisher={mckey}&custom_data_sub1=custom_data.sub1",
+          "https://example.com/landing?~secondary_publisher={mckey}&custom_data_sub1=custom_data.sub1"
+        ],
+        note: "Branch는 <code>~secondary_publisher</code> 파라미터명에 물결표(~)가 포함됩니다. URL에 그대로 입력해야 하며, 인코딩하지 않도록 주의하세요. <code>custom_data_sub1</code> 파라미터는 값이 정확히 <code>custom_data.sub1</code>이어야 통과합니다 — 매크로가 아닌 고정 리터럴 값입니다."
+      },
+      appsflyer: {
+        trackerName: "Appsflyer",
+        requiredParams: {
+          af_sub1: "{subparam}",
+          af_siteid: "{nstation}",
+          clickid: "{nstkey}",
+          advertising_id: "{gaid}",
+          idfa: "{idfa}",
+          af_ip: "{ip}",
+          af_ua: "{useragent}",
+          af_lang: "{language}"
+        },
+        removableParams: [
+          "af_sub1", "af_siteid", "clickid", "advertising_id",
+          "idfa", "af_ip", "af_ua", "af_lang"
+        ],
+        sampleUrls: [
+          "https://example.com/landing?af_sub1={subparam}&af_siteid={nstation}&clickid={nstkey}&advertising_id={gaid}&idfa={idfa}&af_ip={ip}&af_ua={useragent}&af_lang={language}&site=naver&utm_source=meta",
+          "https://example.com/landing?af_sub1={subparam}&af_siteid={nstation}&clickid={nstkey}&advertising_id={gaid}&idfa={idfa}&af_ip={ip}&af_ua={useragent}&af_lang={language}&campaign={campaign_name}",
+          "https://example.com/landing?af_sub1={wrong}&af_siteid={nstation}&clickid={nstkey}&advertising_id={gaid}&idfa={idfa}&af_ip={ip}&af_ua={useragent}&af_lang={language}",
+          "https://example.com/landing?af_sub1={subparam}&clickid={nstkey}&utm_source=test"
+        ]
+      },
+      singular: {
+        trackerName: "Singular",
+        requiredParams: {
+          subparam: "{subparam}",
+          idfa: "{adid}",
+          aifa: "{adid}",
+          psid: "{mkey}",
+          ve: "{osver}",
+          cl: "{nstkey}",
+          ip: "{ip}",
+          pcid: "{campid}",
+          p: "{os}",
+          pssid: "{mckey}",
+          pcn: "{camp_name}"
+        },
+        removableParams: [
+          "subparam", "idfa", "aifa", "psid", "ve", "cl",
+          "ip", "pcid", "p", "pssid", "pcn"
+        ],
+        sampleUrls: [
+          "https://example.com/landing?subparam={subparam}&idfa={adid}&aifa={adid}&psid={mkey}&ve={osver}&cl={nstkey}&ip={ip}&pcid={campid}&p={os}&pssid={mckey}&pcn={camp_name}&site=naver&utm_source=meta",
+          "https://example.com/landing?subparam={subparam}&idfa={adid}&aifa={adid}&psid={mkey}&ve={osver}&cl={nstkey}&ip={ip}&pcid={campid}&p={os}&pssid={mckey}&pcn={camp_name}&campaign={campaign_name}",
+          "https://example.com/landing?subparam={wrong}&idfa={adid}&aifa={adid}&psid={mkey}&ve={osver}&cl={nstkey}&ip={ip}&pcid={campid}&p={os}&pssid={mckey}&pcn={camp_name}",
+          "https://example.com/landing?subparam={subparam}&idfa={adid}&cl={nstkey}&utm_source=test"
+        ]
+      }
+    };
+
+    // ─── DOM refs ───
+    const trackerSelect     = document.getElementById("trackerSelect");
+    const trackerDescription = document.getElementById("trackerDescription");
+    const requiredList      = document.getElementById("requiredList");
+    const ruleCount         = document.getElementById("ruleCount");
+    const pillText          = document.getElementById("pillText");
+    const urlInput          = document.getElementById("urlInput");
+    const urlError          = document.getElementById("urlError");
+    const validateBtn       = document.getElementById("validateBtn");
+    const sampleBtn         = document.getElementById("sampleBtn");
+    const clearBtn          = document.getElementById("clearBtn");
+    const summaryCard       = document.getElementById("summaryCard");
+    const results           = document.getElementById("results");
+    const totalCountEl      = document.getElementById("totalCount");
+    const passCountEl       = document.getElementById("passCount");
+    const failCountEl       = document.getElementById("failCount");
+    const macroCountEl      = document.getElementById("macroCount");
+    const confirmOverlay    = document.getElementById("confirmOverlay");
+    const confirmOk         = document.getElementById("confirmOk");
+    const confirmCancel     = document.getElementById("confirmCancel");
+    const filterBtns        = document.querySelectorAll(".filter-btn");
+
+    const trackerNote      = document.getElementById("trackerNote");
+    const trackerNoteText  = document.getElementById("trackerNoteText");
+    let hasResults = false;
+    let pendingTrackerValue = null;
+    let prevTrackerValue = "airbridge";
+    let currentFilter = "all";
+
+    // ─── Utilities ───
+    function getSelectedRule() {
+      return TRACKER_RULES[trackerSelect.value];
+    }
+
+    function decodeSafe(value) {
+      try { return decodeURIComponent(value); } catch { return value; }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function isPureMacroValue(value) {
+      return /^\{[^{}]+\}$/.test(decodeSafe(value).trim());
+    }
+
+    function buildParamsMap(searchParams) {
+      const map = new Map();
+      for (const [key, value] of searchParams.entries()) {
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(value);
+      }
+      return map;
+    }
+
+    function getRawParamKey(rawSegment) {
+      const eqIndex = rawSegment.indexOf("=");
+      return eqIndex === -1 ? rawSegment.trim() : rawSegment.slice(0, eqIndex).trim();
+    }
+
+    function buildFinalUrlPreserveOriginal(rawUrl, rule) {
+      const qIndex = rawUrl.indexOf("?");
+      if (qIndex === -1) return rawUrl;
+      const hashIndex = rawUrl.indexOf("#");
+      const baseEnd = hashIndex !== -1 ? hashIndex : rawUrl.length;
+      const basePart = rawUrl.slice(0, qIndex);
+      const rawQuery = rawUrl.slice(qIndex + 1, baseEnd);
+      const hashPart = hashIndex !== -1 ? rawUrl.slice(hashIndex) : "";
+      if (!rawQuery.trim()) return basePart + hashPart;
+      const rawSegments = rawQuery.split("&").filter(Boolean);
+      const removableKeySet = new Set(Object.keys(rule.requiredParams).map(k => k.trim()));
+      const keptSegments = [];
+      for (const seg of rawSegments) {
+        const rawKey = getRawParamKey(seg);
+        if (removableKeySet.has(rawKey)) continue;
+        const eqIdx = seg.indexOf("=");
+        const rawValue = eqIdx === -1 ? "" : seg.slice(eqIdx + 1);
+        if (isPureMacroValue(rawValue)) continue;
+        keptSegments.push(seg);
+      }
+      return keptSegments.length === 0 ? basePart + hashPart : `${basePart}?${keptSegments.join("&")}${hashPart}`;
+    }
+
+    function truncateUrl(url, maxLen = 120) {
+      if (url.length <= maxLen) return { short: url, full: url, truncated: false };
+      const short = url.slice(0, maxLen) + "…";
+      return { short, full: url, truncated: true };
+    }
+
+    // ─── Rule preview ───
+    function updateRulePreview() {
+      const rule = getSelectedRule();
+      pillText.textContent = `${rule.trackerName} 기준으로 검증합니다`;
+      trackerDescription.textContent = `${rule.trackerName} 필수 파라미터 기준으로 검증합니다.`;
+      const entries = Object.entries(rule.requiredParams);
+      ruleCount.textContent = `${entries.length}개 파라미터`;
+      requiredList.innerHTML = entries.map(([key, value]) =>
+        `<div class="required-item"><strong>${escapeHtml(key)}</strong><span class="param-value mono"> = ${escapeHtml(value)}</span></div>`
+      ).join("");
+      urlInput.placeholder = "";
+
+      if (rule.note) {
+        trackerNoteText.innerHTML = rule.note;
+        trackerNote.classList.add("visible");
+      } else {
+        trackerNote.classList.remove("visible");
+      }
+    }
+
+    // ─── Validation logic ───
+    function validateUrl(rawUrl, index, rule) {
+      const result = {
+        index, rawUrl, trackerName: rule.trackerName,
+        isValidUrl: true, passed: true,
+        errors: [], duplicateParams: [],
+        requiredCheckRows: [], requiredDetected: [],
+        extraMacroParams: [], normalParams: [], finalUrl: ""
+      };
+
+      let parsedUrl;
+      try {
+        parsedUrl = new URL(rawUrl);
+      } catch {
+        result.isValidUrl = false;
+        result.passed = false;
+        result.errors.push("유효한 URL 형식이 아닙니다.");
+        return result;
+      }
+
+      const paramMap = buildParamsMap(parsedUrl.searchParams);
+      const duplicateKeys = [...paramMap.entries()].filter(([, v]) => v.length > 1).map(([k]) => k);
+      if (duplicateKeys.length > 0) result.duplicateParams = duplicateKeys;
+
+      for (const [requiredKey, expectedValue] of Object.entries(rule.requiredParams)) {
+        const values = paramMap.get(requiredKey) || [];
+        const actualValue = values[0] ?? "";
+        const decodedActualValue = decodeSafe(actualValue).trim();
+        let status = "정상", statusClass = "cell-pass", issue = "";
+
+        if (values.length === 0) {
+          result.passed = false; status = "누락"; statusClass = "cell-fail";
+          issue = "필수 파라미터가 없습니다.";
+          result.errors.push(`${requiredKey} 누락`);
+        } else if (values.length > 1) {
+          result.passed = false; status = "중복"; statusClass = "cell-fail";
+          issue = "같은 파라미터가 중복으로 존재합니다.";
+          result.errors.push(`${requiredKey} 중복`);
+        } else if (decodedActualValue === "") {
+          result.passed = false; status = "빈 값"; statusClass = "cell-fail";
+          issue = "값이 비어 있습니다.";
+          result.errors.push(`${requiredKey} 값 비어있음`);
+        } else if (decodedActualValue !== expectedValue) {
+          result.passed = false; status = "값 오류"; statusClass = "cell-fail";
+          issue = `기대값 ${expectedValue} 와 일치하지 않습니다.`;
+          result.errors.push(`${requiredKey} 값 오류 (기대 ${expectedValue}, 실제 ${decodedActualValue})`);
+        } else {
+          result.requiredDetected.push({ key: requiredKey, value: actualValue });
+        }
+
+        result.requiredCheckRows.push({
+          key: requiredKey, expectedValue,
+          actualValue: values.length > 0 ? decodedActualValue : "-",
+          status, statusClass, issue
+        });
+      }
+
+      if (result.duplicateParams.length > 0) {
+        for (const key of result.duplicateParams) {
+          if (!Object.prototype.hasOwnProperty.call(rule.requiredParams, key)) {
+            result.errors.push(`${key} 중복`);
+          }
+        }
+      }
+
+      for (const [key, values] of paramMap.entries()) {
+        const firstValue = values[0] ?? "";
+        const decodedValue = decodeSafe(firstValue).trim();
+        if (Object.prototype.hasOwnProperty.call(rule.requiredParams, key)) continue;
+        if (isPureMacroValue(firstValue)) {
+          result.extraMacroParams.push({ key, value: decodedValue });
+        } else {
+          result.normalParams.push({ key, value: firstValue });
+        }
+      }
+
+      result.finalUrl = buildFinalUrlPreserveOriginal(rawUrl, rule);
+      return result;
+    }
+
+    // ─── Render helpers ───
+    function makeListHtml(items, emptyText) {
+      if (!items || items.length === 0) return `<div class="empty-text">${escapeHtml(emptyText)}</div>`;
+      return `<ul class="list">${items.map(i => `<li class="mono">${escapeHtml(i)}</li>`).join("")}</ul>`;
+    }
+
+    function renderResultCard(result) {
+      const statusClass = result.passed ? "status-pass" : "status-fail";
+      const statusIcon  = result.passed ? "✓" : "✗";
+      const statusText  = result.passed ? "검증 통과" : "검증 실패";
+      const cardClass   = result.passed ? "result-pass" : "result-fail";
+
+      const errorItems   = result.errors;
+      const dupItems     = result.duplicateParams;
+      const removedItems = result.requiredDetected.map(i => `${i.key}=${decodeSafe(i.value)}`);
+      const macroItems   = result.extraMacroParams.map(i => `${i.key}=${i.value}`);
+      const normalItems  = result.normalParams.map(i => `${i.key}=${decodeSafe(i.value)}`);
+
+      const urlInfo = truncateUrl(result.rawUrl);
+      const urlDisplayId = `url-disp-${result.index}`;
+
+      const finalUrlCopyClass = result.passed ? "" : "";
+      const failNote = !result.passed
+        ? `<div class="final-url-fail-note">⚠ 검증 실패 — 참고용</div>` : "";
+
+      return `
+        <div class="result-card ${cardClass}" data-status="${result.passed ? 'pass' : 'fail'}">
+          <div class="result-header">
+            <h3 class="result-title">URL ${result.index} · ${escapeHtml(result.trackerName)}</h3>
+            <div class="status-badge ${statusClass}">${statusIcon} ${statusText}</div>
+          </div>
+
+          <div class="result-url-wrap">
+            <div class="result-url mono" id="${urlDisplayId}" data-full="${escapeHtml(result.rawUrl)}" data-short="${escapeHtml(urlInfo.short)}" data-expanded="false">
+              ${escapeHtml(urlInfo.truncated ? urlInfo.short : urlInfo.full)}
+            </div>
+            <div class="result-url-toggle">
+              ${urlInfo.truncated ? `<button class="url-toggle-btn" onclick="toggleUrl('${urlDisplayId}')">전체 보기</button>` : ""}
+              <button class="copy-url-btn" data-copy="${escapeHtml(result.rawUrl)}">원본 복사</button>
+            </div>
+          </div>
+
+          ${!result.isValidUrl ? `
+            <div class="panel">
+              <h4>오류</h4>
+              ${makeListHtml(result.errors, "오류 없음")}
+            </div>
+          ` : `
+            <div class="grid-2">
+              <div class="panel">
+                <h4>오류 / 경고</h4>
+                ${makeListHtml(errorItems, "오류 없음")}
+              </div>
+              <div class="panel">
+                <h4>중복 파라미터</h4>
+                ${makeListHtml(dupItems, "중복 없음")}
+              </div>
+            </div>
+
+            <div class="param-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>필수 파라미터</th>
+                    <th>기대값</th>
+                    <th>실제값</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${result.requiredCheckRows.map(row => `
+                    <tr class="${row.issue ? 'has-issue' : ''}">
+                      <td class="mono">${escapeHtml(row.key)}</td>
+                      <td class="mono">${escapeHtml(row.expectedValue)}</td>
+                      <td class="mono">${escapeHtml(row.actualValue)}</td>
+                      <td>
+                        <span class="${row.statusClass}">${escapeHtml(row.status)}</span>
+                        ${row.issue ? `<div class="error-detail">${escapeHtml(row.issue)}</div>` : ""}
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="grid-2" style="margin-top:12px;">
+              <div class="panel">
+                <h4>제거된 필수 파라미터</h4>
+                ${makeListHtml(removedItems, "제거 대상 없음")}
+              </div>
+              <div class="panel macro-panel">
+                <h4>추가 매크로 파라미터</h4>
+                <p class="macro-note">값에 <span class="mono">{}</span> 매크로 포함 — 최종 URL에서 자동 제외</p>
+                ${makeListHtml(macroItems, "추가 매크로 없음")}
+              </div>
+            </div>
+
+            <div class="panel" style="margin-bottom:12px;">
+              <h4>일반 파라미터</h4>
+              ${makeListHtml(normalItems, "일반 파라미터 없음")}
+            </div>
+
+            <div class="final-url-box">
+              <div class="final-url-top">
+                <h4 class="final-url-title">어드민 입력용 최종 URL</h4>
+                <button class="copy-btn" data-copy="${escapeHtml(result.finalUrl)}">URL 복사</button>
+              </div>
+              ${failNote}
+              <div class="final-url-text mono">${escapeHtml(result.finalUrl)}</div>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    // ─── Toggle URL expand ───
+    function toggleUrl(id) {
+      const el = document.getElementById(id);
+      const btn = el.nextElementSibling.querySelector(".url-toggle-btn");
+      if (!el || !btn) return;
+      const expanded = el.dataset.expanded === "true";
+      if (expanded) {
+        el.textContent = el.dataset.short;
+        el.dataset.expanded = "false";
+        btn.textContent = "전체 보기";
+      } else {
+        el.textContent = el.dataset.full;
+        el.dataset.expanded = "true";
+        btn.textContent = "접기";
+      }
+    }
+
+    // ─── Render results ───
+    function renderResults(validatedResults) {
+      const total = validatedResults.length;
+      const pass  = validatedResults.filter(r => r.passed).length;
+      const fail  = total - pass;
+      const macro = validatedResults.filter(r => r.extraMacroParams.length > 0).length;
+
+      totalCountEl.textContent = total;
+
+      passCountEl.textContent = pass;
+      passCountEl.className = "summary-value" + (pass > 0 ? " pass" : " zero");
+
+      failCountEl.textContent = fail;
+      failCountEl.className = "summary-value" + (fail > 0 ? " fail" : " zero");
+
+      macroCountEl.textContent = macro;
+      macroCountEl.className = "summary-value" + (macro === 0 ? " zero" : "");
+
+      results.innerHTML = validatedResults.map(renderResultCard).join("");
+      summaryCard.classList.remove("hidden");
+      hasResults = true;
+
+      applyFilter(currentFilter);
+      bindCopyButtons();
+    }
+
+    // ─── Filter ───
+    function applyFilter(filter) {
+      currentFilter = filter;
+      filterBtns.forEach(btn => {
+        btn.className = "filter-btn";
+        if (btn.dataset.filter === filter) {
+          if (filter === "all")  btn.classList.add("active-all");
+          if (filter === "pass") btn.classList.add("active-pass");
+          if (filter === "fail") btn.classList.add("active-fail");
+        }
+      });
+      document.querySelectorAll(".result-card").forEach(card => {
+        const status = card.dataset.status;
+        if (filter === "all" || filter === status) {
+          card.classList.remove("filtered-out");
+        } else {
+          card.classList.add("filtered-out");
+        }
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener("click", () => applyFilter(btn.dataset.filter));
+    });
+
+    // ─── Copy buttons ───
+    function bindCopyButtons() {
+      document.querySelectorAll("[data-copy]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const raw = btn.getAttribute("data-copy") || "";
+          const text = raw.replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
+          try {
+            await navigator.clipboard.writeText(text);
+            const orig = btn.textContent;
+            btn.textContent = "복사됨 ✓";
+            btn.classList.add("copied");
+            setTimeout(() => { btn.textContent = orig; btn.classList.remove("copied"); }, 1400);
+          } catch {
+            alert("복사에 실패했습니다. 직접 복사해 주세요.");
+          }
+        });
+      });
+    }
+
+    // ─── Validate handler ───
+    function handleValidate() {
+      const input = urlInput.value.split(/\n+/).map(l => l.trim()).filter(Boolean);
+      if (input.length === 0) {
+        urlInput.classList.add("input-error");
+        urlError.classList.add("visible");
+        urlInput.focus();
+        return;
+      }
+      urlInput.classList.remove("input-error");
+      urlError.classList.remove("visible");
+
+      const rule = getSelectedRule();
+      const validated = input.map((url, idx) => validateUrl(url, idx + 1, rule));
+      renderResults(validated);
+
+      summaryCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    urlInput.addEventListener("input", () => {
+      if (urlInput.value.trim()) {
+        urlInput.classList.remove("input-error");
+        urlError.classList.remove("visible");
+      }
+    });
+
+    validateBtn.addEventListener("click", handleValidate);
+
+    sampleBtn.addEventListener("click", () => {
+      const rule = getSelectedRule();
+      urlInput.value = rule.sampleUrls.join("\n");
+      urlInput.classList.remove("input-error");
+      urlError.classList.remove("visible");
+    });
+
+    clearBtn.addEventListener("click", () => {
+      urlInput.value = "";
+      results.innerHTML = "";
+      summaryCard.classList.add("hidden");
+      hasResults = false;
+      urlInput.classList.remove("input-error");
+      urlError.classList.remove("visible");
+    });
+
+    // ─── Tracker change confirm ───
+    trackerSelect.addEventListener("change", (e) => {
+      if (hasResults) {
+        pendingTrackerValue = e.target.value;
+        trackerSelect.value = prevTrackerValue; // 시각적으로 되돌림
+        confirmOverlay.classList.add("visible");
+      } else {
+        prevTrackerValue = e.target.value;
+        urlInput.value = "";
+        urlInput.classList.remove("input-error");
+        urlError.classList.remove("visible");
+        updateRulePreview();
+      }
+    });
+
+    confirmOk.addEventListener("click", () => {
+      confirmOverlay.classList.remove("visible");
+      if (pendingTrackerValue) {
+        trackerSelect.value = pendingTrackerValue;
+        prevTrackerValue = pendingTrackerValue;
+        pendingTrackerValue = null;
+      }
+      urlInput.value = "";
+      urlInput.classList.remove("input-error");
+      urlError.classList.remove("visible");
+      results.innerHTML = "";
+      summaryCard.classList.add("hidden");
+      hasResults = false;
+      currentFilter = "all";
+      filterBtns.forEach(btn => {
+        btn.className = "filter-btn";
+        if (btn.dataset.filter === "all") btn.classList.add("active-all");
+      });
+      updateRulePreview();
+    });
+
+    confirmCancel.addEventListener("click", () => {
+      trackerSelect.value = prevTrackerValue;
+      pendingTrackerValue = null;
+      confirmOverlay.classList.remove("visible");
+    });
+
+    confirmOverlay.addEventListener("click", (e) => {
+      if (e.target === confirmOverlay) {
+        confirmCancel.click();
+      }
+    });
+
+    // ─── Init ───
+    updateRulePreview();
+  </script>
+</body>
+</html>
