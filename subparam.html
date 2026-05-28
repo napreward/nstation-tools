@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>subparam 변환</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -286,7 +287,7 @@
 /* ════════════════════════════════════════
    CONFIG
 ════════════════════════════════════════ */
-const BASE_URL    = 'http://test.nstation.co.kr:11080/dec_sub?subparam=';
+const BASE_URL    = (location.protocol === 'https:' ? 'https' : 'http') + '://test.nstation.co.kr:11080/dec_sub?subparam=';
 const CONCURRENCY = 3;
 const TIMEOUT_MS  = 10000;
 // 출력 컬럼 순서 (subparam은 앞에 별도 고정)
@@ -768,4 +769,4 @@ document.getElementById('btnDlSample').addEventListener('click', () => {
 });
 </script>
 </body>
-</html>          
+</html>
