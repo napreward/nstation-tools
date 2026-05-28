@@ -207,7 +207,7 @@
 <div class="hero">
   <div class="hero-top">
     <span class="hero-title">subparam 변환</span>
-    <span class="hero-badge"><span class="hero-badge-ver">v1.1.0 ·</span><span class="hero-badge-name">제작: 이소정</span></span>
+    <span class="hero-badge"><span class="hero-badge-ver">v1.2.0 ·</span><span class="hero-badge-name">제작: 이소정</span></span>
   </div>
   <div class="hero-sub">subparam 값으로 캠페인 정보(adid · camp_id · channel_id · user_id 등)를 조회하고 CSV로 내보냅니다</div>
 </div>
@@ -223,7 +223,7 @@
   </div>
 </main>
 
-<footer>subparam 변환 · nstation · v1.0 · 제작: 이소정</footer>
+<footer>subparam 변환 · nstation · v1.2.0 · 제작: 이소정</footer>
 
 <!-- ═══ CSV 양식 예시 모달 ═══ -->
 <div class="modal-overlay" id="exModal">
@@ -749,6 +749,7 @@ function openModal() { exModal.style.display='flex'; }
 function closeModal() { exModal.style.display='none'; }
 
 document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalX').addEventListener('click', closeModal);
 exModal.addEventListener('click', e => { if(e.target===exModal) closeModal(); });
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 
@@ -767,4 +768,4 @@ document.getElementById('btnDlSample').addEventListener('click', () => {
 });
 </script>
 </body>
-</html>
+</html>          
