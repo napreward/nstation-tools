@@ -286,7 +286,7 @@
 /* ════════════════════════════════════════
    CONFIG
 ════════════════════════════════════════ */
-const BASE_URL    = (location.protocol === 'https:' ? 'https' : 'http') + '://test.nstation.co.kr:11080/dec_sub?subparam=';
+const BASE_URL    = location.protocol === 'https:' ? 'https://test.nstation.co.kr:11444/dec_sub?subparam=' : 'http://test.nstation.co.kr:11080/dec_sub?subparam=';
 const CONCURRENCY = 3;
 const TIMEOUT_MS  = 10000;
 // 출력 컬럼 순서 (subparam은 앞에 별도 고정)
