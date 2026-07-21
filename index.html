@@ -22,7 +22,10 @@
       flex-shrink: 0;
     }
     .top-tab {
-      padding: 10px 24px;
+      width: 200px;
+      text-align: center;
+      white-space: nowrap;
+      padding: 10px 16px;
       border: none;
       border-radius: 8px 8px 0 0;
       font-size: 15px;
@@ -52,11 +55,15 @@
 <body>
   <nav class="top-nav">
     <button class="top-tab active" id="tabIr" onclick="switchTab('ir')">🖼 이미지 자동 리사이저</button>
+    <button class="top-tab" id="tabAd" onclick="switchTab('ad')">🔐 광고주 계정</button>
     <button class="top-tab" id="tabSp" onclick="switchTab('sp')">🔍 subparam 변환</button>
     <button class="top-tab" id="tabTv" onclick="switchTab('tv')">🔗 트래킹 링크 검증</button>
   </nav>
   <div class="panel active" id="panelIr">
     <iframe src="resizer.html" title="이미지 자동 리사이저" allow="clipboard-write"></iframe>
+  </div>
+  <div class="panel" id="panelAd">
+    <iframe src="https://script.google.com/macros/s/AKfycbw9Na11j57J6TId3-hXBONDk6P-OqPQghP-iJ7DZz1lcRfPqSIFe2c56qfM9pgWZiPW/exec" title="광고주 계정" allow="clipboard-write"></iframe>
   </div>
   <div class="panel" id="panelTv">
     <div class="warn-banner">※ URL 직접 분석 필요 / 트래커 링크 검증은 숙련 후 사용 권장</div>
@@ -67,12 +74,11 @@
   </div>
   <script>
     function switchTab(name) {
-      document.getElementById('panelTv').classList.toggle('active', name === 'tv');
-      document.getElementById('tabTv').classList.toggle('active', name === 'tv');
-      document.getElementById('panelIr').classList.toggle('active', name === 'ir');
-      document.getElementById('panelSp').classList.toggle('active', name === 'sp');
-      document.getElementById('tabIr').classList.toggle('active', name === 'ir');
-      document.getElementById('tabSp').classList.toggle('active', name === 'sp');
+      document.querySelectorAll('.top-tab').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+      var cap = name.charAt(0).toUpperCase() + name.slice(1);
+      document.getElementById('tab' + cap).classList.add('active');
+      document.getElementById('panel' + cap).classList.add('active');
     }
   </script>
 </body>
