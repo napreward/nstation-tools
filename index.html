@@ -163,43 +163,28 @@
       armAutoHide();
     }
 
+    // 호출 대상 (원래 8080 / 크롬 정책상 앞으로 4430 예정 → 바꿀 땐 아래 두 줄만 수정)
+    var CALL_PROTO = 'http';   // 8080이면 'http', 4430이면 'https'
+    var CALL_PORT = 8080;      // 4430으로 바꿀 땐 → 'https', 4430
+
     function updateCamps() {
       var ips = ['50', '51', '52', '53'];
-      var btn = document.getElementById('btnUpdate');
-      var orig = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '⏳ 요청 전송 중...';
-      closeStatus();
-
-      // 4개 서버에 동시에 요청 전송 (fire-and-forget).
-      // 요청은 확실히 나가고, 서버가 알아서 약 5~6분 처리함.
-      // no-cors라 완료/성공 여부는 못 읽으므로 "요청이 나갔는지"만 판단 → 버튼이 멈추지 않음.
-      var t0 = Date.now();
-      var blocked = []; // 3초 내 즉시 실패 = 요청이 안 나감(차단/거부)
+      // [검증용] 각 서버 URL을 새 탭(팝업)으로 열어 → 실제 응답(1=성공 / 0=실패)을 눈으로 확인
+      // 팝업(페이지 이동)은 크롬 mixed-content 차단을 안 받으므로 http여도 열림.
+      var blocked = false;
       ips.forEach(function (n) {
-        var url = 'http://183.110.238.' + n + ':8080/cmd?update_camp';
-        fetch(url, { mode: 'no-cors', cache: 'no-store' })
-          .catch(function () {
-            if (Date.now() - t0 < 3000) { blocked.push(n); }
-          });
+        var url = CALL_PROTO + '://183.110.238.' + n + ':' + CALL_PORT + '/cmd?update_camp';
+        var w = window.open(url, '_blank');
+        if (!w) { blocked = true; }
       });
 
-      setTimeout(function () {
-        btn.disabled = false;
-        btn.innerHTML = orig;
-        if (blocked.length === ips.length) {
-          showStatus('err', '⚠️ 요청이 전송되지 않았어요',
-            '크롬 "안전하지 않은 콘텐츠" 허용을 확인하세요.<br>' +
-            '(주소창 왼쪽 아이콘 → 사이트 설정 → 허용 → 새로고침)');
-        } else if (blocked.length > 0) {
-          showStatus('err', '⚠️ 일부 서버에 요청이 안 갔어요',
-            blocked.map(function (x) { return '· 183.110.238.' + x; }).join('<br>') +
-            '<br>개발팀에 문의하세요.');
-        } else {
-          showStatus('ok', '✅ 업데이트 요청 전송됨',
-            '서버에서 처리 중이에요. 화면 반영까지 약 5~6분 걸려요.');
-        }
-      }, 3500);
+      if (blocked) {
+        showStatus('err', '⚠️ 팝업이 차단됐어요',
+          '주소창 오른쪽 팝업 아이콘 → "항상 허용" 으로 바꾼 뒤 다시 눌러주세요.');
+      } else {
+        showStatus('ok', '✅ 4개 서버 탭 열림',
+          '각 탭에서 응답값(1=성공 / 0=실패)을 확인하세요.');
+      }
     }
   </script>
 </body>
