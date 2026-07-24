@@ -68,24 +68,32 @@
       padding: 8px 20px;
       flex-shrink: 0;
     }
-    /* 오른쪽 아래 안내 알림 */
-    .up-toast {
+    /* 오른쪽 아래 결과 알림 (자동으로 안 사라짐 — × 눌러야 닫힘) */
+    .status-card {
       position: fixed;
       right: 20px;
       bottom: 20px;
-      max-width: 300px;
-      background: #1e1e2e;
-      color: #eee;
-      padding: 14px 18px;
+      max-width: 360px;
+      padding: 16px 46px 14px 18px;
       border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.7;
+      font-size: 14px;
+      line-height: 1.6;
       box-shadow: 0 6px 24px rgba(0,0,0,0.35);
       display: none;
       z-index: 9999;
     }
-    .up-toast.show { display: block; }
-    .up-toast .up-toast-title { font-weight: 700; margin-bottom: 4px; }
+    .status-card.show { display: block; }
+    .status-card.ok  { background: #12352f; color: #d7f2ee; border-left: 4px solid #2f6a60; }
+    .status-card.err { background: #3a1414; color: #ffd9d5; border-left: 4px solid #b3453b; }
+    .status-card.wait{ background: #23233a; color: #dfe3f0; border-left: 4px solid #5b6bb0; }
+    .status-card .st-title { font-weight: 700; margin-bottom: 4px; }
+    .status-card .st-time { font-size: 12px; opacity: 0.7; margin-top: 8px; }
+    .status-card .st-close {
+      position: absolute; top: 8px; right: 10px;
+      background: none; border: none; color: inherit;
+      font-size: 20px; line-height: 1; cursor: pointer; opacity: 0.6;
+    }
+    .status-card .st-close:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -110,7 +118,10 @@
     <iframe src="subparam.html" title="subparam 변환"></iframe>
   </div>
 
-  <div id="upToast" class="up-toast"></div>
+  <div id="statusCard" class="status-card">
+    <button class="st-close" onclick="closeStatus()" title="닫기">×</button>
+    <div id="statusBody"></div>
+  </div>
 
   <script>
     function switchTab(name) {
@@ -121,41 +132,77 @@
       document.getElementById('panel' + cap).classList.add('active');
     }
 
+    var statusHideTimer = null;
+
+    function closeStatus() {
+      clearTimeout(statusHideTimer);
+      document.getElementById('statusCard').classList.remove('show');
+    }
+
+    // 사용자가 페이지를 "실제로 보고 있을 때만" 카운트다운 → 보고 나면 자동으로 닫힘.
+    // 자리를 비운 동안(탭 숨김 / 창 포커스 아웃)엔 안 사라지고 그대로 남아있음.
+    function armAutoHide() {
+      clearTimeout(statusHideTimer);
+      var card = document.getElementById('statusCard');
+      if (!card.classList.contains('show')) return;
+      if (document.visibilityState === 'visible' && document.hasFocus()) {
+        statusHideTimer = setTimeout(closeStatus, 7000); // 7초 보고 나면 사라짐
+      }
+    }
+    document.addEventListener('visibilitychange', armAutoHide); // 탭 다시 보이면
+    window.addEventListener('focus', armAutoHide);              // 창 다시 포커스되면
+    window.addEventListener('blur', function () { clearTimeout(statusHideTimer); }); // 자리 비우면 정지
+
+    function showStatus(kind, title, sub) {
+      var now = new Date();
+      var hh = ('0' + now.getHours()).slice(-2);
+      var mm = ('0' + now.getMinutes()).slice(-2);
+      document.getElementById('statusBody').innerHTML =
+        '<div class="st-title">' + title + '</div>' +
+        (sub ? sub : '') +
+        '<div class="st-time">🕒 ' + hh + ':' + mm + ' 전송 · 보시면 잠시 후 자동으로 닫혀요</div>';
+      document.getElementById('statusCard').className = 'status-card show ' + kind;
+      armAutoHide();
+    }
+
     function updateCamps() {
       var ips = ['50', '51', '52', '53'];
       var btn = document.getElementById('btnUpdate');
       var orig = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = '⏳ 업데이트 중...';
+      btn.innerHTML = '⏳ 요청 전송 중...';
+      showStatus('wait', '⏳ 업데이트 요청 전송 중...', '잠시만요.');
 
-      // 탭 안 열고 백그라운드로 4개 서버 호출 → 접속 실패 서버는 알럿
-      var dead = [];
-      var checked = 0;
+      // 4개 서버에 동시에 요청 전송 (처리는 서버가 백그라운드로 약 3분간 진행)
+      // 결과는 no-cors라 읽을 수 없으므로 "요청이 나갔는지"만 판단한다.
+      var t0 = Date.now();
+      var blocked = []; // 3초 안에 즉시 실패 = 차단(크롬 설정)/거부로 간주
       ips.forEach(function (n) {
         var url = 'http://183.110.238.' + n + ':8080/cmd?update_camp';
-        var ctrl = new AbortController();
-        var timer = setTimeout(function () { ctrl.abort(); }, 6000); // 6초 내 응답 없으면 실패로 간주
-        fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal })
-          .catch(function () { dead.push(n); })
-          .finally(function () {
-            clearTimeout(timer);
-            checked++;
-            if (checked === ips.length) {
-              btn.disabled = false;
-              btn.innerHTML = orig;
-              if (dead.length > 0) {
-                var list = dead.map(function (x) { return '  · 183.110.238.' + x; }).join('\n');
-                alert('⚠️ 접속 실패 서버가 있어요!\n\n' + list +
-                  '\n\n개발팀에 문의하세요.');
-              } else {
-                var t = document.getElementById('upToast');
-                t.classList.add('show');
-                t.innerHTML = '<div class="up-toast-title">✅ 4개 서버 업데이트 완료</div>';
-                setTimeout(function () { t.classList.remove('show'); }, 3000);
-              }
-            }
+        fetch(url, { mode: 'no-cors', cache: 'no-store' })
+          .catch(function () {
+            if (Date.now() - t0 < 3000) { blocked.push(n); }
           });
       });
+
+      setTimeout(function () {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        if (blocked.length === ips.length) {
+          // 4대 전부 즉시 실패 → 요청이 아예 안 나감 (대개 크롬 설정 문제)
+          showStatus('err', '⚠️ 요청이 전송되지 않았어요',
+            '크롬 "안전하지 않은 콘텐츠" 허용을 확인하세요.<br>' +
+            '(주소창 왼쪽 아이콘 → 사이트 설정 → 허용 → 새로고침)');
+        } else if (blocked.length > 0) {
+          // 일부만 실패
+          showStatus('err', '⚠️ 일부 서버에 요청이 안 갔어요',
+            blocked.map(function (x) { return '· 183.110.238.' + x; }).join('<br>') +
+            '<br>개발팀에 문의하세요.');
+        } else {
+          showStatus('ok', '✅ 업데이트 요청 전송 완료',
+            '화면 반영까지 약 3분 걸려요.');
+        }
+      }, 3500);
     }
   </script>
 </body>
