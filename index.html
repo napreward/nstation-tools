@@ -16,6 +16,7 @@
     }
     .top-nav {
       display: flex;
+      align-items: flex-end;
       gap: 4px;
       padding: 10px 16px 0;
       background: #1e1e2e;
@@ -38,6 +39,23 @@
     }
     .top-tab:hover { background: #3a3a55; color: #ddd; }
     .top-tab.active { background: #f0f0f0; color: #1e1e2e; }
+    /* 오른쪽 끝 업데이트 버튼 */
+    .nav-update {
+      margin-left: auto;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      padding: 9px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Malgun Gothic', sans-serif;
+      cursor: pointer;
+      color: #dbf1ec;
+      background: #2f6a60;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .nav-update:hover { background: #276057; }
     .panel { display: none; flex: 1; overflow: hidden; }
     .panel.active { display: flex; flex-direction: column; }
     .panel iframe { width: 100%; flex: 1; border: none; }
@@ -50,6 +68,24 @@
       padding: 8px 20px;
       flex-shrink: 0;
     }
+    /* 오른쪽 아래 안내 알림 */
+    .up-toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      max-width: 300px;
+      background: #1e1e2e;
+      color: #eee;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+      display: none;
+      z-index: 9999;
+    }
+    .up-toast.show { display: block; }
+    .up-toast .up-toast-title { font-weight: 700; margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -58,6 +94,7 @@
     <button class="top-tab" id="tabAd" onclick="switchTab('ad')">🔐 광고주 계정</button>
     <button class="top-tab" id="tabSp" onclick="switchTab('sp')">🔍 subparam 변환</button>
     <button class="top-tab" id="tabTv" onclick="switchTab('tv')">🔗 트래킹 링크 검증</button>
+    <button class="nav-update" id="btnUpdate" onclick="updateCamps()">🔄 4개 서버 업데이트</button>
   </nav>
   <div class="panel active" id="panelIr">
     <iframe src="resizer.html" title="이미지 자동 리사이저" allow="clipboard-write"></iframe>
@@ -72,6 +109,9 @@
   <div class="panel" id="panelSp">
     <iframe src="subparam.html" title="subparam 변환"></iframe>
   </div>
+
+  <div id="upToast" class="up-toast"></div>
+
   <script>
     function switchTab(name) {
       document.querySelectorAll('.top-tab').forEach(function (b) { b.classList.remove('active'); });
@@ -79,6 +119,43 @@
       var cap = name.charAt(0).toUpperCase() + name.slice(1);
       document.getElementById('tab' + cap).classList.add('active');
       document.getElementById('panel' + cap).classList.add('active');
+    }
+
+    function updateCamps() {
+      var ips = ['50', '51', '52', '53'];
+      var btn = document.getElementById('btnUpdate');
+      var orig = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '⏳ 업데이트 중...';
+
+      // 탭 안 열고 백그라운드로 4개 서버 호출 → 접속 실패 서버는 알럿
+      var dead = [];
+      var checked = 0;
+      ips.forEach(function (n) {
+        var url = 'https://183.110.238.' + n + ':4430/cmd?update_camp';
+        var ctrl = new AbortController();
+        var timer = setTimeout(function () { ctrl.abort(); }, 6000); // 6초 내 응답 없으면 실패로 간주
+        fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal })
+          .catch(function () { dead.push(n); })
+          .finally(function () {
+            clearTimeout(timer);
+            checked++;
+            if (checked === ips.length) {
+              btn.disabled = false;
+              btn.innerHTML = orig;
+              if (dead.length > 0) {
+                var list = dead.map(function (x) { return '  · 183.110.238.' + x; }).join('\n');
+                alert('⚠️ 접속 실패 서버가 있어요!\n\n' + list +
+                  '\n\n개발팀에 문의하세요.');
+              } else {
+                var t = document.getElementById('upToast');
+                t.classList.add('show');
+                t.innerHTML = '<div class="up-toast-title">✅ 4개 서버 업데이트 완료</div>';
+                setTimeout(function () { t.classList.remove('show'); }, 3000);
+              }
+            }
+          });
+      });
     }
   </script>
 </body>
