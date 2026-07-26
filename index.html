@@ -164,8 +164,8 @@
     }
 
     // 호출 대상 (원래 8080 / 크롬 정책상 앞으로 4430 예정 → 바꿀 땐 아래 두 줄만 수정)
-    var CALL_PROTO = 'http';   // 8080이면 'http', 4430이면 'https'
-    var CALL_PORT = 8080;      // 4430으로 바꿀 땐 → 'https', 4430
+    var CALL_PROTO = 'https';  // 8080이면 'http', 4430이면 'https'
+    var CALL_PORT = 4430;      // 8080으로 되돌릴 땐 → 'http', 8080
 
     function updateCamps() {
       var ips = ['50', '51', '52', '53'];
@@ -182,8 +182,8 @@
         showStatus('err', '⚠️ 팝업이 차단됐어요',
           '주소창 오른쪽 팝업 아이콘 → "항상 허용" 으로 바꾼 뒤 다시 눌러주세요.');
       } else {
-        showStatus('ok', '✅ 4개 서버 탭 열림',
-          '각 탭에서 응답값(1=성공 / 0=실패)을 확인하세요.');
+        showStatus('ok', '✅ 4개 서버 창을 열었어요',
+          '열린 창(50·51·52·53)을 확인하세요.');
       }
     }
   </script>
