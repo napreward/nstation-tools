@@ -164,8 +164,8 @@
     }
 
     // 호출 대상 (원래 8080 / 크롬 정책상 앞으로 4430 예정 → 바꿀 땐 아래 두 줄만 수정)
-    var CALL_PROTO = 'https';  // 8080이면 'http', 4430이면 'https'
-    var CALL_PORT = 4430;      // 8080으로 되돌릴 땐 → 'http', 8080
+    var CALL_PROTO = 'http';   // 8080이면 'http', 4430이면 'https'
+    var CALL_PORT = 8080;      // 4430으로 바꿀 땐 → 'https', 4430
 
     function updateCamps() {
       var ips = ['50', '51', '52', '53'];
