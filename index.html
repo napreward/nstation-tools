@@ -16,6 +16,7 @@
     }
     .top-nav {
       display: flex;
+      overflow-x: auto;
       align-items: flex-end;
       gap: 4px;
       padding: 10px 16px 0;
@@ -23,7 +24,8 @@
       flex-shrink: 0;
     }
     .top-tab {
-      width: 170px;
+      min-width: 150px;
+      flex-shrink: 0;
       text-align: center;
       white-space: nowrap;
       padding: 9px 14px;
@@ -101,6 +103,8 @@
     <button class="top-tab active" id="tabIr" onclick="switchTab('ir')">🖼 이미지 자동 리사이저</button>
     <button class="top-tab" id="tabAd" onclick="switchTab('ad')">🔐 광고주 계정</button>
     <button class="top-tab" id="tabSp" onclick="switchTab('sp')">🔍 subparam 변환</button>
+    <button class="top-tab" id="tabCs" onclick="switchTab('cs')">📋 CS 업로드 양식</button>
+    <button class="top-tab" id="tabBm" onclick="switchTab('bm')">🔖 스크랩 북마클릿</button>
     <button class="top-tab" id="tabTv" onclick="switchTab('tv')">🔗 트래킹 링크 검증</button>
     <button class="nav-update" id="btnUpdate" onclick="updateCamps()">🔄 4개 서버 업데이트</button>
   </nav>
@@ -116,6 +120,13 @@
   </div>
   <div class="panel" id="panelSp">
     <iframe src="subparam.html" title="subparam 변환"></iframe>
+  </div>
+
+  <div class="panel" id="panelCs">
+    <iframe src="cs-upload.html" title="CS 업로드 양식" allow="clipboard-write"></iframe>
+  </div>
+  <div class="panel" id="panelBm">
+    <iframe src="scrap-bookmarklet.html" title="스크랩 북마클릿" allow="clipboard-write"></iframe>
   </div>
 
   <div id="statusCard" class="status-card">
