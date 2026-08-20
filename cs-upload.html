@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>광고주 양식 변환</title>
+<style>
+  :root{
+    --page:#F0F2F7; --panel:#FFFFFF; --line:#E5E7EB; --line2:#D1D5DB;
+    --ink:#111827; --tx:#1F2937; --tx2:#6B7280; --tx3:#9CA3AF;
+    --soft:#F3F4F6; --soft2:#F9FAFB; --dash:#FAFAFA;
+    --blue:#1D4ED8; --blue-bg:#EFF6FF; --blue-bd:#BFDBFE;
+    --nav:#1E1E2E;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box }
+  body{
+    background:var(--page); color:var(--tx);
+    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR","Segoe UI","Malgun Gothic",sans-serif;
+    font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1080px; margin:0 auto; padding:22px 20px 44px }
+
+  /* ── 페이지 헤더 (resizer.html 과 동일 규격) ── */
+  .page-header{ display:flex; align-items:flex-start; gap:16px; margin-bottom:18px }
+  h1{ font-size:26px; font-weight:800; color:var(--ink) }
+  .sub{ font-size:13px; color:var(--tx2); margin-top:2px }
+  .ver{ margin-left:auto; flex:none; background:var(--nav); color:#C8C8D6;
+        border-radius:999px; padding:6px 14px; font-size:11.5px; font-weight:700 }
+  .ver b{ color:#fff; font-weight:800 }
+
+  /* ── 양식 선택 (세그먼트) ── */
+  .seg{ display:inline-flex; gap:4px; background:var(--soft); border:1px solid var(--line);
+        border-radius:13px; padding:4px; margin-bottom:16px }
+  .seg button{ border:0; background:transparent; border-radius:9px; padding:8px 18px;
+    font:700 13.5px/1.4 inherit; font-family:inherit; color:var(--tx2); cursor:pointer;
+    display:flex; align-items:center; gap:7px; transition:.12s }
+  .seg button:hover{ color:var(--ink) }
+  .seg button.on{ background:var(--ink); color:#fff }
+  .seg .ext{ font-size:10px; font-weight:800; letter-spacing:.3px; padding:1px 6px;
+    border-radius:5px; background:var(--line); color:var(--tx2) }
+  .seg button.on .ext{ background:rgba(255,255,255,.18); color:#E5E7EB }
+
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:20px;
+    padding:22px 24px; box-shadow:0 2px 12px rgba(0,0,0,.05); margin-bottom:16px }
+  .panel h2{ font-size:18px; font-weight:800; color:var(--ink); margin-bottom:14px }
+  .panel h2 .cnt{ font-size:12.5px; font-weight:500; color:var(--tx2); margin-left:8px }
+
+  #drop{ background:var(--dash); border:2px dashed var(--line2); border-radius:14px;
+    padding:38px 20px; text-align:center; cursor:pointer; transition:.15s }
+  #drop:hover,#drop.hot{ border-color:var(--blue); background:var(--blue-bg) }
+  #drop .big{ font-size:15px; font-weight:700; color:var(--ink); margin-bottom:5px }
+  #drop .small{ font-size:12.5px; color:var(--tx2) }
+  #drop .ico{ font-size:22px; display:block; margin-bottom:8px; opacity:.55 }
+  input[type=file]{ display:none }
+
+  .msg{ display:none; margin-top:14px; padding:11px 15px; border-radius:11px;
+        font-size:13px; font-weight:600; border:1px solid transparent }
+  .msg.ok  { display:block; background:#ECFDF5; border-color:#A7F3D0; color:#047857 }
+  .msg.warn{ display:block; background:#FFFBEB; border-color:#FDE68A; color:#B45309 }
+  .msg.err { display:block; background:#FEF2F2; border-color:#FECACA; color:#B91C1C }
+
+  .scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:12px }
+  table{ border-collapse:collapse; width:100%; font-size:12.5px }
+  th,td{ padding:8px 11px; text-align:left; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; max-width:230px; border-bottom:1px solid var(--line) }
+  th{ background:var(--soft2); font-weight:700; font-size:11.5px; color:var(--tx2); letter-spacing:.2px }
+  th.key{ background:var(--blue-bg); color:var(--blue) }
+  tr:last-child td{ border-bottom:0 }
+  td:empty::after{ content:"·"; color:#D1D5DB }
+
+  .row{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin-top:16px }
+  .btn{ border:0; border-radius:11px; padding:10px 16px; font:700 14px/1.4 inherit;
+    font-family:inherit; cursor:pointer; transition:.12s }
+  .btn.primary{ background:var(--ink); color:#fff }
+  .btn.primary:hover{ background:#000 }
+  .btn.ghost{ background:transparent; color:var(--tx2); border:1px solid var(--line) }
+  .btn.ghost:hover{ background:var(--soft2); color:var(--tx) }
+
+  .rules{ margin:0; padding-left:19px; color:var(--tx2); font-size:12.8px }
+  .rules li{ margin:5px 0 }
+  code{ background:var(--soft); color:#374151; border:1px solid var(--line); border-radius:6px;
+    padding:1px 7px; font-size:11.5px; font-weight:700;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace }
+  .foot{ font-size:12px; color:var(--tx3); text-align:center; margin-top:20px }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header">
+    <div>
+      <h1>광고주 양식 변환</h1>
+      <p class="sub">유저문의리스트 CSV → 광고주별 업로드 양식</p>
+    </div>
+    <span class="ver"><b>v1.0</b> · 제작: 오예린</span>
+  </div>
+
+  <div class="seg" id="tabs"></div>
+
+  <div class="panel">
+    <h2>파일 업로드</h2>
+    <div id="drop">
+      <span class="ico">⬆</span>
+      <div class="big">CSV 파일을 여기에 끌어다 놓으세요</div>
+      <div class="small">또는 클릭해서 선택 · 여러 개 한꺼번에 올려도 됩니다</div>
+    </div>
+    <input type="file" id="file" accept=".csv,text/csv" multiple>
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <div class="panel" id="preview-card" style="display:none">
+    <h2>변환 결과 미리보기 <span class="cnt" id="cnt"></span></h2>
+    <div class="scroll"><table id="preview"></table></div>
+    <div class="row">
+      <button class="btn primary" id="dl">변환된 CSV 다운로드</button>
+      <button class="btn ghost" id="reset">다시 하기</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2 id="rule-title">적용되는 규칙</h2>
+    <ul class="rules" id="rules"></ul>
+  </div>
+
+  <p class="foot">파일은 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.</p>
+</div>
+
+<script>
+
+
+/* ===================== 양식 정의 ===================== */
+/* src: 필요한 원본 컬럼 / get(r): 값 생성 함수 (r = {컬럼명: 값}, 이미 ="" 벗겨진 상태) */
+
+const FORMATS = {
+  f1: {
+    label: "Tyr",
+    desc: "Support Ticket Template (19컬럼) · CSV 출력",
+    suffix: "_Tyr",
+    out: "csv",
+    filter: { col: "광고주", prefix: "DSP_Tyrads" },
+    cols: ["Request Date","Click Date","Event Name (English)","Publisher ID",
+           "Event ID","App Event ID","Campaign ID","Payout",
+           "Publisher User Name","Publisher User Email","Publisher Click ID",
+           "Publisher User ID","Transaction ID","Order ID","Game Player ID",
+           "Device ID","Screenshot URL","Feedback","Remarks"],
+    map: {
+      "App Event ID":      { src:["이벤트 명"],       get:r => r["이벤트 명"] },
+      "Campaign ID":       { src:["캠페인 ID(수집)"], get:r => r["캠페인 ID(수집)"] },
+      "Publisher User ID": { src:["유저 정보"],       get:r => r["유저 정보"].replace(/\+/g," ") }
+    },
+    rules: [
+      "<code>광고주</code> 가 <code>DSP_Tyrads</code> 로 시작하는 행만 추출 (나머지 행은 제외)",
+      "<code>이벤트 명</code> → <code>App Event ID</code>",
+      "<code>캠페인 ID(수집)</code> → <code>Campaign ID</code>",
+      "<code>유저 정보</code> → <code>Publisher User ID</code> (값의 <code>+</code> 는 띄어쓰기로 변환)",
+      "나머지 16개 컬럼은 템플릿 순서를 유지한 채 공란",
+      "출력은 <code>.csv</code> 파일 · UTF-8 BOM (엑셀에서 바로 열림)"
+    ]
+  },
+
+  f2: {
+    label: "TNK",
+    desc: "PID / APP ID / ADID (7컬럼) · 엑셀(xlsx) 출력",
+    suffix: "_TNK",
+    out: "xlsx",
+    filter: { col: "광고주", prefix: "DSP_TNK" },
+    cols: ["PID","APP ID(필수)","ADID/IDFA","MD_USER_NM","유저정보","스크린샷","비고"],
+    map: {
+      "APP ID(필수)": { src:["캠페인 ID(수집)"], get:r => r["캠페인 ID(수집)"] },
+      "ADID/IDFA":    { src:["ADID"],            get:r => r["ADID"] },
+      "유저정보":      { src:["성함","연락처"],
+                        get:r => [r["성함"], r["연락처"]].filter(v => v !== "").join("/") },
+      "비고":          { src:["No."],             get:r => r["No."] }
+    },
+    numericCols: ["APP ID(필수)", "비고"],   // 엑셀에서 숫자 셀로 기록
+    rules: [
+      "<code>광고주</code> 가 <code>DSP_TNK</code> 로 시작하는 행만 추출 (나머지 행은 제외)",
+      "<code>캠페인 ID(수집)</code> → <code>APP ID(필수)</code>",
+      "<code>ADID</code> → <code>ADID/IDFA</code>",
+      "<code>성함</code> + <code>연락처</code> → <code>유저정보</code> (예: 홍길동/010-1234-5678)",
+      "<code>No.</code> → <code>비고</code>",
+      "<code>PID</code>, <code>MD_USER_NM</code>, <code>스크린샷</code> 은 공란 (스크린샷은 어드민에서 직접 업로드)",
+      "출력은 <code>.xlsx</code> 파일 · <code>APP ID</code>·<code>비고</code> 는 숫자 셀, 나머지는 텍스트 셀"
+    ]
+  }
+};
+
+const COMMON_RULES = [
+  '엑셀 텍스트강제 표기 <code>="4141"</code> 는 <code>4141</code> 로 정리',
+  "입력 인코딩(CP949 / UTF-8)은 자동 판별"
+];
+
+let curFmt = "f1";
+
+/* ===================== 유틸 ===================== */
+function parseCSV(text){
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){
+      if (c === '"'){ if (text[i+1] === '"'){ cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else {
+      if (c === '"') q = true;
+      else if (c === ','){ row.push(cell); cell = ""; }
+      else if (c === '\r'){ /* skip */ }
+      else if (c === '\n'){ row.push(cell); rows.push(row); row = []; cell = ""; }
+      else cell += c;
+    }
+  }
+  if (cell !== "" || row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(v => v.trim() !== ""));
+}
+
+function decode(buf){
+  const b = new Uint8Array(buf);
+  if (b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) return new TextDecoder("utf-8").decode(buf);
+  try { return new TextDecoder("utf-8", {fatal:true}).decode(buf); }
+  catch(e){ return new TextDecoder("euc-kr").decode(buf); }   // CP949
+}
+
+// 엑셀 텍스트강제 표기 ="4141" -> 4141
+function unwrapExcel(v){
+  let p = (v ?? "").trim();
+  while (/^=\s*(["'])[\s\S]*\1$/.test(p)) p = p.replace(/^=\s*(["'])([\s\S]*)\1$/, "$2").trim();
+  return p;
+}
+
+const csvEscape = v => {
+  v = v == null ? "" : String(v);
+  return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v;
+};
+
+/* ===================== XLSX 생성기 (외부 라이브러리 없음) =====================
+   ZIP(무압축 store) + 최소 SpreadsheetML 파트로 .xlsx 를 직접 만든다. */
+
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++){
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(bytes){
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+const utf8 = s => new TextEncoder().encode(s);
+
+function zipStore(entries){   // entries: [{name, data:Uint8Array}]
+  const d = new Date();
+  const dosTime = ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1)) & 0xFFFF;
+  const dosDate = (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xFFFF;
+
+  const locals = [], centrals = [];
+  let offset = 0;
+
+  for (const e of entries){
+    const name = utf8(e.name), crc = crc32(e.data), len = e.data.length;
+
+    const lh = new Uint8Array(30 + name.length);
+    const lv = new DataView(lh.buffer);
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true); lv.setUint16(6, 0x0800, true); lv.setUint16(8, 0, true);
+    lv.setUint16(10, dosTime, true); lv.setUint16(12, dosDate, true);
+    lv.setUint32(14, crc, true); lv.setUint32(18, len, true); lv.setUint32(22, len, true);
+    lv.setUint16(26, name.length, true); lv.setUint16(28, 0, true);
+    lh.set(name, 30);
+    locals.push(lh, e.data);
+
+    const ch = new Uint8Array(46 + name.length);
+    const cv = new DataView(ch.buffer);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true); cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0x0800, true); cv.setUint16(10, 0, true);
+    cv.setUint16(12, dosTime, true); cv.setUint16(14, dosDate, true);
+    cv.setUint32(16, crc, true); cv.setUint32(20, len, true); cv.setUint32(24, len, true);
+    cv.setUint16(28, name.length, true);
+    cv.setUint32(42, offset, true);
+    ch.set(name, 46);
+    centrals.push(ch);
+
+    offset += lh.length + len;
+  }
+
+  const cdSize = centrals.reduce((a, c) => a + c.length, 0);
+  const eocd = new Uint8Array(22);
+  const ev = new DataView(eocd.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, entries.length, true); ev.setUint16(10, entries.length, true);
+  ev.setUint32(12, cdSize, true); ev.setUint32(16, offset, true);
+
+  const parts = [...locals, ...centrals, eocd];
+  const total = parts.reduce((a, p) => a + p.length, 0);
+  const out = new Uint8Array(total);
+  let p = 0;
+  for (const b of parts){ out.set(b, p); p += b.length; }
+  return out;
+}
+
+const xmlEsc = s => String(s ?? "")
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&apos;")
+  .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,"");   // 엑셀이 거부하는 제어문자 제거
+
+function colRef(n){   // 0 -> A, 26 -> AA
+  let s = "";
+  n += 1;
+  while (n > 0){ const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = (n - r - 1) / 26; }
+  return s;
+}
+
+// 순수 정수/소수만 숫자 셀로. 앞자리 0, 15자리 초과, 부호/기호 섞인 값은 텍스트 유지
+const isNumeric = v => /^-?(0|[1-9]\d*)(\.\d+)?$/.test(v) && v.replace(/[-.]/g,"").length <= 15;
+
+function buildXlsx(cols, rows, numericCols){
+  const numSet = new Set(numericCols || []);
+  const xmlRows = [];
+
+  xmlRows.push('<row r="1">' + cols.map((c,i) =>
+    `<c r="${colRef(i)}1" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(c)}</t></is></c>`
+  ).join("") + '</row>');
+
+  rows.forEach((r, ri) => {
+    const n = ri + 2;
+    const cells = cols.map((c, i) => {
+      const v = r[c] ?? "";
+      if (v === "") return "";
+      const ref = colRef(i) + n;
+      return (numSet.has(c) && isNumeric(v))
+        ? `<c r="${ref}"><v>${v}</v></c>`
+        : `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+    }).join("");
+    xmlRows.push(`<row r="${n}">${cells}</row>`);
+  });
+
+  const P = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  const files = [
+    { name: "[Content_Types].xml", data: utf8(P +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' +
+      '</Types>') },
+    { name: "_rels/.rels", data: utf8(P +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+      '</Relationships>') },
+    { name: "xl/workbook.xml", data: utf8(P +
+      '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
+      'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+      '<sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>') },
+    { name: "xl/_rels/workbook.xml.rels", data: utf8(P +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' +
+      '</Relationships>') },
+    { name: "xl/worksheets/sheet1.xml", data: utf8(P +
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+      `<sheetData>${xmlRows.join("")}</sheetData></worksheet>`) },
+  ];
+  return zipStore(files);
+}
+
+/* ===================== 변환 ===================== */
+function convert(text, fmtKey){
+  const F = FORMATS[fmtKey];
+  const rows = parseCSV(text);
+  if (rows.length < 2) throw new Error("데이터 행이 없습니다.");
+  const header = rows[0].map(h => h.replace(/^﻿/,"").trim());
+
+  const need = [...new Set([
+    ...Object.values(F.map).flatMap(m => m.src),
+    ...(F.filter ? [F.filter.col] : [])
+  ])];
+  const miss = need.filter(c => header.indexOf(c) === -1);
+  if (miss.length) throw new Error(`입력 파일에 다음 컬럼이 없습니다 → ${miss.join(", ")}`);
+
+  const pos = {}; need.forEach(c => pos[c] = header.indexOf(c));
+  const pre = F.filter ? F.filter.prefix.toLowerCase() : null;
+
+  const out = [];
+  let total = 0, skipped = 0;
+
+  for (const raw of rows.slice(1)){
+    total++;
+    const src = {};
+    need.forEach(c => src[c] = unwrapExcel(raw[pos[c]]));
+
+    if (pre && !src[F.filter.col].toLowerCase().startsWith(pre)){ skipped++; continue; }
+
+    const o = {};
+    for (const c of F.cols) o[c] = (c in F.map) ? F.map[c].get(src) : "";
+    out.push(o);
+  }
+  return { rows: out, total, skipped };
+}
+
+/* ===================== UI ===================== */
+const $ = s => document.querySelector(s);
+const drop = $("#drop"), fileInput = $("#file"), msg = $("#msg");
+let outRows = [], outName = "광고주양식.csv";
+
+const say = (k,t) => { msg.className = "msg " + k; msg.textContent = t; };
+const clearMsg = () => { msg.className = "msg"; msg.textContent = ""; };
+
+function buildTabs(){
+  $("#tabs").innerHTML = Object.entries(FORMATS).map(([k,f]) =>
+    `<button class="${k===curFmt?"on":""}" data-k="${k}">${f.label}` +
+    `<span class="ext">${f.out.toUpperCase()}</span></button>`).join("");
+  $("#tabs").querySelectorAll("button").forEach(b =>
+    b.addEventListener("click", () => { curFmt = b.dataset.k; buildTabs(); showRules(); resetAll(); }));
+}
+
+function showRules(){
+  const F = FORMATS[curFmt];
+  $("#rule-title").innerHTML = `${F.label} — 적용되는 규칙 <span class="cnt">${F.desc}</span>`;
+  $("#rules").innerHTML = [...F.rules, ...COMMON_RULES].map(r => `<li>${r}</li>`).join("");
+  $("#dl").textContent = `변환된 ${F.out === "xlsx" ? "엑셀" : "CSV"} 다운로드`;
+}
+
+function resetAll(){
+  outRows = []; fileInput.value = "";
+  $("#preview-card").style.display = "none"; clearMsg();
+}
+
+drop.addEventListener("click", () => fileInput.click());
+["dragenter","dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("hot"); }));
+["dragleave","drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("hot"); }));
+drop.addEventListener("drop", e => handle(e.dataTransfer.files));
+fileInput.addEventListener("change", e => handle(e.target.files));
+
+async function handle(files){
+  clearMsg();
+  const list = [...files].filter(f => /\.csv$/i.test(f.name));
+  if (!list.length){ say("err","CSV 파일이 아닙니다."); return; }
+
+  outRows = []; const errs = [];
+  let total = 0, skipped = 0;
+  for (const f of list){
+    try {
+      const r = convert(decode(await f.arrayBuffer()), curFmt);
+      outRows.push(...r.rows); total += r.total; skipped += r.skipped;
+    }
+    catch(e){ errs.push(`${f.name}: ${e.message}`); }
+  }
+
+  const Fp = FORMATS[curFmt];
+  if (!outRows.length){
+    if (errs.length) say("err", errs.join(" / "));
+    else if (total && Fp.filter)
+      say("warn", `${total}행 중 광고주가 '${Fp.filter.prefix}' 로 시작하는 행이 없습니다. 양식 선택이 맞는지 확인해 주세요.`);
+    else say("err", "변환할 데이터가 없습니다.");
+    return;
+  }
+
+  const F = FORMATS[curFmt];
+  const ext = F.out === "xlsx" ? ".xlsx" : ".csv";
+  outName = (list.length === 1 ? list[0].name.replace(/\.csv$/i,"") : "병합") + F.suffix + ext;
+  $("#dl").textContent = `변환된 ${F.out === "xlsx" ? "엑셀" : "CSV"} 다운로드`;
+
+  render();
+  const filt = F.filter
+    ? ` (전체 ${total}행 중 '${F.filter.prefix}' 로 시작하는 ${outRows.length}행 추출, ${skipped}행 제외)`
+    : "";
+  if (errs.length) say("warn", `${outRows.length}행 변환 완료${filt}. 일부 실패 → ${errs.join(" / ")}`);
+  else say("ok", `${F.label} · ${list.length}개 파일 · ${outRows.length}행 변환 완료${filt}.`);
+}
+
+function render(){
+  const F = FORMATS[curFmt];
+  const head = "<tr>" + F.cols.map(c =>
+    `<th${c in F.map ? ' class="key"' : ''}>${c}</th>`).join("") + "</tr>";
+  const body = outRows.slice(0,10).map(r =>
+    "<tr>" + F.cols.map(c => `<td>${(r[c]||"").replace(/</g,"&lt;")}</td>`).join("") + "</tr>").join("");
+  $("#preview").innerHTML = head + body;
+  $("#cnt").textContent = outRows.length > 10
+    ? `— 전체 ${outRows.length}행 중 10행 표시` : `— 전체 ${outRows.length}행`;
+  $("#preview-card").style.display = "block";
+}
+
+$("#dl").addEventListener("click", () => {
+  const F = FORMATS[curFmt], cols = F.cols;
+  let blob;
+  if (F.out === "xlsx"){
+    blob = new Blob([buildXlsx(cols, outRows, F.numericCols)],
+      {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  } else {
+    const lines = [cols.join(",")];
+    for (const r of outRows) lines.push(cols.map(c => csvEscape(r[c])).join(","));
+    blob = new Blob(["﻿" + lines.join("\r\n")], {type:"text/csv;charset=utf-8"});
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = outName; a.style.display = "none";
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 2000);
+});
+
+$("#reset").addEventListener("click", resetAll);
+
+buildTabs(); showRules();
+</script>
+</body>
+</html>

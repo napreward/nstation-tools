@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS문의 → 시트 북마크 설치</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 34px 20px 90px;
+    background: #f0f2f7;
+    color: #1f2937;
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  /* ── 페이지 헤더 ───────────────────────────── */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 22px;
+  }
+  h1 {
+    font-size: 26px; font-weight: 800; color: #111827;
+    letter-spacing: -0.02em; margin: 0 0 4px;
+  }
+  .page-header-sub { font-size: 13px; color: #6b7280; }
+  .version-badge {
+    flex: none; background: #111827; color: #fff;
+    border-radius: 999px; padding: 6px 14px;
+    font-size: 11px; font-weight: 700; letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .version-badge span { color: #9ca3af; font-weight: 600; }
+
+  /* ── 패널 ──────────────────────────────────── */
+  .panel {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    padding: 22px 24px; margin-bottom: 16px;
+  }
+  .panel-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 18px; font-weight: 800; color: #111827;
+    letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  .step-no {
+    flex: none; width: 24px; height: 24px; border-radius: 8px;
+    background: #111827; color: #fff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .panel p { margin: 6px 0; font-size: 14px; color: #374151; }
+  .muted { font-size: 13px; color: #6b7280; }
+
+  /* ── 폼 ────────────────────────────────────── */
+  label {
+    display: block; font-size: 13px; font-weight: 700;
+    color: #111827; margin: 14px 0 6px;
+  }
+  input[type=text] {
+    width: 100%; padding: 11px 13px;
+    background: #fff; color: #1f2937;
+    border: 1px solid #d1d5db; border-radius: 10px;
+    font-size: 14px; font-family: inherit;
+  }
+  #url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  input[type=text]:focus {
+    outline: none; border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17,24,39,.08);
+  }
+
+  /* ── 드래그 영역 ───────────────────────────── */
+  .drop {
+    margin-top: 16px; padding: 28px 20px; text-align: center;
+    border: 1px dashed #d1d5db; border-radius: 14px; background: #f9fafb;
+  }
+  #bm {
+    display: inline-block; padding: 10px 16px; border-radius: 11px;
+    background: #111827; color: #fff;
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    text-decoration: none; cursor: grab; user-select: none;
+    transition: transform .12s ease, opacity .12s ease;
+  }
+  #bm:active { cursor: grabbing; transform: scale(.98); }
+  #bm.off { background: #d1d5db; color: #6b7280; cursor: not-allowed; }
+  .drop .hint { font-size: 12px; color: #6b7280; margin-top: 12px; }
+
+  /* ── 상태 메시지 ───────────────────────────── */
+  .note { border-radius: 12px; padding: 11px 14px; font-size: 13px; margin-top: 12px; }
+  .note.ok   { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+  .note.warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .note strong { font-weight: 700; }
+
+  code {
+    background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px;
+    padding: 2px 8px; font-size: 11px; font-weight: 700; color: #374151;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  kbd {
+    background: #fff; border: 1px solid #d1d5db; border-bottom-width: 2px;
+    border-radius: 6px; padding: 1px 7px;
+    font-size: 12px; font-weight: 700; color: #374151; font-family: inherit;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header">
+    <div>
+      <h1>CS문의 → 시트</h1>
+      <div class="page-header-sub">TNK 어드민 CS 문의를 클릭 한 번으로 스프레드시트에 반영</div>
+    </div>
+    <!-- 제작자 이름을 바꾸시려면 아래 한 줄만 수정하세요 -->
+    <div class="version-badge">v2.0 <span>· 제작: 오예린</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="step-no">1</span> 북마크바 켜기</div>
+    <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd> — 주소창 아래에 줄이 하나 생깁니다.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="step-no">2</span> 두 칸 채우기</div>
+
+    <label for="url">웹 앱 주소 <span class="muted">(담당자에게 받은 주소)</span></label>
+    <input type="text" id="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec" spellcheck="false">
+
+    <label for="who">내 이름</label>
+    <input type="text" id="who" placeholder="예: 오예린" maxlength="20">
+    <p class="muted">누가 언제 갱신했는지 기록에 남기기 위한 것입니다. 실명이 아니어도 됩니다.</p>
+
+    <div id="msg"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="step-no">3</span> 북마크바로 끌어다 놓기</div>
+    <p>클릭이 아니라 <strong>드래그</strong>입니다.</p>
+    <div class="drop">
+      <a id="bm" class="off" href="javascript:void(0)">CS문의 → 시트</a>
+      <div class="hint">마우스로 잡아서 북마크바에 떨어뜨리세요</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="step-no">4</span> 사용</div>
+    <p>어드민 <strong>CS &gt; CS 문의</strong> 에서 목록이 다 뜬 뒤 북마크를 클릭하세요.</p>
+    <p>화면 상단에 <strong>시트 반영 완료 · ○○행</strong> 알림이 뜨면 성공입니다.</p>
+    <div class="note warn">
+      <strong>중요</strong> — 시트는 보낸 내용으로 통째로 교체됩니다.
+      목록 아래 <code>Load More</code> 로 필요한 만큼 다 불러온 뒤에 누르세요.
+      행수가 크게 줄어들면 한 번 되묻습니다.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">잘 안 될 때</div>
+    <p>북마크 우클릭 → 수정 → URL 칸이 <code>javascript:</code> 로 시작하는지 확인하세요.</p>
+    <p><code>https://</code> 로 시작하면 잘못 들어간 것이니, 지우고 위에서 다시 드래그하시면 됩니다.</p>
+  </div>
+
+</div>
+
+<script>
+var TPL = String.raw`javascript:(function(){var U='__URL__',S='zZM2mAUVcQzMXqtZxBz1FhH2qy8zlskD',N='__WHO__';function M(m,c){var o=document.getElementById('__tnkMsg');if(o)o.remove();var d=document.createElement('div');d.id='__tnkMsg';d.textContent=m;d.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:2147483647;background:'+c+';color:#fff;padding:11px 20px;border-radius:11px;font:700 14px -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.28)';document.body.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove()},6000)}var T=null,ts=document.querySelectorAll('table');for(var i=0;i<ts.length;i++){if(ts[i].querySelectorAll('th').length>=13&&/처리일자/.test(ts[i].innerText)){T=ts[i];break}}if(!T){M('테이블을 찾지 못했습니다','#b91c1c');return}var cl=function(s){return String(s).replace(/[\t\r\n]+/g,' ').trim()};var hd=[].slice.call(T.querySelectorAll('th')).map(function(x){return cl(x.innerText)}).slice(1,14);var rw=[].slice.call(T.querySelectorAll('tbody tr')).map(function(r){return [].slice.call(r.cells).slice(1,14).map(function(c){return cl(c.innerText)})}).filter(function(a){return a.length===13&&a.some(function(v){return v!==''})});if(!rw.length){M('보낼 데이터가 없습니다','#b91c1c');return}var tsv=[hd].concat(rw).map(function(a){return a.join('\t')}).join('\n');function send(f){return fetch(U,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({secret:S,who:N,tsv:tsv,force:f})}).then(function(r){return r.json()})}M('전송 중… '+rw.length+'행','#111827');send(false).then(function(j){if(j.ok){M('시트 반영 완료 · '+j.rows+'행 ('+N+')','#047857');return}if(j.needConfirm){if(confirm('현재 시트에 '+j.current+'행이 있는데 '+j.incoming+'행만 보내려 합니다.\n\nLoad More 를 덜 누르셨을 수 있습니다.\n그래도 이 데이터로 교체할까요?')){M('강제 전송 중…','#b45309');send(true).then(function(k){M(k.ok?('교체 완료 · '+k.rows+'행 ('+N+')'):('실패: '+k.message),k.ok?'#047857':'#b91c1c')});}else{M('취소했습니다 · 시트는 그대로입니다','#4b5563')}return}M('실패: '+j.message,'#b91c1c')}).catch(function(){M('전송 실패 · 주소를 확인하세요','#b91c1c')})})();`;
+
+var urlEl = document.getElementById('url');
+var whoEl = document.getElementById('who');
+var bm    = document.getElementById('bm');
+var msg   = document.getElementById('msg');
+
+function refresh() {
+  var u = urlEl.value.trim();
+  var w = whoEl.value.replace(/['"\\\r\n]/g, '').trim();   // 따옴표·역슬래시는 코드를 깨뜨리므로 제거
+
+  var urlOk = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u);
+  var whoOk = w.length > 0;
+
+  if (urlOk && whoOk) {
+    bm.href = TPL.replace('__URL__', u).replace('__WHO__', w);
+    bm.textContent = 'CS문의 → 시트 (' + w + ')';
+    bm.className = '';
+    msg.innerHTML = '<div class="note ok">준비됐습니다 — 아래 버튼을 북마크바로 끌어다 놓으세요</div>';
+  } else {
+    bm.href = 'javascript:void(0)';
+    bm.textContent = 'CS문의 → 시트';
+    bm.className = 'off';
+    if (u && !urlOk) {
+      msg.innerHTML = '<div class="note warn">주소 형식이 다릅니다. <code>https://script.google.com/macros/s/…/exec</code> 형태여야 합니다.</div>';
+    } else if (urlOk && !whoOk) {
+      msg.innerHTML = '<div class="note warn">이름을 입력하세요.</div>';
+    } else {
+      msg.innerHTML = '';
+    }
+  }
+}
+
+urlEl.addEventListener('input', refresh);
+whoEl.addEventListener('input', refresh);
+bm.addEventListener('click', function (e) {
+  e.preventDefault();
+  alert('클릭이 아니라 북마크바로 끌어다 놓으세요.');
+});
+refresh();
+</script>
+</body>
+</html>
