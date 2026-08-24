@@ -106,6 +106,7 @@
     <button class="top-tab" id="tabCs" onclick="switchTab('cs')">📋 CS 업로드 양식</button>
     <button class="top-tab" id="tabBm" onclick="switchTab('bm')">🔖 스크랩 북마클릿</button>
     <button class="top-tab" id="tabTv" onclick="switchTab('tv')">🔗 트래킹 링크 검증</button>
+    <button class="top-tab" id="tabNm" onclick="switchTab('nm')">📧 네트워크사 메일 요청</button>
     <button class="nav-update" id="btnUpdate" onclick="updateCamps()">🔄 4개 서버 업데이트</button>
   </nav>
   <div class="panel active" id="panelIr">
@@ -128,7 +129,9 @@
   <div class="panel" id="panelBm">
     <iframe src="scrap-bookmarklet.html" title="스크랩 북마클릿" allow="clipboard-write"></iframe>
   </div>
-
+  <div class="panel" id="panelNm">
+    <iframe src="network-mail.html" title="네트워크사 메일 요청" allow="clipboard-write"></iframe>
+  </div>
   <div id="statusCard" class="status-card">
     <button class="st-close" onclick="closeStatus()" title="닫기">×</button>
     <div id="statusBody"></div>
