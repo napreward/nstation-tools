@@ -78,8 +78,29 @@
   }
   .checks input { margin-right: 8px; }
   .radios { display: flex; gap: 18px; flex-wrap: wrap; padding: 4px 0; }
-  .radios label { font-size: 14px; cursor: pointer; }
+  .radios label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+  }
   .radios input { margin-right: 6px; }
+  .상세뎁스 { margin-top: 6px; }
+  /* 위쪽 input[type=number] 규칙(width:100%)을 이기려면 선택자를 더 좁혀야 한다 */
+  input[type="number"].단가직접값 {
+    width: 62px;
+    margin-left: 6px;
+    padding: 3px 6px;
+    font-size: 12px;
+    border-radius: 4px;
+  }
+  /* 숫자 증감 화살표는 자리를 많이 차지해 감춘다 */
+  .단가직접값::-webkit-outer-spin-button,
+  .단가직접값::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .단가단위 { margin-left: 3px; font-size: 13px; }
   .기간줄 { display: flex; align-items: flex-start; gap: 8px; }
   .시작묶음, .종료묶음 { flex: 1; min-width: 0; }
   .시작묶음 input[type="date"], .종료묶음 input[type="date"] { width: 100%; }
@@ -288,8 +309,16 @@
         </div>
 
         <div class="field">
-          <label class="title" for="뎁스">뎁스<span class="req">*</span></label>
-          <input type="text" id="뎁스" name="뎁스" required>
+          <label class="title">뎁스<span class="req">*</span></label>
+          <div class="radios" id="상품유형칸">
+            <label><input type="radio" name="상품유형" value="CPM">CPM</label>
+            <label><input type="radio" name="상품유형" value="CPCV">CPCV</label>
+            <label><input type="radio" name="상품유형" value="CPI">CPI</label>
+            <label><input type="radio" name="상품유형" value="CPE">CPE</label>
+            <label><input type="radio" name="상품유형" value="CPSNS">CPSNS</label>
+            <label><input type="radio" name="상품유형" value="CPA">CPA</label>
+          </div>
+          <input type="text" id="뎁스" name="뎁스" class="상세뎁스" required>
         </div>
 
         <div class="field">
@@ -330,8 +359,10 @@
           </div>
 
           <div class="field">
-            <label class="title" for="단가">단가<span class="req">*</span></label>
-            <input type="number" id="단가" name="단가" min="0" required>
+            <label class="title">단가<span class="req">*</span></label>
+            <p class="hint" id="단가안내">상품 유형을 먼저 선택 부탁드립니다.</p>
+            <div class="radios" id="단가선택칸"></div>
+            <input type="hidden" id="단가" name="단가" value="">
           </div>
         </fieldset>
 
@@ -452,6 +483,112 @@
 
   날짜잠금(document.getElementById('시작일ASAP'), document.getElementById('시작일'));
   날짜잠금(document.getElementById('종료일별도'), document.getElementById('종료일'));
+
+  // ── 상품 유형과 단가 ─────────────────────────────────────
+  // 상품 유형별로 통상 쓰는 단가입니다. 값이 바뀌면 이 표만 고치면 됩니다.
+  // 빈 배열이면 통상 단가 없이 직접 작성만 뜹니다.
+  var 단가표 = {
+    CPM:   [2000, 3000],
+    CPCV:  [10, 15],
+    CPI:   [170, 200],
+    CPE:   [200, 230],
+    CPSNS: [200, 230],
+    CPA:   []
+  };
+
+  var 상품유형칸 = document.getElementById('상품유형칸');
+  var 단가선택칸 = document.getElementById('단가선택칸');
+  var 단가안내 = document.getElementById('단가안내');
+  var 단가칸 = document.getElementById('단가');
+
+  function 고른유형() {
+    var 선택 = 상품유형칸.querySelector('input[name="상품유형"]:checked');
+    return 선택 ? 선택.value : '';
+  }
+
+  // 고른 단가를 실제로 보낼 칸에 옮겨 담는다
+  function 단가반영() {
+    var 선택 = 단가선택칸.querySelector('input[name="단가선택"]:checked');
+    var 직접값 = document.getElementById('단가직접값');
+
+    if (!선택) {
+      단가칸.value = '';
+      if (직접값) 직접값.disabled = true;
+      return;
+    }
+
+    if (선택.value === '직접') {
+      직접값.disabled = false;
+      단가칸.value = 직접값.value.trim();
+    } else {
+      직접값.disabled = true;
+      단가칸.value = 선택.value;
+    }
+  }
+
+  function 단가그리기() {
+    var 유형 = 고른유형();
+    단가선택칸.innerHTML = '';
+    단가칸.value = '';
+
+    if (!유형) {
+      단가안내.hidden = false;
+      return;
+    }
+
+    // 유형을 고르면 안내 문구는 감추고 단가만 보여준다
+    단가안내.hidden = true;
+
+    var 후보 = 단가표[유형] || [];
+
+    후보.forEach(function (값) {
+      var 라벨 = document.createElement('label');
+      var 라디오 = document.createElement('input');
+      라디오.type = 'radio';
+      라디오.name = '단가선택';
+      라디오.value = String(값);
+      라디오.addEventListener('change', 단가반영);
+      라벨.appendChild(라디오);
+      라벨.appendChild(document.createTextNode(값.toLocaleString('ko-KR') + '원'));
+      단가선택칸.appendChild(라벨);
+    });
+
+    var 직접라벨 = document.createElement('label');
+    var 직접라디오 = document.createElement('input');
+    직접라디오.type = 'radio';
+    직접라디오.name = '단가선택';
+    직접라디오.value = '직접';
+    직접라디오.addEventListener('change', 단가반영);
+    직접라벨.appendChild(직접라디오);
+    직접라벨.appendChild(document.createTextNode('직접 작성'));
+
+    // 입력칸과 단위를 같은 라벨 안에 넣어 바로 옆에 붙인다
+    var 직접값 = document.createElement('input');
+    직접값.type = 'number';
+    직접값.id = '단가직접값';
+    직접값.className = '단가직접값';
+    직접값.min = '0';
+    직접값.disabled = true;
+    직접값.addEventListener('input', 단가반영);
+    직접라벨.appendChild(직접값);
+
+    var 단위 = document.createElement('span');
+    단위.className = '단가단위';
+    단위.textContent = '원';
+    직접라벨.appendChild(단위);
+
+    단가선택칸.appendChild(직접라벨);
+
+    // 통상 단가가 없는 유형이면 바로 직접 작성으로 열어준다
+    if (!후보.length) {
+      직접라디오.checked = true;
+      직접값.disabled = false;
+    }
+
+    단가반영();
+  }
+
+  상품유형칸.addEventListener('change', 단가그리기);
 
   // ── 첨부파일 목록 ────────────────────────────────────────
   // "파일 3개"만 보이면 무엇이 붙었는지 알 수 없어 오발송으로 이어진다.
@@ -731,6 +868,19 @@
     if (!고른것.length) {
       이벤트.preventDefault();
       alert('네트워크사를 한 곳 이상 선택해 주세요.');
+      return;
+    }
+
+    if (!고른유형()) {
+      이벤트.preventDefault();
+      alert('뎁스의 상품 유형을 골라 주세요.');
+      return;
+    }
+
+    // 단가는 라이브 요청에서만 쓰는데, 숨은 칸이라 브라우저가 검사해 주지 않는다
+    if (!라이브그룹.disabled && !단가칸.value) {
+      이벤트.preventDefault();
+      alert('단가를 고르거나 직접 적어 주세요.');
       return;
     }
     보내기.disabled = true;
