@@ -42,7 +42,8 @@
   }
   .req { color: var(--danger); margin-left: 2px; }
   .hint { font-size: 12px; color: var(--muted); margin: -2px 0 6px; }
-  input[type="text"], input[type="number"], input[type="password"], select, textarea {
+  input[type="text"], input[type="number"], input[type="password"],
+  input[type="date"], select, textarea {
     width: 100%;
     padding: 9px 11px;
     border: 1px solid var(--line);
@@ -77,8 +78,8 @@
   .radios label { font-size: 14px; cursor: pointer; }
   .radios input { margin-right: 6px; }
   .기간줄 { display: flex; align-items: flex-start; gap: 8px; }
-  .기간줄 > input { flex: 1; min-width: 0; }
-  .종료묶음 { flex: 1; min-width: 0; }
+  .시작묶음, .종료묶음 { flex: 1; min-width: 0; }
+  .시작묶음 input[type="date"], .종료묶음 input[type="date"] { width: 100%; }
   .물결 { color: var(--muted); flex: none; padding-top: 9px; }
   .별도 {
     display: block;
@@ -88,6 +89,60 @@
     cursor: pointer;
   }
   .별도 input { margin-right: 6px; }
+  /* 첨부한 파일 이름을 작게 나열한다. 엉뚱한 파일이 섞이면 바로 보이게 */
+  /* 끌어다 놓는 칸. 넘치면 이 안에서만 스크롤된다 */
+  .파일상자 {
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+    padding: 5px 8px;
+    height: 120px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+  }
+  .파일상자.끌기중 {
+    border-color: var(--accent);
+    border-style: solid;
+    background: #f2f7ff;
+  }
+  .파일없음 {
+    margin: auto;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    pointer-events: none;
+  }
+  .파일목록 { list-style: none; margin: 0; padding: 0; flex: none; }
+  .파일목록 li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 2px;
+    font-size: 11px;
+  }
+  .파일목록 li + li { border-top: 1px solid #f2f4f7; }
+  .파일이름 {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .파일크기 { flex: none; font-size: 10px; color: var(--muted); }
+  .파일지우기 {
+    width: auto;
+    flex: none;
+    padding: 0 3px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .파일지우기:hover { color: var(--danger); }
   .note { font-size: 13px; color: var(--muted); }
   .error { font-size: 13px; color: var(--danger); }
   hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
@@ -233,12 +288,16 @@
           <div class="field">
             <label class="title">기간<span class="req">*</span></label>
             <div class="기간줄">
-              <input type="text" id="시작일" name="시작일"
-                     placeholder="시작일" autocomplete="off" required>
+              <div class="시작묶음">
+                <input type="date" id="시작일" name="시작일" required>
+                <label class="별도">
+                  <input type="checkbox" id="시작일ASAP" name="시작일ASAP" value="on">
+                  ASAP
+                </label>
+              </div>
               <span class="물결">~</span>
               <div class="종료묶음">
-                <input type="text" id="종료일" name="종료일"
-                       placeholder="종료일" autocomplete="off" required>
+                <input type="date" id="종료일" name="종료일" required>
                 <label class="별도">
                   <input type="checkbox" id="종료일별도" name="종료일별도" value="on">
                   별도 요청 시
@@ -272,8 +331,12 @@
 
           <div class="field">
             <label class="title" for="소재파일">소재 파일<span class="req">*</span></label>
-            <p class="hint">여러 개 선택할 수 있습니다. 메일에 첨부됩니다.</p>
+            <p class="hint">파일을 고르거나 아래 칸으로 끌어다 놓으세요. 여러 번 나눠 담아도 됩니다.</p>
             <input type="file" id="소재파일" name="소재파일" multiple required>
+            <div class="파일상자" id="파일상자">
+              <p class="파일없음" id="파일없음">여기로 파일을 끌어다 놓을 수 있습니다</p>
+              <ul class="파일목록" id="파일목록"></ul>
+            </div>
           </div>
         </fieldset>
 
@@ -350,19 +413,118 @@
 
   종류칸.addEventListener('change', 종류바뀜);
 
-  // “별도 요청 시”를 켜면 종료일 칸을 잠근다
-  var 종료일칸 = document.getElementById('종료일');
-  var 별도칸 = document.getElementById('종료일별도');
+  // 체크를 켜면 짝이 되는 날짜 칸을 비우고 잠근다
+  function 날짜잠금(체크, 날짜칸) {
+    체크.addEventListener('change', function () {
+      if (체크.checked) {
+        날짜칸.value = '';
+        날짜칸.required = false;
+        날짜칸.disabled = true;
+      } else {
+        날짜칸.disabled = false;
+        날짜칸.required = true;
+      }
+    });
+  }
 
-  별도칸.addEventListener('change', function () {
-    if (별도칸.checked) {
-      종료일칸.value = '';
-      종료일칸.required = false;
-      종료일칸.disabled = true;
-    } else {
-      종료일칸.disabled = false;
-      종료일칸.required = true;
+  날짜잠금(document.getElementById('시작일ASAP'), document.getElementById('시작일'));
+  날짜잠금(document.getElementById('종료일별도'), document.getElementById('종료일'));
+
+  // ── 첨부파일 목록 ────────────────────────────────────────
+  // "파일 3개"만 보이면 무엇이 붙었는지 알 수 없어 오발송으로 이어진다.
+  // 이름을 나열하고 하나씩 뺄 수 있게 한다.
+  var 파일칸 = document.getElementById('소재파일');
+  var 파일목록 = document.getElementById('파일목록');
+  var 파일상자 = document.getElementById('파일상자');
+  var 파일없음 = document.getElementById('파일없음');
+  var 고른파일 = [];
+
+  function 크기표시(바이트) {
+    if (바이트 >= 1024 * 1024) return (바이트 / 1024 / 1024).toFixed(1) + ' MB';
+    return Math.max(1, Math.round(바이트 / 1024)) + ' KB';
+  }
+
+  function 파일그리기() {
+    파일없음.hidden = 고른파일.length > 0;
+    파일목록.innerHTML = '';
+    고른파일.forEach(function (파일, 순번) {
+      var 줄 = document.createElement('li');
+
+      var 이름 = document.createElement('span');
+      이름.className = '파일이름';
+      이름.textContent = 파일.name;
+      이름.title = 파일.name;
+
+      var 크기 = document.createElement('span');
+      크기.className = '파일크기';
+      크기.textContent = 크기표시(파일.size);
+
+      var 빼기 = document.createElement('button');
+      빼기.type = 'button';
+      빼기.className = '파일지우기';
+      빼기.textContent = '×';
+      빼기.title = '빼기';
+      빼기.addEventListener('click', function () {
+        고른파일.splice(순번, 1);
+        파일다시넣기();
+      });
+
+      줄.appendChild(이름);
+      줄.appendChild(크기);
+      줄.appendChild(빼기);
+      파일목록.appendChild(줄);
+    });
+  }
+
+  // 하나를 뺀 뒤 실제 전송 목록도 같이 맞춰준다
+  function 파일다시넣기() {
+    var 담기 = new DataTransfer();
+    고른파일.forEach(function (파일) { 담기.items.add(파일); });
+    파일칸.files = 담기.files;
+    파일그리기();
+  }
+
+  // 이미 담은 것은 두고 새로 고른 것만 뒤에 이어 붙인다
+  function 파일추가(새것들) {
+    Array.prototype.slice.call(새것들).forEach(function (파일) {
+      var 이미있음 = 고른파일.some(function (기존) {
+        return 기존.name === 파일.name
+          && 기존.size === 파일.size
+          && 기존.lastModified === 파일.lastModified;
+      });
+      if (!이미있음) 고른파일.push(파일);
+    });
+    파일다시넣기();
+  }
+
+  파일칸.addEventListener('change', function () {
+    파일추가(파일칸.files);
+  });
+
+  // 끌어다 놓기
+  ['dragenter', 'dragover'].forEach(function (이름) {
+    파일상자.addEventListener(이름, function (이벤트) {
+      이벤트.preventDefault();
+      파일상자.classList.add('끌기중');
+    });
+  });
+
+  ['dragleave', 'dragend', 'drop'].forEach(function (이름) {
+    파일상자.addEventListener(이름, function () {
+      파일상자.classList.remove('끌기중');
+    });
+  });
+
+  파일상자.addEventListener('drop', function (이벤트) {
+    이벤트.preventDefault();
+    if (이벤트.dataTransfer && 이벤트.dataTransfer.files.length) {
+      파일추가(이벤트.dataTransfer.files);
     }
+  });
+
+  // 칸 밖에 떨어뜨렸을 때 브라우저가 그 파일을 열어버리지 않게 막는다
+  ['dragover', 'drop'].forEach(function (이름) {
+    document.addEventListener(이름, function (이벤트) { 이벤트.preventDefault(); });
   });
 
   // 구글시트 조회가 느려서, 한 번 받은 목록은 브라우저에 저장해 두고 즉시 띄운다
