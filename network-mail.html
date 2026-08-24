@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nap reward 네트워크사 메일 요청</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --line: #e3e6ea;
+    --text: #1f2328;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --danger: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 20px 80px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 24px 24px 4px;
+  }
+  /* 묶음마다 마지막 칸이 생기므로 여백을 지우지 않고 항상 같은 간격을 준다 */
+  .field { margin-bottom: 20px; }
+  label.title {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .req { color: var(--danger); margin-left: 2px; }
+  .hint { font-size: 12px; color: var(--muted); margin: -2px 0 6px; }
+  input[type="text"], input[type="number"], input[type="password"], select, textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    color: var(--text);
+  }
+  textarea { min-height: 88px; resize: vertical; }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .checks {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: #fff;
+    max-height: 190px;
+    overflow-y: auto;
+  }
+  .checks label {
+    display: block;
+    font-size: 14px;
+    padding: 4px 0;
+    cursor: pointer;
+  }
+  .checks input { margin-right: 8px; }
+  .radios { display: flex; gap: 18px; flex-wrap: wrap; padding: 4px 0; }
+  .radios label { font-size: 14px; cursor: pointer; }
+  .radios input { margin-right: 6px; }
+  .기간줄 { display: flex; align-items: flex-start; gap: 8px; }
+  .기간줄 > input { flex: 1; min-width: 0; }
+  .종료묶음 { flex: 1; min-width: 0; }
+  .물결 { color: var(--muted); flex: none; padding-top: 9px; }
+  .별도 {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    cursor: pointer;
+  }
+  .별도 input { margin-right: 6px; }
+  .note { font-size: 13px; color: var(--muted); }
+  .error { font-size: 13px; color: var(--danger); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    color: #fff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:disabled { background: #9aa4b2; cursor: not-allowed; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>nap reward 네트워크사 메일 요청</h1>
+  <p class="sub" id="설명">메일 종류를 고르면 그 메일에 필요한 항목만 아래에 나타납니다.</p>
+
+  <!-- 비밀번호를 확인하기 전에는 폼을 보여주지 않는다 -->
+  <div class="card" id="로그인칸">
+    <div class="field">
+      <label class="title" for="비밀번호">비밀번호<span class="req">*</span></label>
+      <input type="password" id="비밀번호" autocomplete="current-password"
+             placeholder="팀에 공유된 비밀번호">
+    </div>
+    <p id="로그인오류" class="error" style="margin:0 0 14px"></p>
+    <button type="button" id="들어가기">들어가기</button>
+  </div>
+
+  <form id="요청폼" method="POST" enctype="multipart/form-data" hidden>
+    <input type="hidden" id="접근키" name="접근키" value="">
+    <div class="card">
+
+      <div class="field">
+        <label class="title" for="메일종류">메일 종류<span class="req">*</span></label>
+        <select id="메일종류" name="메일 종류" required>
+          <option value="">선택하세요</option>
+          <option value="최초 라이브 요청">최초 라이브 요청</option>
+          <option value="트래픽 푸시">트래픽 푸시</option>
+          <option value="소재 및 문구 교체">소재 및 문구 교체</option>
+        </select>
+      </div>
+
+      <!-- 메일 종류를 고르기 전에는 아래를 통째로 감춘다 -->
+      <div id="본문영역" hidden>
+
+        <div class="field">
+          <label class="title">네트워크사<span class="req">*</span></label>
+          <p class="hint">주소록 시트에 등록된 곳이 표시됩니다. 여러 곳을 고르면 각각 따로 발송됩니다.</p>
+          <div class="checks" id="네트워크사목록">
+            <p class="note">불러오는 중…</p>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="field">
+          <label class="title" for="광고주명">광고주명<span class="req">*</span></label>
+          <input type="text" id="광고주명" name="광고주명" required>
+        </div>
+
+        <div class="field">
+          <label class="title" for="뎁스">뎁스<span class="req">*</span></label>
+          <input type="text" id="뎁스" name="뎁스" required>
+        </div>
+
+        <div class="field">
+          <label class="title" for="캠페인ID">캠페인 ID<span class="req">*</span></label>
+          <input type="text" id="캠페인ID" name="캠페인 ID" required>
+        </div>
+
+        <!-- 최초 라이브 요청에서만 쓰는 항목 -->
+        <fieldset id="그룹_라이브" style="border:0;padding:0;margin:0" disabled hidden>
+          <div class="field">
+            <label class="title">OS<span class="req">*</span></label>
+            <div class="radios">
+              <label><input type="radio" name="OS" value="AOS" required>AOS</label>
+              <label><input type="radio" name="OS" value="iOS">iOS</label>
+              <label><input type="radio" name="OS" value="AOS, iOS">AOS, iOS</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="title">기간<span class="req">*</span></label>
+            <div class="기간줄">
+              <input type="text" id="시작일" name="시작일"
+                     placeholder="시작일" autocomplete="off" required>
+              <span class="물결">~</span>
+              <div class="종료묶음">
+                <input type="text" id="종료일" name="종료일"
+                       placeholder="종료일" autocomplete="off" required>
+                <label class="별도">
+                  <input type="checkbox" id="종료일별도" name="종료일별도" value="on">
+                  별도 요청 시
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="title" for="단가">단가<span class="req">*</span></label>
+            <input type="number" id="단가" name="단가" min="0" required>
+          </div>
+        </fieldset>
+
+        <!-- 라이브 요청과 소재·문구 교체에서 쓰는 항목 -->
+        <fieldset id="그룹_문구" style="border:0;padding:0;margin:0" disabled hidden>
+          <div class="field">
+            <label class="title" for="메인문구">메인 문구<span class="req">*</span></label>
+            <input type="text" id="메인문구" name="메인 문구" placeholder="캠페인명" required>
+          </div>
+
+          <div class="field">
+            <label class="title" for="서브문구">서브 문구<span class="req">*</span></label>
+            <input type="text" id="서브문구" name="서브 문구" placeholder="짧은 문구" required>
+          </div>
+
+          <div class="field">
+            <label class="title" for="상세문구">상세 문구<span class="req">*</span></label>
+            <textarea id="상세문구" name="상세 문구" placeholder="참여방법" required></textarea>
+          </div>
+
+          <div class="field">
+            <label class="title" for="소재파일">소재 파일<span class="req">*</span></label>
+            <p class="hint">여러 개 선택할 수 있습니다. 메일에 첨부됩니다.</p>
+            <input type="file" id="소재파일" name="소재파일" multiple required>
+          </div>
+        </fieldset>
+
+        <!-- 세 유형 모두에서 쓰는 자유 입력. 적은 내용이 있을 때만 메일에 들어간다 -->
+        <div class="field">
+          <label class="title" for="기타">기타</label>
+          <textarea id="기타" name="기타"
+                    placeholder="따로 전달할 내용이 있으면 적어주세요. 비워두면 메일에 들어가지 않습니다."></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <p id="안내" class="note" style="margin:16px 0 10px"></p>
+    <button type="submit" id="보내기" disabled>메일 종류를 먼저 고르세요</button>
+    <p class="note" style="text-align:right;margin:10px 0 0">
+      <a href="#" id="로그아웃" style="color:var(--muted)">로그아웃</a>
+    </p>
+  </form>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // n8n 주소. 서버가 바뀌면 이 두 줄만 고치면 된다
+  var 접수주소 = 'https://n8n.nasmedia.co.kr/webhook/mail-request';
+  var 목록주소 = 'https://n8n.nasmedia.co.kr/webhook/network-list';
+
+  var 폼 = document.getElementById('요청폼');
+  var 종류칸 = document.getElementById('메일종류');
+  var 본문영역 = document.getElementById('본문영역');
+  var 라이브그룹 = document.getElementById('그룹_라이브');
+  var 문구그룹 = document.getElementById('그룹_문구');
+  var 목록칸 = document.getElementById('네트워크사목록');
+  var 보내기 = document.getElementById('보내기');
+  var 안내 = document.getElementById('안내');
+
+  폼.action = 접수주소;
+
+  // 메일 종류별로 어떤 묶음을 쓰는지
+  var 구성 = {
+    '최초 라이브 요청': { 라이브: true, 문구: true },
+    '트래픽 푸시': { 라이브: false, 문구: false },
+    '소재 및 문구 교체': { 라이브: false, 문구: true }
+  };
+
+  // disabled 로 꺼두면 제출도 안 되고 필수 검사도 걸리지 않는다
+  function 묶음전환(요소, 켬) {
+    요소.disabled = !켬;
+    요소.hidden = !켬;
+  }
+
+  function 종류바뀜() {
+    var 값 = 종류칸.value;
+    var 설정 = 구성[값];
+
+    if (!설정) {
+      본문영역.hidden = true;
+      묶음전환(라이브그룹, false);
+      묶음전환(문구그룹, false);
+      보내기.disabled = true;
+      보내기.textContent = '메일 종류를 먼저 고르세요';
+      return;
+    }
+
+    본문영역.hidden = false;
+    묶음전환(라이브그룹, 설정.라이브);
+    묶음전환(문구그룹, 설정.문구);
+    보내기.disabled = false;
+    보내기.textContent = '메일 보내기';
+  }
+
+  종류칸.addEventListener('change', 종류바뀜);
+
+  // “별도 요청 시”를 켜면 종료일 칸을 잠근다
+  var 종료일칸 = document.getElementById('종료일');
+  var 별도칸 = document.getElementById('종료일별도');
+
+  별도칸.addEventListener('change', function () {
+    if (별도칸.checked) {
+      종료일칸.value = '';
+      종료일칸.required = false;
+      종료일칸.disabled = true;
+    } else {
+      종료일칸.disabled = false;
+      종료일칸.required = true;
+    }
+  });
+
+  // 구글시트 조회가 느려서, 한 번 받은 목록은 브라우저에 저장해 두고 즉시 띄운다
+  var 저장키 = 'nap-reward-네트워크사목록';
+
+  function 저장된목록() {
+    try {
+      var 원문 = localStorage.getItem(저장키);
+      if (!원문) return null;
+      var 값 = JSON.parse(원문);
+      return Array.isArray(값) && 값.length ? 값 : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function 목록저장(이름들) {
+    try {
+      localStorage.setItem(저장키, JSON.stringify(이름들));
+    } catch (e) {
+      // 저장이 막혀 있어도 동작에는 지장이 없다
+    }
+  }
+
+  // 다시 그릴 때 이미 체크해 둔 항목이 풀리지 않게 기억해 둔다
+  function 체크된것들() {
+    var 값들 = [];
+    폼.querySelectorAll('input[name="네트워크사"]:checked').forEach(function (칸) {
+      값들.push(칸.value);
+    });
+    return 값들;
+  }
+
+  function 목록그리기(이름들, 갱신중) {
+    if (!이름들.length) {
+      목록칸.innerHTML = '<p class="error">주소록 시트가 비어 있습니다.</p>';
+      return;
+    }
+
+    var 유지할것 = 체크된것들();
+    목록칸.innerHTML = '';
+
+    이름들.forEach(function (이름, 순번) {
+      var 라벨 = document.createElement('label');
+      var 체크 = document.createElement('input');
+      체크.type = 'checkbox';
+      체크.name = '네트워크사';
+      체크.value = 이름;
+      체크.id = 'net' + 순번;
+      체크.checked = 유지할것.indexOf(이름) !== -1;
+      라벨.appendChild(체크);
+      라벨.appendChild(document.createTextNode(이름));
+      목록칸.appendChild(라벨);
+    });
+
+    if (갱신중) {
+      var 알림 = document.createElement('p');
+      알림.className = 'note';
+      알림.style.margin = '6px 0 0';
+      알림.textContent = '최신 목록을 확인하는 중…';
+      목록칸.appendChild(알림);
+    }
+  }
+
+  // ── 로그인 ───────────────────────────────────────────────
+  // 비밀번호는 페이지에 적어두지 않는다. 입력받아 n8n에 확인시키고,
+  // 확인된 값만 이 창을 닫을 때까지 들고 있는다.
+  var 로그인칸 = document.getElementById('로그인칸');
+  var 비밀번호칸 = document.getElementById('비밀번호');
+  var 로그인오류 = document.getElementById('로그인오류');
+  var 들어가기 = document.getElementById('들어가기');
+  var 접근키칸 = document.getElementById('접근키');
+  var 설명 = document.getElementById('설명');
+  // 한 번 통과하면 24시간 동안 다시 묻지 않는다
+  var 접근저장키 = 'nap-reward-접근';
+  var 유지시간 = 24 * 60 * 60 * 1000;
+
+  function 접근기억(열쇠) {
+    try {
+      localStorage.setItem(접근저장키, JSON.stringify({ key: 열쇠, at: Date.now() }));
+    } catch (e) {
+      // 저장이 막혀 있으면 이번 방문에만 유지된다
+    }
+  }
+
+  function 접근꺼내기() {
+    try {
+      var 원문 = localStorage.getItem(접근저장키);
+      if (!원문) return null;
+      var 값 = JSON.parse(원문);
+      if (!값 || !값.key) return null;
+      if (Date.now() - Number(값.at || 0) >= 유지시간) {
+        localStorage.removeItem(접근저장키);
+        return null;
+      }
+      return 값.key;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function 접근지우기() {
+    try { localStorage.removeItem(접근저장키); } catch (e) {}
+  }
+
+  function 폼열기(열쇠, 이름들) {
+    접근키칸.value = 열쇠;
+    로그인칸.hidden = true;
+    폼.hidden = false;
+    설명.textContent = '메일 종류를 고르면 그 메일에 필요한 항목만 아래에 나타납니다.';
+    목록저장(이름들);
+    목록그리기(이름들, false);
+  }
+
+  function 확인시도(열쇠, 조용히) {
+    if (!조용히) {
+      들어가기.disabled = true;
+      들어가기.textContent = '확인 중…';
+      로그인오류.textContent = '';
+    }
+
+    return fetch(목록주소 + '?key=' + encodeURIComponent(열쇠))
+      .then(function (응답) {
+        if (!응답.ok) throw new Error('HTTP ' + 응답.status);
+        return 응답.json();
+      })
+      .then(function (자료) {
+        if (자료 && 자료.ok === false) {
+          throw new Error('비밀번호가 맞지 않습니다.');
+        }
+        var 이름들 = Array.isArray(자료.networks) ? 자료.networks : [];
+        // 처음 통과할 때만 시각을 적어 24시간을 센다
+        if (!조용히) 접근기억(열쇠);
+        폼열기(열쇠, 이름들);
+      })
+      .catch(function (오류) {
+        접근지우기();
+        if (!조용히) {
+          로그인오류.textContent = 오류.message;
+        }
+      })
+      .then(function () {
+        들어가기.disabled = false;
+        들어가기.textContent = '들어가기';
+      });
+  }
+
+  들어가기.addEventListener('click', function () {
+    var 값 = 비밀번호칸.value.trim();
+    if (!값) {
+      로그인오류.textContent = '비밀번호를 입력해 주세요.';
+      return;
+    }
+    확인시도(값, false);
+  });
+
+  비밀번호칸.addEventListener('keydown', function (이벤트) {
+    if (이벤트.key === 'Enter') {
+      이벤트.preventDefault();
+      들어가기.click();
+    }
+  });
+
+  // 로그아웃하면 다음 방문에 다시 비밀번호를 묻는다
+  document.getElementById('로그아웃').addEventListener('click', function (이벤트) {
+    이벤트.preventDefault();
+    접근지우기();
+    location.reload();
+  });
+
+  // 24시간이 안 지났으면 비밀번호를 다시 묻지 않는다
+  var 기억된키 = 접근꺼내기();
+  if (기억된키) {
+    확인시도(기억된키, true);
+  }
+
+  // 체크박스는 브라우저가 필수 검사를 해주지 않으니 직접 막는다
+  폼.addEventListener('submit', function (이벤트) {
+    var 고른것 = 폼.querySelectorAll('input[name="네트워크사"]:checked');
+    if (!고른것.length) {
+      이벤트.preventDefault();
+      alert('네트워크사를 한 곳 이상 선택해 주세요.');
+      return;
+    }
+    보내기.disabled = true;
+    보내기.textContent = '보내는 중…';
+  });
+
+  종류바뀜();
+})();
+</script>
+</body>
+</html>
