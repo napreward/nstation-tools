@@ -105,22 +105,75 @@
   }
   button:disabled { background: #9aa4b2; cursor: not-allowed; }
   [hidden] { display: none !important; }
+
+  /* ── 잠금 화면. 허브의 다른 도구와 같은 어두운 배색 ── */
+  body.잠금 {
+    background: #0f1115;
+    padding: 24px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  body.잠금 .wrap { width: 100%; max-width: 320px; }
+  body.잠금 h1, body.잠금 #설명 { display: none; }
+
+  #로그인칸 { text-align: center; }
+  .잠금제목 {
+    color: #f3f4f6;
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .잠금설명 {
+    color: #9aa1ac;
+    font-size: 13px;
+    margin: 0 0 20px;
+  }
+  #로그인칸 input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    background: #171a21;
+    border: 1px solid #2b303b;
+    border-radius: 8px;
+    color: #e5e7eb;
+    font-size: 14px;
+    text-align: center;
+  }
+  #로그인칸 input[type="password"]::placeholder { color: #6b7280; }
+  #로그인칸 input[type="password"]:focus {
+    outline: none;
+    border-color: #2ed3b7;
+  }
+  .잠금오류 {
+    color: #f87171;
+    font-size: 13px;
+    min-height: 18px;
+    margin: 10px 0 0;
+  }
+  #들어가기 {
+    width: auto;
+    margin-top: 14px;
+    padding: 10px 28px;
+    background: #2ed3b7;
+    color: #0b2f29;
+    border-radius: 8px;
+  }
+  #들어가기:disabled { background: #2a6b61; color: #9fd9cf; }
 </style>
 </head>
-<body>
+<body class="잠금">
 <div class="wrap">
 
   <h1>nap reward 네트워크사 메일 요청</h1>
   <p class="sub" id="설명">메일 종류를 고르면 그 메일에 필요한 항목만 아래에 나타납니다.</p>
 
   <!-- 비밀번호를 확인하기 전에는 폼을 보여주지 않는다 -->
-  <div class="card" id="로그인칸">
-    <div class="field">
-      <label class="title" for="비밀번호">비밀번호<span class="req">*</span></label>
-      <input type="password" id="비밀번호" autocomplete="current-password"
-             placeholder="팀에 공유된 비밀번호">
-    </div>
-    <p id="로그인오류" class="error" style="margin:0 0 14px"></p>
+  <div id="로그인칸">
+    <h2 class="잠금제목">🔒 네트워크사 메일 요청</h2>
+    <p class="잠금설명">운영팀 공용 비밀번호를 입력하세요</p>
+    <input type="password" id="비밀번호" autocomplete="current-password" placeholder="비밀번호">
+    <p id="로그인오류" class="잠금오류"></p>
     <button type="button" id="들어가기">들어가기</button>
   </div>
 
@@ -417,6 +470,7 @@
 
   function 폼열기(열쇠, 이름들) {
     접근키칸.value = 열쇠;
+    document.body.classList.remove('잠금');
     로그인칸.hidden = true;
     폼.hidden = false;
     설명.textContent = '메일 종류를 고르면 그 메일에 필요한 항목만 아래에 나타납니다.';
