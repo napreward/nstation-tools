@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>nap reward 네트워크사 메일 요청</title>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>
   :root {
     --bg: #f6f7f9;
@@ -20,7 +22,8 @@
     padding: 40px 20px 80px;
     background: var(--bg);
     color: var(--text);
-    font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+    /* Pretendard 를 못 받아오면 아래 순서대로 대체됩니다 */
+    font-family: Pretendard, system-ui, -apple-system, "Malgun Gothic", sans-serif;
     line-height: 1.6;
   }
   .wrap { max-width: 640px; margin: 0 auto; }
@@ -149,6 +152,7 @@
   button {
     width: 100%;
     padding: 12px;
+    font-family: inherit;
     font-size: 15px;
     font-weight: 600;
     font-family: inherit;
@@ -160,6 +164,21 @@
   }
   button:disabled { background: #9aa4b2; cursor: not-allowed; }
   [hidden] { display: none !important; }
+
+  .만든이 {
+    position: fixed;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    padding: 5px 13px;
+    border-radius: 999px;
+    background: #2e2e42;
+    color: #e8e9f0;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
 
   /* ── 잠금 화면. 허브의 다른 도구와 같은 어두운 배색 ── */
   body.잠금 {
@@ -218,6 +237,10 @@
 </style>
 </head>
 <body class="잠금">
+
+<!-- 버전과 만든 사람. 고칠 때 여기 글자만 바꾸면 됩니다 -->
+<div class="만든이">v1.0 · 제작: 김유진</div>
+
 <div class="wrap">
 
   <h1>nap reward 네트워크사 메일 요청</h1>
