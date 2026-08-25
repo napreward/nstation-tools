@@ -44,6 +44,16 @@
     margin-bottom: 6px;
   }
   .req { color: var(--danger); margin-left: 2px; }
+  /* 라벨과 시트 바로가기를 한 줄 양끝에 둔다 */
+  .칸머리 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .시트링크 {
+    flex: none;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .시트링크:hover { text-decoration: underline; }
   .hint { font-size: 12px; color: var(--muted); margin: -2px 0 6px; }
   input[type="text"], input[type="number"], input[type="password"],
   input[type="date"], select, textarea {
@@ -328,7 +338,12 @@
       <div id="본문영역" hidden>
 
         <div class="field">
-          <label class="title">네트워크사<span class="req">*</span></label>
+          <div class="칸머리">
+            <label class="title">네트워크사<span class="req">*</span></label>
+            <a class="시트링크"
+               href="https://docs.google.com/spreadsheets/d/1XSIybup_l0V5QeXxFRnU-hooE1asgpwbgF3eNdtgaR8/edit"
+               target="_blank" rel="noopener">주소록 시트 열기 ↗</a>
+          </div>
           <div class="checks" id="네트워크사목록">
             <p class="note">불러오는 중…</p>
           </div>
