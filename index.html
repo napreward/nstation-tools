@@ -107,7 +107,7 @@
     <button class="top-tab" id="tabBm" onclick="switchTab('bm')">🔖 스크랩 북마클릿</button>
     <button class="top-tab" id="tabTv" onclick="switchTab('tv')">🔗 트래킹 링크 검증</button>
     <button class="top-tab" id="tabNm" onclick="switchTab('nm')">📧 네트워크사 메일 요청</button>
-    <button class="nav-update" id="btnUpdate" onclick="updateCamps()">🔄 4개 서버 업데이트</button>
+    <button class="nav-update" id="btnUpdate" onclick="updateCamps()">🔄 5개 서버 업데이트</button>
   </nav>
   <div class="panel active" id="panelIr">
     <iframe src="resizer.html" title="이미지 자동 리사이저" allow="clipboard-write"></iframe>
@@ -182,7 +182,7 @@
     var CALL_PORT = 8080;      // 4430으로 바꿀 땐 → 'https', 4430
 
     function updateCamps() {
-      var ips = ['50', '51', '52', '53'];
+      var ips = ['50', '51', '52', '53', '54'];
       // [검증용] 각 서버 URL을 새 탭(팝업)으로 열어 → 실제 응답(1=성공 / 0=실패)을 눈으로 확인
       // 팝업(페이지 이동)은 크롬 mixed-content 차단을 안 받으므로 http여도 열림.
       var blocked = false;
@@ -196,8 +196,8 @@
         showStatus('err', '⚠️ 팝업이 차단됐어요',
           '주소창 오른쪽 팝업 아이콘 → "항상 허용" 으로 바꾼 뒤 다시 눌러주세요.');
       } else {
-        showStatus('ok', '✅ 4개 서버 창을 열었어요',
-          '열린 창(50·51·52·53)을 확인하세요.');
+        showStatus('ok', '✅ 5개 서버 창을 열었어요',
+          '열린 창(50·51·52·53·54)을 확인하세요.');
       }
     }
   </script>
