@@ -1438,6 +1438,7 @@
         previewOutputLabel.textContent = '-';
         coordsToggle.style.display = 'none';
         manualPreviewCoords.classList.remove('visible');
+        manualPreviewCoords.textContent = '';
         renderInspectPanel();
         return;
       }
@@ -2749,7 +2750,13 @@
 
     function renderInspectPanel() {
       const active = getActiveImage();
-      if (!active || !active.guide) { inspectPanel.style.display = 'none'; return; }
+      if (!active || !active.guide) {
+        // 숨기면서 내용도 비운다(지운 이미지의 항목 · 단추가 남지 않게)
+        inspectPanel.style.display = 'none';
+        inspectGuideEl.textContent = '';
+        inspectListEl.innerHTML = '';
+        return;
+      }
       inspectPanel.style.display = '';
       inspectGuideEl.textContent = `기준 ${active.width}×${active.height}: ${guideText(active.guide)} (텍스트·로고, 글자 든 박스는 박스 바깥선까지) · 잘림은 지금 크롭(${active.selectedSize.replace('x', '×')}) 기준`;
       const st = active.inspect.status;
@@ -3122,7 +3129,7 @@
       rejectStatusEl.textContent = '';
       rejectModal.classList.add('open');
       rejectPreviewEl.scrollTop = 0;
-      rejectCopyBtn.focus();
+      if (!tour.open) rejectCopyBtn.focus();   // 튜토리얼 중엔 포커스를 말풍선에 둔다(Enter가 '복사'를 누르지 않게)
     }
 
     function closeRejectModal() {
@@ -3181,7 +3188,8 @@
     const tourNext = document.getElementById('tourNext');
     const tourSkip = document.getElementById('tourSkip');
     const tourBlocks = [...tourEl.querySelectorAll('.tour-block')];
-    const tour = { open: false, i: 0, sample: null, prevActive: -1, prevDragged: false, raf: 0, key: '', busy: false };
+    // run = 튜토리얼을 켤 때마다 1씩 — 끝냈거나 새로 시작한 뒤에 늦게 끝난 일(샘플 올리기 · 검사 기다리기)을 알아본다
+    const tour = { open: false, run: 0, i: 0, sample: null, prevActive: -1, prevDragged: false, raf: 0, key: '', busy: false, vw: 0, vh: 0 };
 
     const tourCell = () => (tour.sample ? autoResizeArea.querySelector(`td[data-inspect-id="${tour.sample.id}"]`) : null);
     const buttonIn = (root, label) => (root ? [...root.querySelectorAll('button')].find(b => b.textContent.trim() === label) || null : null);
@@ -3189,31 +3197,46 @@
     // 샘플: data URL → File(네트워크 호출 없이) → 평소 올리기와 같은 길
     async function tourAddSample() {
       if (tour.sample && state.images.includes(tour.sample)) return;
+      const run = tour.run;
       const bin = atob(TOUR_SAMPLE_SRC.split(',')[1]);
       const bytes = new Uint8Array(bin.length);
       for (let k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
       const file = new File([bytes], TOUR_SAMPLE_NAME, { type: 'image/png' });
+      const errClass = errorList.className, errHtml = errorList.innerHTML;   // handleFiles가 비우는 '지원하지 않는 크기' 안내를 지킨다
       await handleFiles([file]);
-      tour.sample = state.images.find(it => it.file === file) || null;
-      if (!tour.open) tourRemoveSample();   // 올리는 사이에 튜토리얼을 닫았으면 남기지 않고 바로 지운다
+      errorList.className = errClass;
+      errorList.innerHTML = errHtml;
+      const item = state.images.find(it => it.file === file) || null;
+      // 올리는 사이에 튜토리얼을 닫았거나 새로 시작했으면: 샘플만 빼고, 그 사이 사용자가 고른 이미지 · 상태는 건드리지 않는다
+      if (!tour.open || tour.run !== run) { tourSpliceImage(item, false); return; }
+      tour.sample = item;
     }
 
-    function tourRemoveSample() {
-      const item = tour.sample;
-      tour.sample = null;
+    // 이미지 하나 빼기(검사 대기열 · 객체 URL까지). restore면 튜토리얼 시작 전의 선택 · 드래그 안내 상태로 되돌린다
+    function tourSpliceImage(item, restore) {
       const idx = item ? state.images.indexOf(item) : -1;
       if (idx < 0) return;
       const q = inspectQueue.indexOf(item);
       if (q >= 0) inspectQueue.splice(q, 1);
       state.images.splice(idx, 1);
       URL.revokeObjectURL(item.url);
-      state.activeIndex = Math.min(tour.prevActive, state.images.length - 1);
-      state.hasDragged = tour.prevDragged;
+      if (restore) {
+        state.activeIndex = Math.min(tour.prevActive, state.images.length - 1);
+        state.hasDragged = tour.prevDragged;
+      } else if (state.activeIndex > idx || state.activeIndex >= state.images.length) {
+        state.activeIndex--;
+      }
       renderAutoResizeTable();
       renderImageList();
       syncControls();
       renderEditor();
       renderManualPreview();
+    }
+
+    function tourRemoveSample() {
+      const item = tour.sample;
+      tour.sample = null;
+      tourSpliceImage(item, true);
     }
 
     // 편집기 · 옆 목록을 샘플로
@@ -3236,7 +3259,7 @@
     const TOUR_STEPS = [
       { title: '튜토리얼', next: '시작하기',
         text: '소재 이미지를 올려 <b>규격별로 자르고</b>, <b>여백 가이드를 검수</b>하고, <b>광고주 반려 메일</b>까지 만드는 순서를 하나씩 보여 드려요.<br>연습용 샘플 이미지를 잠깐 올렸다가 끝나면 지웁니다(미리 올려 둔 이미지는 그대로).' },
-      { target: () => dropArea, title: '1. 이미지 올리기', next: '샘플 올리기', onNext: tourAddSample,
+      { target: () => dropArea, title: '1. 이미지 올리기', next: '샘플 올리기', onNext: tourAddSample, acceptsDrop: true,
         text: '소재 이미지를 여기로 끌어 놓거나 눌러서 고릅니다. <b>1200×600</b>과 <b>720×780</b>만 받고, 여러 장을 한 번에 올려도 돼요.<br>지금은 연습용 샘플을 대신 올려 볼게요.' },
       { target: () => (tourCell() ? tourCell().previousElementSibling : null), title: '2. 자동 리사이징',
         text: '올리자마자 출력 크기별로 잘라서 보여 줘요. <b>720×780 → 720×720 · 627×627</b>, <b>1200×600 → 1200×627 · 720×360</b>.' },
@@ -3249,9 +3272,11 @@
       { target: () => inspectPanel, title: '6. 항목별 판단', enter: tourShowSample,
         text: '감지는 추정이라 마지막 판단은 사람이 해요. 항목마다 <b>넘김</b>(가이드만 걸린 주황 항목 허용) · <b>장식이라 무시</b>(글자가 아닌 장식) · <b>되돌리기</b>(원래대로)를 고를 수 있어요.' },
       { target: () => buttonIn(inspectListEl.querySelector('.inspect-item.guide'), '넘김'), title: '7. 넘김 해 보기', action: true,
-        enter: () => {
+        enter: () => {   // 다시 들어와도 '넘김' 단추가 있게: 샘플의 넘김 · 무시를 풀어 둔다
           tourShowSample();
-          if (tour.sample) for (const k of Object.keys(tour.sample.passes)) setPass(tour.sample, Number(k), false);
+          if (!tour.sample) return;
+          for (const k of Object.keys(tour.sample.passes)) setPass(tour.sample, Number(k), false);
+          for (const k of Object.keys(tour.sample.overrides)) setOverride(tour.sample, Number(k), null);
         },
         text: '샘플의 <b>SAMPLE</b> 로고는 왼쪽 여백이 31px라 가이드(65px)에 걸렸지만 잘리지는 않아요. 괜찮다고 보면 <b>넘김</b>으로 허용해 보세요. 반려 문구에서 빠지고, 표에는 ‘넘김’으로 남아요.' },
       { target: () => buttonIn(inspectListEl, '반려 문구 보기'), title: '8. 반려 문구 만들기', action: true,
@@ -3297,12 +3322,16 @@
       const step = TOUR_STEPS[i];
       if (step.enter) step.enter();
       tourRender();
-      const el = tourTarget();
-      if (el) {
-        const b = el.getBoundingClientRect();
-        if (b.top < 8 || b.bottom > innerHeight - 8) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      }
+      tourReveal();
       tourNext.focus();
+    }
+
+    // 밝힐 곳이 화면 밖이면 한 번에 가운데로(부드럽게 스크롤하면 구멍이 내용보다 늦게 따라와 어긋나 보임)
+    function tourReveal() {
+      const el = tourTarget();
+      if (!el) return;
+      const b = el.getBoundingClientRect();
+      if (b.top < 8 || b.bottom > document.documentElement.clientHeight - 8) el.scrollIntoView({ block: 'center', behavior: 'instant' });
     }
 
     async function tourNextStep() {
@@ -3311,21 +3340,22 @@
       const step = TOUR_STEPS[tour.i];
       if (step.action) {
         const el = tourTarget();
-        if (el) { el.click(); return; }   // 직접 누른 것과 같은 길 — 아래 클릭 감지가 다음 단계로 넘긴다
+        if (el) { el.click(); tourNext.focus(); return; }   // 직접 누른 것과 같은 길 — 아래 클릭 감지가 다음 단계로 넘긴다
       }
       if (step.onNext) {
+        const run = tour.run;
         tour.busy = true;
         tourNext.disabled = true;
         tourNext.textContent = '샘플 검사 중…';
         try {
           await step.onNext();
-          while (tour.open && tour.sample && tour.sample.inspect.status !== 'done' && tour.sample.inspect.status !== 'error') {
+          while (tour.open && tour.run === run && tour.sample && tour.sample.inspect.status !== 'done' && tour.sample.inspect.status !== 'error') {
             await new Promise(r => setTimeout(r, 100));
           }
         } finally {
-          tour.busy = false;
+          if (tour.run === run) tour.busy = false;
         }
-        if (!tour.open) return;
+        if (!tour.open || tour.run !== run) return;
       }
       tourGo(tour.i + 1);
     }
@@ -3337,6 +3367,11 @@
       const el = tourTarget();
       // 보이는 화면 크기(스크롤 막대 제외) — 말풍선이 막대 밑으로 들어가지 않게
       const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight, pad = 6;
+      if (vw !== tour.vw || vh !== tour.vh) {   // 창 크기가 바뀌면 밝힐 곳이 화면 밖으로 밀렸을 수 있다
+        tour.vw = vw;
+        tour.vh = vh;
+        tourReveal();
+      }
       let r = null;
       if (el) {
         const b = el.getBoundingClientRect();
@@ -3372,6 +3407,10 @@
       if (tour.open) return;
       closeRejectModal();
       tour.open = true;
+      tour.run++;
+      tour.busy = false;
+      tour.vw = 0;
+      tour.vh = 0;
       tour.sample = null;
       tour.prevActive = state.activeIndex;
       tour.prevDragged = state.hasDragged;
@@ -3394,23 +3433,41 @@
     tourNext.addEventListener('click', tourNextStep);
     tourPrev.addEventListener('click', () => { if (!tour.busy) tourGo(tour.i - 1); });
     tourSkip.addEventListener('click', endTour);
-    // 따라 하기 단계: 밝힌 곳을 누르면(그 단추의 원래 동작이 먼저 끝난 뒤) 다음 단계로
+    // 튜토리얼 중 페이지 클릭: 따라 하기 단계의 밝힌 곳만 통과시키고(그 단추의 원래 동작이 끝난 뒤 다음 단계로),
+    // 구멍 둘레 여백에 걸친 옆 단추 · 키보드로 눌린 다른 단추(예: 반려 창 '복사')는 막는다
     document.addEventListener('click', (e) => {
-      if (!tour.open || tour.busy || !TOUR_STEPS[tour.i].action) return;
+      if (!tour.open || tourEl.contains(e.target)) return;
       const el = tourTarget();
-      if (!el || !el.contains(e.target)) return;
+      if (!TOUR_STEPS[tour.i].action || tour.busy || !el || !el.contains(e.target)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
       const at = tour.i;
       setTimeout(() => { if (tour.open && tour.i === at) tourGo(at + 1); }, 80);
     }, true);
-    // 튜토리얼 중엔 키를 먼저 받는다: Esc = 그만 보기, → = 다음, ← = 이전
+    // 튜토리얼 중엔 키를 먼저 받는다: Esc = 그만 보기, → = 다음, ← = 이전. Enter · Space는 말풍선 단추에만
     document.addEventListener('keydown', (e) => {
       if (!tour.open) return;
+      if ((e.key === 'Enter' || e.key === ' ') && !tourBubble.contains(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       const go = { Escape: endTour, ArrowRight: tourNextStep, ArrowLeft: () => { if (!tourPrev.hidden && !tour.busy) tourGo(tour.i - 1); } }[e.key];
       if (!go) return;
       e.preventDefault();
       e.stopPropagation();
       go();
     }, true);
+    // 튜토리얼 중 파일을 끌어 놓으면: 브라우저가 파일을 열지 않게 막고, 올리기 칸을 밝힌 1단계에서는 평소처럼 올린다
+    tourEl.addEventListener('dragover', (e) => e.preventDefault());
+    tourEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (!TOUR_STEPS[tour.i].acceptsDrop) return;
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+      if (files.length) handleFiles(files);
+    });
 
     // ─── Init ───
     renderAutoResizeTable();
