@@ -56,6 +56,21 @@
       flex-shrink: 0;
     }
     .creator-signature span { color: #f9fafb; }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .tour-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      color: #1f2937;
+      font-size: 13px;
+    }
+    .tour-btn:hover { background: #f9fafb; }
 
     /* ─── Panel ─── */
     .panel {
@@ -160,6 +175,12 @@
       border-color: #bfdbfe;
       color: #1d4ed8;
     }
+    .size-guide {
+      font-size: 11px;
+      color: #be185d;
+      font-weight: 700;
+      white-space: nowrap;
+    }
 
     #fileInput { display: none; }
 
@@ -260,6 +281,8 @@
     .table-footer {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
       margin-top: 14px;
     }
 
@@ -325,6 +348,217 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
 
+    /* ─── Margin Inspection (v1.8.0) ─── */
+    .mi-cell { min-width: 300px; }
+    .size-cell { white-space: nowrap; }
+    .mi-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .mi-chip {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .mi-chip.cut   { color: #b91c1c; background: #fef2f2; border-color: #fca5a5; }
+    .mi-chip.guide { color: #b45309; background: #fffbeb; border-color: #fcd34d; }
+    .mi-chip.info  { color: #4b5563; background: #f3f4f6; border-color: #e5e7eb; }
+    .mi-chip.ok    { color: #047857; background: #ecfdf5; border-color: #6ee7b7; }
+    .mi-chip.pass  { color: #475569; background: #f1f5f9; border-color: #cbd5e1; }
+    .mi-chip.wait  { color: #6b7280; background: #f9fafb; border-color: #e5e7eb; font-weight: 600; }
+    .mi-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.5;
+    }
+    .mi-lv { font-weight: 800; margin-right: 4px; }
+    .mi-lv.cut { color: #dc2626; }
+    .mi-lv.guide { color: #d97706; }
+    .mi-lv.info { color: #6b7280; }
+    .mi-lv.pass { color: #64748b; }
+    .mi-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .mi-actions .mi-link { margin-top: 0; }
+    .mi-link {
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #2563eb;
+      cursor: pointer;
+    }
+    .mi-link:hover { transform: none; text-decoration: underline; }
+    .zip-note {
+      font-size: 12px;
+      font-weight: 700;
+      color: #b91c1c;
+    }
+    .zip-note.wait { color: #9ca3af; font-weight: 600; }
+
+    /* ─── 반려 문구 창 ─── */
+    .reject-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(17,24,39,0.45);
+    }
+    .reject-modal.open { display: flex; }
+    .reject-box {
+      width: min(760px, 100%);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px 22px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .reject-box h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+      word-break: break-all;
+    }
+    .reject-sub {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+    .reject-opts {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+    }
+    .reject-opts select { padding: 6px 10px; font-size: 13px; }
+    .reject-preview {
+      height: min(56vh, 560px);
+      min-height: 240px;
+      overflow: auto;
+      padding: 14px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #fff;
+      outline: none;
+    }
+    .reject-preview:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .reject-preview img { max-width: 100%; height: auto; }
+    .reject-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+    }
+    .reject-status {
+      margin-right: auto;
+      font-size: 12px;
+      font-weight: 700;
+      color: #059669;
+    }
+    .reject-status.err { color: #b91c1c; }
+
+    /* ─── 튜토리얼(게임식 안내) ─── */
+    .tour { position: fixed; inset: 0; z-index: 100; pointer-events: none; }   /* 클릭은 아래 4칸 · 말풍선 · (안내 단계의) 구멍만 받는다 */
+    .tour[hidden] { display: none; }
+    .tour-block { position: fixed; background: transparent; pointer-events: auto; }
+    .tour-bubble { pointer-events: auto; }
+    .tour-hole {
+      position: fixed;
+      border-radius: 12px;
+      box-shadow: 0 0 0 9999px rgba(17,24,39,0.6);
+      outline: 3px solid #60a5fa;
+    }
+    .tour-hole.action { outline-color: #f59e0b; }
+    .tour-hole.none { outline: none; }
+    .tour-hole::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: inherit;
+      border: 3px solid #60a5fa;
+      animation: tour-pulse 1.4s ease-out infinite;
+      pointer-events: none;
+    }
+    .tour-hole.action::after { border-color: #f59e0b; }
+    .tour-hole.none::after { display: none; }
+    @keyframes tour-pulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      100% { transform: scale(1.06); opacity: 0; }
+    }
+    .tour-bubble {
+      position: fixed;
+      width: min(360px, calc(100vw - 32px));
+      padding: 16px 18px 14px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.28);
+      color: #1f2937;
+    }
+    .tour-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    .tour-bar { flex: 1; height: 4px; border-radius: 99px; background: #e5e7eb; overflow: hidden; }
+    .tour-bar span { display: block; height: 100%; background: #2563eb; border-radius: 99px; transition: width 0.2s; }
+    .tour-bubble h3 { margin: 0 0 6px; font-size: 15px; font-weight: 800; color: #111827; }
+    .tour-text { font-size: 13px; line-height: 1.7; color: #374151; }
+    .tour-text b { color: #111827; }
+    .tour-text .t-cut { color: #dc2626; font-weight: 800; }
+    .tour-text .t-guide { color: #d97706; font-weight: 800; }
+    .tour-text .t-info { color: #6b7280; font-weight: 800; }
+    .tour-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #b45309;
+    }
+    .tour-hint:empty { display: none; }
+    .tour-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .tour-actions button { padding: 7px 14px; font-size: 13px; }
+    .tour-skip {
+      margin-right: auto;
+      padding: 7px 4px !important;
+      background: none;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+    .tour-skip:hover { color: #4b5563; transform: none; }
+
     /* ─── Crop Editor Layout ─── */
     .crop-layout {
       display: grid;
@@ -387,6 +621,10 @@
       color: #9ca3af;
       line-height: 1.5;
     }
+    .image-item .mi-badge { font-weight: 800; margin-left: 4px; }
+    .mi-badge.cut { color: #dc2626; }
+    .mi-badge.guide { color: #d97706; }
+    .mi-badge.ok { color: #059669; }
 
     /* ─── Editor Column ─── */
     .editor-controls {
@@ -395,6 +633,16 @@
       flex-wrap: wrap;
       align-items: center;
       margin-bottom: 12px;
+    }
+    .guide-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #be185d;
+      cursor: pointer;
+      user-select: none;
     }
 
     .editor-wrap {
@@ -414,9 +662,8 @@
       position: absolute;
       inset: 0;
       display: flex;
-      align-items: flex-end;
+      align-items: center;   /* v1.8.0: 아래 여백 검수 표시를 가리지 않게 가운데로 */
       justify-content: center;
-      padding-bottom: 20px;
       pointer-events: none;
       z-index: 10;
       opacity: 1;
@@ -503,6 +750,78 @@
     }
     .preview-coords.visible { display: block; }
 
+    /* ─── Inspection panel (side) ─── */
+    .inspect-panel {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .side-preview .inspect-panel h4 { margin-bottom: 6px; }
+    .inspect-guide {
+      font-size: 11px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .inspect-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .inspect-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #374151;
+      background: #fff;
+    }
+    .inspect-item.cut   { border-color: #fca5a5; background: #fef2f2; }
+    .inspect-item.guide { border-color: #fcd34d; background: #fffbeb; }
+    .inspect-item.info  { background: #f9fafb; color: #6b7280; }
+    .inspect-item.pass  { border-color: #e2e8f0; background: #f8fafc; color: #64748b; }
+    .inspect-item .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .inspect-item .btns {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .inspect-item .pos {
+      font-size: 11px;
+      color: #9ca3af;
+      font-family: ui-monospace, monospace;
+    }
+    .inspect-item button {
+      padding: 3px 8px;
+      font-size: 11px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      color: #374151;
+    }
+    .inspect-item button:hover { transform: none; background: #f9fafb; }
+    .inspect-ok {
+      font-size: 12px;
+      font-weight: 700;
+      color: #059669;
+    }
+    .inspect-wait {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .inspect-reject {
+      margin-top: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
     /* ─── Hint ─── */
     .hint {
       margin-top: 10px;
@@ -535,9 +854,12 @@
     <div class="page-header">
       <div>
         <h1>이미지 자동 리사이저</h1>
-        <p class="page-header-sub">자동 리사이징 + 박스 크롭 편집기</p>
+        <p class="page-header-sub">자동 리사이징 + 박스 크롭 편집기 + 여백 검수</p>
       </div>
-      <div class="creator-signature">v1.7.0 · <span>제작: 정호윤</span></div>
+      <div class="header-actions">
+        <button class="tour-btn" id="tourBtn">▶ 튜토리얼 보기</button>
+        <div class="creator-signature">v1.8.0 · <span>제작: 정호윤</span></div>
+      </div>
     </div>
 
     <!-- Auto Resize Panel -->
@@ -555,11 +877,13 @@
                 <span class="size-chip">1200 × 600</span>
                 <span class="size-arrow">→</span>
                 <span class="size-chip output">1200 × 627, 720 × 360</span>
+                <span class="size-guide">여백 좌우 30px</span>
               </div>
               <div class="support-sizes">
                 <span class="size-chip">720 × 780</span>
                 <span class="size-arrow">→</span>
                 <span class="size-chip output">720 × 720, 627 × 627</span>
+                <span class="size-guide">여백 상하 30px · 좌우 65px</span>
               </div>
             </div>
           </div>
@@ -573,12 +897,14 @@
       </div>
 
       <div class="table-footer">
+        <span class="zip-note" id="zipNote"></span>
+        <button class="btn-secondary" id="rejectAllBtn" disabled>반려 문구 모아 보기</button>
         <button class="btn-download-zip" id="downloadZipBtn" disabled>ZIP 다운로드</button>
       </div>
     </div>
 
     <!-- Crop Editor Panel -->
-    <div class="panel">
+    <div class="panel" id="editorPanel">
       <h2>박스 크롭 편집기</h2>
 
       <div class="crop-layout">
@@ -598,6 +924,7 @@
             <select id="sizeSelect" disabled></select>
             <button class="btn-ghost" id="resetCropBtn" disabled>초기 위치로 복원</button>
             <button class="btn-primary" id="downloadManualBtn" disabled>크롭 결과 다운로드</button>
+            <label class="guide-toggle"><input type="checkbox" id="guideToggle" checked /> 여백 가이드 표시</label>
           </div>
 
           <div class="editor-wrap" id="editorWrap">
@@ -610,7 +937,8 @@
           <div class="hint">
             크롭 박스는 출력 사이즈에 맞춰 고정<br>
             이동만 가능 (확대/축소 불가)<br>
-            초기 위치는 자동 크롭 계산값
+            초기 위치는 자동 크롭 계산값<br>
+            분홍 = 가이드 여백 구역 · 빨강 = 잘리는 글자·박스 · 주황 = 가이드 여백 안 · 회색 실선 = 넘김 · 회색 점선 = 그림(참고, 오른쪽 목록에서 펼칠 때)
           </div>
         </div>
 
@@ -623,11 +951,59 @@
             ▸ 상세 좌표 보기
           </div>
           <div class="preview-coords" id="manualPreviewCoords"></div>
+
+          <div class="inspect-panel" id="inspectPanel" style="display:none;">
+            <h4>여백 검수</h4>
+            <div class="inspect-guide" id="inspectGuide"></div>
+            <div class="inspect-list" id="inspectList"></div>
+          </div>
         </div>
 
       </div>
     </div>
 
+  </div>
+
+  <!-- 반려 문구 창 -->
+  <div class="reject-modal" id="rejectModal">
+    <div class="reject-box" role="dialog" aria-modal="true" aria-labelledby="rejectTitle">
+      <h3 id="rejectTitle">반려 문구</h3>
+      <div class="reject-sub">광고주에게 보낼 메일 본문입니다. 원본에 여백 가이드를 적용했을 때 어긴 요소만 담았습니다(넘김 · 참고 제외). 여기서 글을 고친 뒤 '복사'를 누르면 이미지와 함께 메일 본문에 한 번에 붙습니다.</div>
+      <div class="reject-opts">
+        <label for="rejectImgMode">이미지</label>
+        <select id="rejectImgMode">
+          <option value="mark">가이드 여백 · 위반 위치 표시</option>
+          <option value="plain">원본 그대로</option>
+          <option value="none">넣지 않음</option>
+        </select>
+      </div>
+      <div class="reject-preview" id="rejectPreview" contenteditable="true" spellcheck="false"></div>
+      <div class="reject-actions">
+        <span class="reject-status" id="rejectStatus"></span>
+        <button class="btn-ghost" id="rejectCloseBtn">닫기</button>
+        <button class="btn-primary" id="rejectCopyBtn">복사</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 튜토리얼: 바깥 4칸은 클릭 막기, 가운데 구멍만 밝게(따라 하기 단계에선 구멍을 눌러 진행) -->
+  <div class="tour" id="tour" hidden>
+    <div class="tour-block" data-side="top"></div>
+    <div class="tour-block" data-side="bottom"></div>
+    <div class="tour-block" data-side="left"></div>
+    <div class="tour-block" data-side="right"></div>
+    <div class="tour-hole" id="tourHole"></div>
+    <div class="tour-bubble" id="tourBubble" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+      <div class="tour-step"><span id="tourCount"></span><div class="tour-bar"><span id="tourBar"></span></div></div>
+      <h3 id="tourTitle"></h3>
+      <div class="tour-text" id="tourText"></div>
+      <div class="tour-hint" id="tourHint"></div>
+      <div class="tour-actions">
+        <button class="tour-skip" id="tourSkip">그만 보기</button>
+        <button class="btn-ghost" id="tourPrev">이전</button>
+        <button class="btn-primary" id="tourNext">다음</button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -649,6 +1025,20 @@
     const editorCanvas      = document.getElementById('editorCanvas');
     const editorCtx         = editorCanvas.getContext('2d');
     const dragHintOverlay   = document.getElementById('dragHintOverlay');
+    const zipNote           = document.getElementById('zipNote');
+    const guideToggle       = document.getElementById('guideToggle');
+    const inspectPanel      = document.getElementById('inspectPanel');
+    const inspectGuideEl    = document.getElementById('inspectGuide');
+    const inspectListEl     = document.getElementById('inspectList');
+    const editorPanel       = document.getElementById('editorPanel');
+    const rejectAllBtn      = document.getElementById('rejectAllBtn');
+    const rejectModal       = document.getElementById('rejectModal');
+    const rejectTitleEl     = document.getElementById('rejectTitle');
+    const rejectPreviewEl   = document.getElementById('rejectPreview');
+    const rejectImgModeEl   = document.getElementById('rejectImgMode');
+    const rejectStatusEl    = document.getElementById('rejectStatus');
+    const rejectCopyBtn     = document.getElementById('rejectCopyBtn');
+    const rejectCloseBtn    = document.getElementById('rejectCloseBtn');
 
     const SIZE_PRESETS = {
       '1200x627': { w: 1200, h: 627 },
@@ -663,7 +1053,11 @@
       pointerDown: false,
       dragOffsetX: 0,
       dragOffsetY: 0,
-      hasDragged: false  // drag hint 제어용
+      hasDragged: false,  // drag hint 제어용
+      showGuide: true,    // 여백 가이드 표시
+      showInfo: false,    // 참고(그림) 항목 펼침 — 펼칠 때만 편집기에 점선 상자
+      hoverEl: -1,        // 검수 목록에서 가리킨 요소
+      rejectImgMode: 'mark' // 반려 문구 이미지: mark(표시) · plain(원본) · none
     };
 
     // ─── Utilities ───
@@ -769,7 +1163,9 @@
       }
       return { id: crypto.randomUUID(), file, name: file.name, url, element: img,
                width: img.naturalWidth, height: img.naturalHeight,
-               allowedSizes, selectedSize, autoCrops, manualCrops };
+               allowedSizes, selectedSize, autoCrops, manualCrops,
+               guide: MARGIN_GUIDES[`${img.naturalWidth}x${img.naturalHeight}`] || null,
+               inspect: { status: 'wait' }, overrides: {}, passes: {} };
     }
 
     // ─── Error display ───
@@ -801,6 +1197,7 @@
       syncControls();
       renderEditor();
       renderManualPreview();
+      queueInspection(loaded);
     }
 
     // ─── Drop zone ───
@@ -829,6 +1226,7 @@
       if (!state.images.length) {
         autoResizeArea.innerHTML = `<div class="empty">지원 이미지를 업로드하면 자동 리사이징 결과가 표시됩니다.</div>`;
         downloadZipBtn.disabled = true;
+        renderTableFooter();
         return;
       }
 
@@ -840,13 +1238,14 @@
             <th>파일명</th>
             <th>원본 크기</th>
             <th>자동 결과</th>
+            <th>여백 검수</th>
           </tr>
         </thead>
         <tbody></tbody>
       `;
 
       const tbody = table.querySelector('tbody');
-      state.images.forEach((item) => {
+      state.images.forEach((item, index) => {
         const tr = document.createElement('tr');
 
         const tdThumb = document.createElement('td');
@@ -861,6 +1260,7 @@
 
         const tdSize = document.createElement('td');
         tdSize.setAttribute('data-label', '원본 크기');
+        tdSize.className = 'size-cell';
         tdSize.textContent = `${item.width} × ${item.height}`;
 
         const tdPreview = document.createElement('td');
@@ -888,10 +1288,17 @@
 
         tdPreview.appendChild(previewWrap);
 
+        const tdInspect = document.createElement('td');
+        tdInspect.setAttribute('data-label', '여백 검수');
+        tdInspect.className = 'mi-cell';
+        tdInspect.dataset.inspectId = item.id;
+        fillInspectionCell(tdInspect, item, index);
+
         tr.appendChild(tdThumb);
         tr.appendChild(tdName);
         tr.appendChild(tdSize);
         tr.appendChild(tdPreview);
+        tr.appendChild(tdInspect);
         tbody.appendChild(tr);
       });
 
@@ -901,6 +1308,7 @@
       wrap.appendChild(table);
       autoResizeArea.appendChild(wrap);
       downloadZipBtn.disabled = false;
+      renderTableFooter();
     }
 
     // ─── Image List ───
@@ -917,7 +1325,7 @@
           <img src="${item.url}" alt="">
           <div class="meta">
             <div class="name">${escapeHtml(item.name)}</div>
-            <div class="desc">${item.width} × ${item.height}</div>
+            <div class="desc">${item.width} × ${item.height}${inspectionBadgeHtml(item)}</div>
           </div>
         `;
         div.addEventListener('click', () => {
@@ -968,6 +1376,11 @@
       renderManualPreview();
     });
 
+    guideToggle.addEventListener('change', () => {
+      state.showGuide = guideToggle.checked;
+      renderEditor();
+    });
+
     // ─── Editor ───
     function renderEditor() {
       const active = getActiveImage();
@@ -1007,6 +1420,8 @@
       editorCtx.fillText(active.selectedSize.replace('x', ' × '), x + 8, y + 20);
       editorCtx.restore();
 
+      if (state.showGuide) drawGuideOverlay(active, scale);
+
       // drag hint: 선택 직후 아직 드래그 안 했으면 표시
       if (!state.hasDragged) {
         dragHintOverlay.classList.remove('hidden');
@@ -1023,6 +1438,7 @@
         previewOutputLabel.textContent = '-';
         coordsToggle.style.display = 'none';
         manualPreviewCoords.classList.remove('visible');
+        renderInspectPanel();
         return;
       }
       const sizeKey = active.selectedSize;
@@ -1038,6 +1454,7 @@
       coordsToggle.style.display = 'inline-flex';
       manualPreviewCoords.textContent =
         `x=${crop.x.toFixed(1)}, y=${crop.y.toFixed(1)}, w=${crop.w.toFixed(1)}, h=${crop.h.toFixed(1)}`;
+      renderInspectPanel();
     }
 
     // coords toggle
@@ -1140,6 +1557,1860 @@
     });
 
     window.addEventListener('resize', () => renderEditor());
+
+    // ─── Margin Inspection (v1.8.0) ───
+    // 가이드 여백 안쪽에 글자·로고·글자 박스가 들어왔는지, 자동/수동 크롭에서 잘리는지 화소로 찾는다.
+    // 계산은 이 페이지 안에서만 하고 밖으로 보내는 것은 없다.
+    /* 여백 검수 — 화소만 보고 '글자·로고·글자 박스'가 가이드 여백 안쪽(또는 출력 크롭이 잘라내는 구간)에 들어왔는지 찾는다. DOM 없음.
+       detectMarginElements(rgba, W, H) → { elements:[{x0,y0,x1,y1,cls,weak,...}] }
+         cls: 'text'(글자·로고) | 'box'(글자 든 박스) | 'graphic'(사진·3D·도형 장식 — 참고만), weak = 짧은 글자라 '글자로 추정'
+       evaluateMargins(elements, W, H, guide, crops) → 판정 목록(잘림 / 가이드 / 참고)
+       v6(2026-10-19): 합성 시험 약 1,900장 결과를 반영 — 배경 무늬 세기에 맞춘 경계 기준, 가장자리 배경색 팔레트로
+       가장자리에 걸친 박스 · 글줄 되살리기, 밝기 위주 · 3색까지 허용하는 글자색 모형, 획 굵기 검사, 짧은 단어 · 배지,
+       두 단계 묶기(조각 → 음절 덩어리 → 글줄, 문장부호 · 말줄임표 붙이기). */
+
+    const MI = {
+      BAND: 4,                // 가장자리 띠 폭(배경색 · 무늬 세기를 재는 곳)
+      EDGE_MIN: 34,           // 경계 기준 = 띠 무늬 대비(변별 98% 값의 둘째로 작은 변) + EDGE_PAD, EDGE_MIN~EDGE_MAX
+      EDGE_MAX: 72,
+      EDGE_PAD: 8,
+      PAL_TOL: 24,            // 띠의 주된 배경색(팔레트)과 이 이내인 띠 화소만 배경 씨앗
+      PAL_COVER: 0.6,         // 팔레트가 띠의 이만큼을 못 덮으면(사진·강한 그라데이션) 띠의 경계 아닌 화소 전부를 씨앗으로
+      NEAR: 20,               // 배경과 이 이내인 경계 화소는 배경 쪽으로 깎음
+      PANEL_RATIO: 0.2,       // 화면의 이 비율 이상인 평평한 면 = 판(배경)
+      PANEL_STD: 18,          // 판: 평면 맞춤 잔차 표준편차(선형 그라데이션 판 허용, 천 · 그림 음영은 제외)
+      FLAT_STD: 14,           // 박스 면: 평면 맞춤 잔차 표준편차(선형 그라데이션 버튼 허용)
+      BOX_MIN_AREA: 120,
+      BOX_FILL: 0.5,
+      BOX_SHARE: 0.3,
+      CHROMA_W: 0.35,         // 글자색 모형에서 색차 가중(JPEG 색 번짐에 덜 흔들리게)
+      TWO_COLOR: 12,          // 글자색 모형(배경·글자색 최대 2개) 평균 거리
+      COMPLEX_SEG: 20,
+      COMPLEX_COLORS: 12,
+      STROKE: 0.4,            // 획: 획 굵기(2×넓이/둘레) ≤ 이 값 × √넓이 — 원 0.56 · 네모 0.5 · 타원 0.42 · 글자 0.15~0.35
+      NOISE_AREA: 40,
+      NOISE_DIM: 14,
+      BIG: 0.6                // 가로·세로 모두 화면의 이 비율 이상인 덩어리 = 배경 그림(조각 아님)
+    };
+
+    function detectMarginElements(rgba, W, H, params) {
+      const P = Object.assign({}, MI, params || {});
+      const dbgOut = {};
+      const N = W * H;
+      if (!N) return { elements: [], pieces: [], BG: new Uint8Array(0), LB: new Int32Array(0), edgeT: 0 };
+      const R = new Uint8Array(N), G = new Uint8Array(N), B = new Uint8Array(N);
+      for (let i = 0, j = 0; i < N; i++, j += 4) {
+        const a = rgba[j + 3];
+        if (a === 255) { R[i] = rgba[j]; G[i] = rgba[j + 1]; B[i] = rgba[j + 2]; }
+        else {
+          const k = a / 255, w = 255 * (1 - k);
+          R[i] = Math.round(rgba[j] * k + w); G[i] = Math.round(rgba[j + 1] * k + w); B[i] = Math.round(rgba[j + 2] * k + w);
+        }
+      }
+      const diff = (i, j) => Math.max(Math.abs(R[i] - R[j]), Math.abs(G[i] - G[j]), Math.abs(B[i] - B[j]));
+      const diffC = (i, c) => Math.max(Math.abs(R[i] - c[0]), Math.abs(G[i] - c[1]), Math.abs(B[i] - c[2]));
+      const cdist = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]), Math.abs(a[2] - b[2]));
+
+      // 1) 3x3 국소 대비(채널별 최대-최소 중 최대)
+      const CON = new Uint8Array(N);
+      {
+        const hMax = new Uint8Array(N), hMin = new Uint8Array(N);
+        for (const C of [R, G, B]) {
+          for (let y = 0; y < H; y++) {
+            const row = y * W;
+            for (let x = 0; x < W; x++) {
+              const i = row + x;
+              let mx = C[i], mn = C[i];
+              if (x > 0) { const v = C[i - 1]; if (v > mx) mx = v; if (v < mn) mn = v; }
+              if (x < W - 1) { const v = C[i + 1]; if (v > mx) mx = v; if (v < mn) mn = v; }
+              hMax[i] = mx; hMin[i] = mn;
+            }
+          }
+          for (let i = 0; i < N; i++) {
+            let mx = hMax[i], mn = hMin[i];
+            if (i >= W) { if (hMax[i - W] > mx) mx = hMax[i - W]; if (hMin[i - W] < mn) mn = hMin[i - W]; }
+            if (i < N - W) { if (hMax[i + W] > mx) mx = hMax[i + W]; if (hMin[i + W] < mn) mn = hMin[i + W]; }
+            if (mx - mn > CON[i]) CON[i] = mx - mn;
+          }
+        }
+      }
+
+      // 2) 가장자리 띠: 무늬 세기(변마다 대비 98% 값 → 둘째로 작은 값: 한두 변에 걸친 장식은 무시) → 경계 기준, 주된 배경색 팔레트
+      //    단 마주 보는 두 변에만 무늬가 있으면(세로 · 가로 줄무늬) 그 무늬 세기를 씀
+      const band = Math.max(1, Math.min(P.BAND, Math.floor(Math.min(W, H) / 2)));
+      let texture = 0;
+      {
+        const sides = [[0, 0, W, band], [0, H - band, W, H], [0, band, band, H - band], [W - band, band, W, H - band]];
+        const p98 = [];
+        for (const [x0, y0, x1, y1] of sides) {
+          const hist = new Uint32Array(256);
+          let n = 0;
+          for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { hist[CON[y * W + x]]++; n++; }
+          let acc = 0, v = 0;
+          if (n) for (; v < 256; v++) { acc += hist[v]; if (acc >= 0.98 * n) break; }
+          p98.push(v);
+        }
+        const sorted = [...p98].sort((a, b) => a - b);
+        texture = sorted[1];
+        const [top, bottom, left, right] = p98;
+        const pair = (a, b, c, d) => Math.min(a, b) > 20 && Math.abs(a - b) <= 0.3 * Math.max(a, b) && Math.max(c, d) < 10;
+        if (pair(top, bottom, left, right)) texture = Math.min(top, bottom);       // 세로 줄무늬
+        else if (pair(left, right, top, bottom)) texture = Math.min(left, right);  // 가로 줄무늬
+      }
+      const EDGE_T = Math.max(P.EDGE_MIN, Math.min(P.EDGE_MAX, texture + P.EDGE_PAD));
+      const EDGE = new Uint8Array(N);
+      for (let i = 0; i < N; i++) EDGE[i] = CON[i] >= EDGE_T ? 1 : 0;
+
+      const inBand = (x, y) => x < band || y < band || x >= W - band || y >= H - band;
+      const palette = [];
+      {
+        const bins = new Map();
+        let n = 0;
+        for (let y = 0; y < H; y++) {
+          const full = y < band || y >= H - band;
+          for (let x = 0; x < W; x++) {
+            if (!full && x === band) { x = W - band - 1; continue; }
+            const i = y * W + x;
+            if (EDGE[i]) continue;
+            const k = (R[i] >> 3) << 10 | (G[i] >> 3) << 5 | (B[i] >> 3);
+            let e = bins.get(k);
+            if (!e) { e = [0, 0, 0, 0]; bins.set(k, e); }
+            e[0]++; e[1] += R[i]; e[2] += G[i]; e[3] += B[i]; n++;
+          }
+        }
+        const list = [...bins.values()].sort((a, b) => b[0] - a[0]);
+        let acc = 0;
+        for (const e of list) {
+          if (palette.length >= 16 || e[0] < 0.06 * n) break;   // 띠의 6% 이상인 색만 배경색(가장자리에 걸친 알약 · 글자 색은 빠지게)
+          palette.push([e[1] / e[0], e[2] / e[0], e[3] / e[0]]);
+          acc += e[0];
+        }
+        if (acc < P.PAL_COVER * n) palette.length = 0;   // 팔레트로 설명 안 됨 → 띠 전체를 씨앗으로
+      }
+      const nearPalette = (i) => {
+        for (const c of palette) if (Math.abs(R[i] - c[0]) <= P.PAL_TOL && Math.abs(G[i] - c[1]) <= P.PAL_TOL && Math.abs(B[i] - c[2]) <= P.PAL_TOL) return true;
+        return false;
+      };
+
+      // 3) 배경 채우기: 씨앗 = 띠(가장자리 4화소)의 경계 아닌 화소 전부 → 경계 아닌 화소로 번짐.
+      //    가장자리까지 이어진 장식은 배경으로 빠진다(가장자리에 닿은 박스·글자는 끝의 '구조' 단계에서 따로 찾음).
+      const BG = new Uint8Array(N);
+      const queue = new Int32Array(N);
+      let qh = 0, qt = 0;
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        if (!inBand(x, y)) { x = W - band - 1; if (x < 0) break; continue; }
+        const i = y * W + x;
+        if (!EDGE[i] && !BG[i]) { BG[i] = 1; queue[qt++] = i; }
+      }
+      const flood = () => {
+        while (qh < qt) {
+          const i = queue[qh++], x = i % W;
+          if (x > 0 && !BG[i - 1] && !EDGE[i - 1]) { BG[i - 1] = 1; queue[qt++] = i - 1; }
+          if (x < W - 1 && !BG[i + 1] && !EDGE[i + 1]) { BG[i + 1] = 1; queue[qt++] = i + 1; }
+          if (i >= W && !BG[i - W] && !EDGE[i - W]) { BG[i - W] = 1; queue[qt++] = i - W; }
+          if (i < N - W && !BG[i + W] && !EDGE[i + W]) { BG[i + W] = 1; queue[qt++] = i + W; }
+        }
+      };
+      flood();
+
+      // 4) 안쪽 면(경계·배경 아님) 4-연결 묶음 + 평면 맞춤 잔차(선형 그라데이션은 평평하게 봄)
+      const IN = new Int32Array(N).fill(-1);
+      const interiors = [];
+      {
+        const S = new Float64Array(10 * 3);
+        for (let s = 0; s < N; s++) {
+          if (BG[s] || EDGE[s] || IN[s] !== -1) continue;
+          const id = interiors.length;
+          let x0 = W, y0 = H, x1 = -1, y1 = -1;
+          let n = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+          S.fill(0);
+          qh = 0; qt = 0; IN[s] = id; queue[qt++] = s;
+          while (qh < qt) {
+            const i = queue[qh++], x = i % W, y = (i - x) / W;
+            if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+            const u = x - s % W, v = y - ((s - s % W) / W);
+            n++; sx += u; sy += v; sxx += u * u; syy += v * v; sxy += u * v;
+            const cs = [R[i], G[i], B[i]];
+            for (let c = 0; c < 3; c++) { const o = c * 10, val = cs[c]; S[o] += val; S[o + 1] += u * val; S[o + 2] += v * val; S[o + 3] += val * val; }
+            if (x > 0 && !BG[i - 1] && !EDGE[i - 1] && IN[i - 1] === -1) { IN[i - 1] = id; queue[qt++] = i - 1; }
+            if (x < W - 1 && !BG[i + 1] && !EDGE[i + 1] && IN[i + 1] === -1) { IN[i + 1] = id; queue[qt++] = i + 1; }
+            if (i >= W && !BG[i - W] && !EDGE[i - W] && IN[i - W] === -1) { IN[i - W] = id; queue[qt++] = i - W; }
+            if (i < N - W && !BG[i + W] && !EDGE[i + W] && IN[i + W] === -1) { IN[i + W] = id; queue[qt++] = i + W; }
+          }
+          // 평면 c = a + b·u + d·v 최소제곱(좌표를 평균으로 옮겨 2x2로 풂) → 잔차 표준편차
+          const Sxx = sxx - sx * sx / n, Syy = syy - sy * sy / n, Sxy = sxy - sx * sy / n;
+          const det2 = Sxx * Syy - Sxy * Sxy;
+          let resid = 0, plainStd = 0;
+          const mean = [0, 0, 0];
+          for (let c = 0; c < 3; c++) {
+            const o = c * 10, s0 = S[o], s1 = S[o + 1], s2 = S[o + 2], s3 = S[o + 3];
+            mean[c] = s0 / n;
+            const Scc = Math.max(0, s3 - s0 * s0 / n);
+            plainStd = Math.max(plainStd, Math.sqrt(Scc / n));
+            let ss = Scc;
+            if (n >= 6 && det2 > 1e-6 * Math.max(1, Sxx * Syy)) {
+              const S1 = s1 - sx * s0 / n, S2 = s2 - sy * s0 / n;
+              const b = (S1 * Syy - Sxy * S2) / det2, d = (Sxx * S2 - Sxy * S1) / det2;
+              ss = Math.max(0, Scc - b * S1 - d * S2);
+            }
+            resid = Math.max(resid, Math.sqrt(ss / n));
+          }
+          interiors.push({ id, seed: s, area: n, x0, y0, x1, y1, mean, std: plainStd, resid });
+        }
+      }
+      for (const it of interiors) if (it.area >= P.PANEL_RATIO * N && it.resid <= P.PANEL_STD) it.panel = true;
+      qh = 0; qt = 0;
+      for (let i = 0; i < N; i++) if (IN[i] !== -1 && interiors[IN[i]].panel) { BG[i] = 1; queue[qt++] = i; }
+      flood();
+
+      // 5) 배경에 붙은 경계 화소 중 그 배경색과 NEAR 이내인 것을 배경 쪽으로 깎는다(배경색 기준을 이어 가며 — 가장자리와 글자 사이 1화소 틈도 열림)
+      {
+        const refR = new Uint8Array(N), refG = new Uint8Array(N), refB = new Uint8Array(N);
+        const pq = [];
+        for (let i = 0; i < N; i++) {
+          if (BG[i] !== 1) continue;
+          const x = i % W;
+          const nb = [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i >= W ? i - W : -1, i < N - W ? i + W : -1];
+          for (const j of nb) {
+            if (j < 0 || BG[j]) continue;
+            if (diff(i, j) <= P.NEAR) { BG[j] = 2; refR[j] = R[i]; refG[j] = G[i]; refB[j] = B[i]; pq.push(j); }
+          }
+        }
+        while (pq.length) {
+          const i = pq.pop(), x = i % W;
+          const ref = [refR[i], refG[i], refB[i]];
+          const nb = [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i >= W ? i - W : -1, i < N - W ? i + W : -1];
+          for (const j of nb) {
+            if (j < 0 || BG[j]) continue;
+            if (diffC(j, ref) <= P.NEAR) { BG[j] = 2; refR[j] = ref[0]; refG[j] = ref[1]; refB[j] = ref[2]; pq.push(j); }
+          }
+        }
+      }
+
+      // 6) 배경 아닌 화소의 8-연결 덩어리 (가장자리에 닿아도 화면 대부분을 덮는 것만 빼고 조각 후보)
+      const LB = new Int32Array(N).fill(-1);
+      const comps = [];
+      for (let s = 0; s < N; s++) {
+        if (BG[s] || LB[s] !== -1) continue;
+        const id = comps.length;
+        let x0 = W, y0 = H, x1 = -1, y1 = -1, touch = false;
+        qh = 0; qt = 0; LB[s] = id; queue[qt++] = s;
+        while (qh < qt) {
+          const i = queue[qh++], x = i % W, y = (i - x) / W;
+          if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+          if (x === 0 || y === 0 || x === W - 1 || y === H - 1) touch = true;
+          for (let dy = -1; dy <= 1; dy++) {
+            const yy = y + dy; if (yy < 0 || yy >= H) continue;
+            for (let dx = -1; dx <= 1; dx++) {
+              const xx = x + dx; if (xx < 0 || xx >= W) continue;
+              const j = yy * W + xx;
+              if (!BG[j] && LB[j] === -1) { LB[j] = id; queue[qt++] = j; }
+            }
+          }
+        }
+        const c = { id, area: qt, x0, y0, x1, y1, touch };
+        c.big = (x1 - x0 + 1) >= P.BIG * W && (y1 - y0 + 1) >= P.BIG * H;
+        if (!c.big && !touch) c.px = queue.slice(0, qt);
+        comps.push(c);
+      }
+
+      // ── 조각 특징 ──
+      // 주변 배경색: bbox 바깥 2화소 고리의 '깎이지 않은' 배경 화소 평균(없으면 팔레트 첫 색)
+      function ringBg(x0, y0, x1, y1) {
+        let m = 0, br = 0, bg = 0, bb = 0;
+        const ys = Math.max(0, y0 - 2), ye = Math.min(H - 1, y1 + 2), xs = Math.max(0, x0 - 2), xe = Math.min(W - 1, x1 + 2);
+        for (let y = ys; y <= ye; y++) for (let x = xs; x <= xe; x++) {
+          if (x >= x0 && x <= x1 && y >= y0 && y <= y1) continue;
+          const i = y * W + x; if (BG[i] !== 1) continue;
+          m++; br += R[i]; bg += G[i]; bb += B[i];
+        }
+        if (m) return [br / m, bg / m, bb / m];
+        return palette.length ? palette[0] : null;
+      }
+      // 밝기 위주 색 공간(YUV, 색차 가중 CHROMA_W)
+      const KW = P.CHROMA_W;
+      const toYUV = (r, g, b) => { const y = 0.299 * r + 0.587 * g + 0.114 * b; return [y, KW * (b - y), KW * (r - y)]; };
+      const segDist = (p, a, b) => {
+        const v0 = b[0] - a[0], v1 = b[1] - a[1], v2 = b[2] - a[2], vv = v0 * v0 + v1 * v1 + v2 * v2;
+        const w0 = p[0] - a[0], w1 = p[1] - a[1], w2 = p[2] - a[2];
+        let t = vv > 0 ? (w0 * v0 + w1 * v1 + w2 * v2) / vv : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const e0 = w0 - t * v0, e1 = w1 - t * v1, e2 = w2 - t * v2;
+        return Math.sqrt(e0 * e0 + e1 * e1 + e2 * e2);
+      };
+      const hist = new Uint32Array(512);
+      // 글자색 모형: 배경 → 글자색(최대 2색, 둘 사이 그라데이션 포함)으로 화소가 얼마나 설명되나
+      function inkStats(px, bgc) {
+        hist.fill(0);
+        let colors = 0;
+        for (const i of px) { const k = (R[i] >> 5) << 6 | (G[i] >> 5) << 3 | (B[i] >> 5); if (!hist[k]++) colors++; }
+        if (!bgc) return { contrast: 255, seg: 99, colors, fg: [R[px[0]], G[px[0]], B[px[0]]] };
+        const n = px.length;
+        const yuv = new Float32Array(n * 3);
+        const bgY = toYUV(bgc[0], bgc[1], bgc[2]);
+        let far = -1, farK = 0, maxCon = 0;
+        for (let k = 0; k < n; k++) {
+          const i = px[k], c = toYUV(R[i], G[i], B[i]);
+          yuv[k * 3] = c[0]; yuv[k * 3 + 1] = c[1]; yuv[k * 3 + 2] = c[2];
+          const d = (c[0] - bgY[0]) ** 2 + (c[1] - bgY[1]) ** 2 + (c[2] - bgY[2]) ** 2;
+          if (d > far) { far = d; farK = k; }
+          const dc = diffC(i, bgc); if (dc > maxCon) maxCon = dc;
+        }
+        // 글자색 1 = 배경에서 가장 먼 쪽 화소들(먼 거리의 80% 이상) 평균
+        const farD = Math.sqrt(far);
+        const ink1 = [0, 0, 0]; let m1 = 0; const fg = [0, 0, 0];
+        for (let k = 0; k < n; k++) {
+          const d = Math.sqrt((yuv[k * 3] - bgY[0]) ** 2 + (yuv[k * 3 + 1] - bgY[1]) ** 2 + (yuv[k * 3 + 2] - bgY[2]) ** 2);
+          if (d >= 0.8 * farD) { ink1[0] += yuv[k * 3]; ink1[1] += yuv[k * 3 + 1]; ink1[2] += yuv[k * 3 + 2]; const i = px[k]; fg[0] += R[i]; fg[1] += G[i]; fg[2] += B[i]; m1++; }
+        }
+        for (let c = 0; c < 3; c++) { ink1[c] /= m1; fg[c] = Math.round(fg[c] / m1); }
+        // 두 색 거리, 가장 벗어난 화소 → 글자색 2
+        let seg2 = 0, off = -1, offK = -1;
+        const p = [0, 0, 0];
+        for (let k = 0; k < n; k++) {
+          p[0] = yuv[k * 3]; p[1] = yuv[k * 3 + 1]; p[2] = yuv[k * 3 + 2];
+          const d = segDist(p, bgY, ink1); seg2 += d;
+          if (d > off) { off = d; offK = k; }
+        }
+        seg2 /= n;
+        let seg = seg2;
+        if (seg2 > P.TWO_COLOR && offK >= 0) {
+          const ink2 = [0, 0, 0]; let m2 = 0;
+          for (let k = 0; k < n; k++) {
+            p[0] = yuv[k * 3]; p[1] = yuv[k * 3 + 1]; p[2] = yuv[k * 3 + 2];
+            if (segDist(p, bgY, ink1) >= 0.8 * off) { ink2[0] += p[0]; ink2[1] += p[1]; ink2[2] += p[2]; m2++; }
+          }
+          for (let c = 0; c < 3; c++) ink2[c] /= m2;
+          let seg3 = 0;
+          for (let k = 0; k < n; k++) {
+            p[0] = yuv[k * 3]; p[1] = yuv[k * 3 + 1]; p[2] = yuv[k * 3 + 2];
+            seg3 += Math.min(segDist(p, bgY, ink1), segDist(p, bgY, ink2), segDist(p, ink1, ink2));
+          }
+          seg = Math.min(seg2, seg3 / n);
+        }
+        return { contrast: maxCon, seg, seg2, colors, fg, farD };
+      }
+      // 볼록함: 화소 수 / 볼록 껍질 넓이(행마다 왼끝 · 오른끝 화소 모서리로 껍질). 점 · 원 · 네모 · 타원은 0.9 이상, 글자는 오목하거나 구멍이 있어 낮다.
+      // bgc를 주면 바탕색에 가까운 화소(ht 이내 — 조각 대비의 절반, 최대 40)는 세지 않는다
+      // — 덩어리에 갇힌 글자 속(ㅇ · ㅁ · O · 0 의 빈 속)이 채운 원 · 네모로 보이지 않게
+      function solidity(px, bgc, ht) {
+        let y0 = Infinity, y1 = -1;
+        for (const i of px) { const y = (i / W) | 0; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        const hgt = y1 - y0 + 1;
+        if (hgt <= 0) return 1;
+        const mn = new Int32Array(hgt).fill(1e9), mx = new Int32Array(hgt).fill(-1);
+        for (const i of px) { const y = (i / W) | 0, x = i - y * W, r = y - y0; if (x < mn[r]) mn[r] = x; if (x > mx[r]) mx[r] = x; }
+        const pts = [];
+        for (let r = 0; r < hgt; r++) if (mx[r] >= 0) { const y = y0 + r; pts.push([mn[r], y], [mx[r] + 1, y], [mn[r], y + 1], [mx[r] + 1, y + 1]); }
+        pts.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+        const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+        const lower = [], upper = [];
+        for (const q of pts) { while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], q) <= 0) lower.pop(); lower.push(q); }
+        for (let k = pts.length - 1; k >= 0; k--) { const q = pts[k]; while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], q) <= 0) upper.pop(); upper.push(q); }
+        const hull = lower.slice(0, -1).concat(upper.slice(0, -1));
+        let a2 = 0;
+        for (let k = 0; k < hull.length; k++) { const a = hull[k], b = hull[(k + 1) % hull.length]; a2 += a[0] * b[1] - b[0] * a[1]; }
+        const ha = Math.abs(a2) / 2;
+        let ink = px.length;
+        if (bgc) { ink = 0; for (const i of px) if (diffC(i, bgc) > ht) ink++; }
+        return ha > 0 ? ink / ha : 1;
+      }
+      // 채운 볼록 도형(점 · 원 · 동전 · 네모 아이콘) = 볼록함 0.88 이상 + 가로세로 비 3 미만(가는 막대 I · ㅡ 는 글자로 둠)
+      const isBlob = (px, w, h, bgc, ht) => Math.max(w, h) < 3 * Math.min(w, h) && solidity(px, bgc, ht) >= 0.88;
+      // 획 굵기: 2×넓이/둘레(4-이웃 중 조각 밖이 있는 화소 수). bgc를 주면 글자 속(바탕색 화소)은 넓이에서 빼고 그 경계도 둘레로 센다
+      function strokeWidth(px, compId, bgc, ht) {
+        let per = 0, ink = 0;
+        const out = (j) => LB[j] !== compId || (bgc && diffC(j, bgc) <= ht);
+        for (const i of px) {
+          if (bgc && diffC(i, bgc) <= ht) continue;
+          ink++;
+          const x = i % W;
+          if (x === 0 || x === W - 1 || i < W || i >= N - W || out(i - 1) || out(i + 1) || out(i - W) || out(i + W)) per++;
+        }
+        return per ? 2 * ink / per : 0;
+      }
+      // 덩어리에 갇힌 바탕색 빈 속(글자 속)의 개수 — 덩어리 밖에 닿지 않는 바탕색 화소 묶음(3화소 이상)
+      function countHoles(px, compId, bgc, ht) {
+        const hole = new Set();
+        for (const i of px) if (diffC(i, bgc) <= ht) hole.add(i);
+        if (hole.size < 3) return { n: 0, area: 0 };
+        const done = new Set();
+        let n = 0, area = 0;
+        for (const s0 of hole) {
+          if (done.has(s0)) continue;
+          let size = 0, open = false;
+          const st = [s0]; done.add(s0);
+          while (st.length) {
+            const i = st.pop(), x = i % W; size++;
+            const nb = [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W];
+            for (const j of nb) {
+              if (j < 0 || j >= N || LB[j] !== compId) { open = true; continue; }
+              if (hole.has(j) && !done.has(j)) { done.add(j); st.push(j); }
+            }
+          }
+          if (!open && size >= 3) { n++; area += size; }
+        }
+        return { n, area };
+      }
+      // 화소 목록을 bbox 가운데 기준으로 deg만큼 돌렸을 때 원래 화소와 겹치는 비율(별 72° · 반짝이 90°)
+      function rotIoU(px, x0, y0, x1, y1, deg) {
+        const set = new Set(px);
+        const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, th = deg * Math.PI / 180, cs = Math.cos(th), sn = Math.sin(th);
+        let inter = 0;
+        for (const i of px) {
+          const x = i % W, y = (i - x) / W;
+          const rx = Math.round(cx + (x - cx) * cs - (y - cy) * sn), ry = Math.round(cy + (x - cx) * sn + (y - cy) * cs);
+          if (rx >= 0 && rx < W && ry >= 0 && ry < H && set.has(ry * W + rx)) inter++;
+        }
+        return px.length ? inter / px.length : 0;
+      }
+      // 90° 돌려도 거의 같은 모양(반짝이 · 십자 · 원 등) — 짧은 글자 판정에서 장식 거르기
+      function rotSymmetric(px, x0, y0, x1, y1, compId) {
+        const w = x1 - x0 + 1, h = y1 - y0 + 1;
+        if (Math.abs(w - h) > Math.max(2, 0.12 * Math.max(w, h))) return false;
+        // 90°로 돌리면 거의 그대로(0.85 이상)이면서 45°로 돌리면 확 달라지는 모양만 — 빽빽한 굵은 글자(리 · 를)는 어느 각도든 비슷하게 겹쳐 제외
+        const r90 = rotIoU(px, x0, y0, x1, y1, 90);
+        if (r90 < 0.85) return false;
+        return r90 - rotIoU(px, x0, y0, x1, y1, 45) >= 0.15;
+      }
+      // 박스 안 내용: 박스색과 40 이상 다른 같은 덩어리 화소 묶음들 → 글자 줄 길이 · 짧은 글자 여부
+      const seen = new Uint8Array(N);
+      function boxContent(x0, y0, x1, y1, boxColor, compId, outBg) {
+        const xs = x0 + 2, xe = x1 - 2, ys = y0 + 2, ye = y1 - 2;
+        if (xe <= xs || ye <= ys) return { row: 0, short: false };
+        const items = [], touched = [], st = [];
+        const bh = y1 - y0 + 1, bw = x1 - x0 + 1;
+        for (let y = ys; y <= ye; y++) for (let x = xs; x <= xe; x++) {
+          const s = y * W + x;
+          if (seen[s] || LB[s] !== compId || diffC(s, boxColor) < 40) continue;
+          let area = 0, per = 0, cx0 = x, cx1 = x, cy0 = y, cy1 = y, sr = 0, sg = 0, sb = 0, nearBg = false; const ipx = []; seen[s] = 1; touched.push(s); st.push(s);
+          const isC = (j) => LB[j] === compId && diffC(j, boxColor) >= 40;
+          while (st.length) {
+            const i = st.pop(), xx = i % W, yy = (i - xx) / W; area++; sr += R[i]; sg += G[i]; sb += B[i]; ipx.push(i);
+            if (BG[i - 1] || BG[i + 1] || BG[i - W] || BG[i + W]) nearBg = true;
+            if (xx < cx0) cx0 = xx; if (xx > cx1) cx1 = xx; if (yy < cy0) cy0 = yy; if (yy > cy1) cy1 = yy;
+            if (xx <= xs || xx >= xe || yy <= ys || yy >= ye || !isC(i - 1) || !isC(i + 1) || !isC(i - W) || !isC(i + W)) per++;
+            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+              const nx = xx + dx, ny = yy + dy;
+              if (nx < xs || nx > xe || ny < ys || ny > ye) continue;
+              const j = ny * W + nx;
+              if (!seen[j] && isC(j)) { seen[j] = 1; touched.push(j); st.push(j); }
+            }
+          }
+          const cw = cx1 - cx0 + 1, ch = cy1 - cy0 + 1;
+          // 박스 속 글자는 박스 면에만 둘러싸임 — 바깥 배경에 닿는 것은 글자 획 사이 틈의 테두리
+          if (area >= 4 && ch <= 0.9 * bh && !nearBg) items.push({ x0: cx0, y0: cy0, x1: cx1, y1: cy1, w: cw, h: ch, area, px: ipx, color: [sr / area, sg / area, sb / area],
+                                                       stroke: !isBlob(ipx, cw, ch) });
+        }
+        for (const i of touched) seen[i] = 0;
+        // 글자 줄 = 획 모양 내용끼리 높이 비슷하고 촘촘히 가로로 이어진 개수(점 · 원 같은 채운 도형은 세지 않음)
+        const strokes = items.filter(it => it.stroke).sort((a, b) => a.x0 - b.x0);
+        let row = 0;
+        for (let s = 0; s < strokes.length; s++) {
+          let len = 1, last = strokes[s];
+          for (let t = s + 1; t < strokes.length; t++) {
+            const b = strokes[t], ha = last.h, hb = b.h;
+            const vov = Math.min(last.y1, b.y1) - Math.max(last.y0, b.y0) + 1;
+            if (b.x0 - last.x1 - 1 > Math.max(ha, hb)) break;
+            if (vov >= 0.5 * Math.min(ha, hb) && Math.max(ha, hb) <= 2.5 * Math.min(ha, hb)) { len++; if (b.x1 > last.x1) last = b; }
+          }
+          if (len > row) row = len;
+        }
+        // 짧은 글자(AD · GO · 쿠폰 · 50%): 작은~중간 박스 안 획 모양 내용 1~3개가 박스 폭의 25% 이상, 위아래 여유가 있고,
+        // 바깥 배경색과도 다름(글자 획 안의 빈 속(ㅁ·ㅇ)은 바깥 배경색이라 빠짐)
+        const tall = strokes.filter(it => it.h >= Math.max(6, 0.1 * bh) && it.h <= 0.85 * (bh - 4));
+        let span = 0;
+        if (tall.length) { let a = W, b = -1; for (const it of tall) { if (it.x0 < a) a = it.x0; if (it.x1 > b) b = it.x1; } span = b - a + 1; }
+        if (P.DEBUG) (dbgOut.box = dbgOut.box || []).push({ box: [x0, y0, x1, y1], items: items.map(it => ({ b: [it.x0, it.y0, it.x1, it.y1], stroke: it.stroke, color: it.color.map(Math.round) })), row, tall: tall.length, span });
+        const lone = tall.length === 1 && (rotIoU(tall[0].px, tall[0].x0, tall[0].y0, tall[0].x1, tall[0].y1, 90) >= 0.75 || rotIoU(tall[0].px, tall[0].x0, tall[0].y0, tall[0].x1, tall[0].y1, 72) >= 0.75);
+        const short = !lone && bh <= 160 && bh >= 14 && bw >= 24 && tall.length >= 1 && tall.length <= 6 && span >= 0.25 * (bw - 4);
+        return { row, short };
+      }
+
+      // 7) 조각 만들기
+      const pieces = [];
+      const compInterior = new Map();   // 덩어리 → 가장 넓은 평평한 안쪽 면
+      const compSeg2 = new Map();       // 덩어리 → 두 색 모형 거리(작으면 글자 자체)
+      const compFlats = new Map();
+      for (const it of interiors) {
+        if (it.panel || it.resid > P.FLAT_STD) continue;
+        const c = comps[LB[it.seed]];
+        if (!c || c.big || c.touch) continue;
+        let arr = compFlats.get(c.id); if (!arr) { arr = []; compFlats.set(c.id, arr); } arr.push(it);
+        const cur = compInterior.get(c.id);
+        if (!cur || it.area > cur.area) compInterior.set(c.id, it);
+      }
+      // JPEG 잡음 · 글자 테두리로 쪼개진 같은 색 면을 합친 넓이
+      const flatArea = (cid) => { const big = compInterior.get(cid); let a = 0; for (const it of compFlats.get(cid) || []) if (cdist(it.mean, big.mean) <= 24) a += it.area; return a; };
+      for (const c of comps) {
+        if (c.big || c.touch) continue;
+        const w = c.x1 - c.x0 + 1, h = c.y1 - c.y0 + 1;
+        const bgc = ringBg(c.x0, c.y0, c.x1, c.y1);
+        const st = inkStats(c.px, bgc);
+        if (st.contrast < 0.85 * EDGE_T) continue;      // 무늬 잡티(기준보다 약한 조각)
+        // 글자 속(ㅇ · ㅁ · O · 8 의 바탕색 빈 속 1~2칸)은 빼고 볼록함 · 획 굵기를 잰다. 빈 속이 여러 칸인 문양(전통 문양 원 · 격자)은 예전처럼 채운 것으로
+        const ht = Math.min(40, 0.5 * st.contrast);
+        const holes = bgc ? countHoles(c.px, c.id, bgc, ht) : { n: 0, area: 0 };
+        const hb = holes.n >= 1 && holes.n <= 2 ? bgc : null;
+        const sw = strokeWidth(c.px, c.id, hb, ht);
+        let inkA = c.area;   // 채움 비율도 글자 속을 빼고(작은 D · O 가 꽉 찬 네모로 보이지 않게)
+        if (hb) { inkA = 0; for (const i of c.px) if (diffC(i, hb) > ht) inkA++; }
+        compSeg2.set(c.id, st.seg2);
+        const p = { kind: 'blob', comp: c.id, bgc, x0: c.x0, y0: c.y0, x1: c.x1, y1: c.y1, w, h, area: c.area, fill: inkA / (w * h),
+                    contrast: st.contrast, seg: st.seg, seg2: st.seg2, colors: st.colors, fg: st.fg, sw, touch: c.touch, row: 0, short: false,
+                    blob: isBlob(c.px, w, h, hb, ht), holeN: holes.n };
+        const it = compInterior.get(c.id);
+        // 글자 든 박스: 넓은 평평한 면 + 바깥 배경과 다른 색 + 그 안에 글자 줄(배경에 닿지 않는 획 모양 내용)
+        const fa = it ? flatArea(c.id) : 0;
+        const outline = it && it.x0 - c.x0 <= 6 && c.x1 - it.x1 <= 6 && it.y0 - c.y0 <= 6 && c.y1 - it.y1 <= 6 && fa >= 0.6 * (it.x1 - it.x0 + 1) * (it.y1 - it.y0 + 1);
+        if (it && fa >= P.BOX_MIN_AREA && fa >= P.BOX_SHARE * w * h && (!bgc || cdist(it.mean, bgc) >= 20 || outline)) {
+          const bc = boxContent(c.x0, c.y0, c.x1, c.y1, it.mean, c.id, bgc);
+          p.row = bc.row; p.short = bc.short;
+        }
+        pieces.push(p);
+      }
+      // 덩어리 안 평평한 면에 글자가 든 것 → 박스 조각(가장자리 그림 위에 얹힌 박스 포함)
+      for (const it of interiors) {
+        if (it.panel) continue;
+        const c = comps[LB[it.seed]];
+        if (!c) continue;
+        const bw = it.x1 - it.x0 + 1, bh = it.y1 - it.y0 + 1;
+        if (it.area < P.BOX_MIN_AREA || bw < 12 || bh < 8 || it.resid > P.FLAT_STD || it.area / (bw * bh) < P.BOX_FILL) continue;
+        let x0 = it.x0, y0 = it.y0, x1 = it.x1, y1 = it.y1;
+        const edgeRow = (y, yIn) => { if (y < 0 || y >= H) return false; for (let x = it.x0; x <= it.x1; x++) if (EDGE[y * W + x] && IN[yIn * W + x] === it.id) return true; return false; };
+        const edgeCol = (x, xIn) => { if (x < 0 || x >= W) return false; for (let y = it.y0; y <= it.y1; y++) if (EDGE[y * W + x] && IN[y * W + xIn] === it.id) return true; return false; };
+        if (edgeRow(it.y0 - 1, it.y0)) y0--;
+        if (edgeRow(it.y1 + 1, it.y1)) y1++;
+        if (edgeCol(it.x0 - 1, it.x0)) x0--;
+        if (edgeCol(it.x1 + 1, it.x1)) x1++;
+        const outBg = ringBg(x0, y0, x1, y1);
+        if (outBg && cdist(it.mean, outBg) < 20) continue;   // 바깥 배경과 같은 색 = 배경이 갇힌 조각
+        const bc = boxContent(x0, y0, x1, y1, it.mean, c.id, outBg);
+        if (bc.row < 3 && !bc.short) continue;   // 글자 없는 평평한 면(그림의 일부)
+        pieces.push({ kind: c.touch ? 'bleedbox' : 'box', comp: c.id, x0, y0, x1, y1, w: x1 - x0 + 1, h: y1 - y0 + 1, area: it.area,
+                      fill: it.area / (bw * bh), contrast: 255, seg: 99, colors: 0, fg: it.mean.map(Math.round), sw: 0, row: bc.row, short: bc.short });
+      }
+      const glyphCon = Math.max(36, 0.9 * EDGE_T);
+      for (const p of pieces) {
+        const ink = p.kind === 'blob' && p.seg <= P.TWO_COLOR && p.contrast >= glyphCon;
+        p.stroke = p.kind === 'blob' && !p.blob;
+        p.textBox = p.row >= 3 || p.short;
+        p.weakBox = !(p.row >= 3) && p.short;
+        p.glyph = ink && p.stroke && p.area >= 6 && p.fill >= 0.08 && p.sw <= 32 && p.colors <= 48;   // 획이 아주 굵거나 색이 많은 조각(천 · 그림)은 글자 아님
+        p.shape = ink && !p.stroke && !p.textBox;            // 채운 도형(점 · 원 · 동전 면 · 아이콘): 글자 근거 아님
+        p.complex = p.kind === 'blob' && !p.textBox && p.seg > P.COMPLEX_SEG && p.colors > P.COMPLEX_COLORS;
+      }
+
+      // 구멍(조각 안의 배경색 화소 — 갇힌 빈 속은 조각에 들어온다)이 있나 — e · o · ㅇ · ㅁ 은 있고 반짝이 · 토큰 · 십자는 없다
+      function hasHole(p) {
+        const c = comps[p.comp];
+        if (!c || !c.px || !p.bgc) return false;
+        let n = 0;
+        for (const i of c.px) if (diffC(i, p.bgc) <= 40) n++;
+        return n >= Math.max(4, 0.03 * c.px.length);
+      }
+      // 장식 대칭 도형 = 90° 대칭이고 구멍 없음(반짝이 · 토큰 · 십자)
+      const symOf = (p) => {
+        if (p._sym === undefined) p._sym = p.kind === 'blob' && comps[p.comp] && comps[p.comp].px ? rotSymmetric(comps[p.comp].px, p.x0, p.y0, p.x1, p.y1, p.comp) && !hasHole(p) : false;
+        return p._sym;
+      };
+      // 8) 묶기 — 격자로 가까운 조각만 비교
+      const n = pieces.length, parent = new Int32Array(n);
+      for (let i = 0; i < n; i++) parent[i] = i;
+      const find = (a) => { while (parent[a] !== a) { parent[a] = parent[parent[a]]; a = parent[a]; } return a; };
+      const unite = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; };
+      const inside = (s, t) => s.x0 >= t.x0 - 1 && s.x1 <= t.x1 + 1 && s.y0 >= t.y0 - 1 && s.y1 <= t.y1 + 1;
+      const sameInk = (a, b, tol) => cdist(a.fg, b.fg) <= tol;
+      const CELL = 48, GW = Math.ceil(W / CELL), GH = Math.ceil(H / CELL);
+      const grid = new Map();
+      pieces.forEach((p, idx) => {
+        if (p.area < 4) return;
+        const r = Math.ceil(Math.max(2, 0.7 * p.h));
+        const cx0 = Math.max(0, Math.floor((p.x0 - r) / CELL)), cx1 = Math.min(GW - 1, Math.floor((p.x1 + r) / CELL));
+        const cy0 = Math.max(0, Math.floor((p.y0 - r) / CELL)), cy1 = Math.min(GH - 1, Math.floor((p.y1 + r) / CELL));
+        p._cells = [cx0, cy0, cx1, cy1];
+        for (let gy = cy0; gy <= cy1; gy++) for (let gx = cx0; gx <= cx1; gx++) {
+          const k = gy * GW + gx; let arr = grid.get(k); if (!arr) { arr = []; grid.set(k, arr); } arr.push(idx);
+        }
+      });
+      const tried = new Set();
+      for (const arr of grid.values()) {
+        for (let s = 0; s < arr.length; s++) for (let t = s + 1; t < arr.length; t++) {
+          const ia = arr[s] < arr[t] ? arr[s] : arr[t], ib = arr[s] < arr[t] ? arr[t] : arr[s];
+          const key = ia * n + ib;
+          if (tried.has(key)) continue;
+          tried.add(key);
+          tryPair(ia, ib);
+        }
+      }
+      function tryPair(ia, ib) {
+        const a = pieces[ia], b = pieces[ib];
+        const dx = Math.max(0, Math.max(a.x0, b.x0) - Math.min(a.x1, b.x1) - 1);
+        const dy = Math.max(0, Math.max(a.y0, b.y0) - Math.min(a.y1, b.y1) - 1);
+        const vov = Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) + 1;
+        const hov = Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) + 1;
+        const hmax = Math.max(a.h, b.h), hmin = Math.min(a.h, b.h);
+        // A. 글자 박스 안에 든 조각
+        if ((a.textBox && inside(b, a)) || (b.textBox && inside(a, b))) { unite(ia, ib); return; }
+        // B. 문장부호 · 받침 막대 · 속도선 같은 작은 부분 → 같은 색 글자에 붙임(글자 높이 비례)
+        const lg = a.glyph && (!b.glyph || a.h >= b.h) ? a : b.glyph ? b : null;
+        const smB = lg ? (lg === a ? b : a) : null;
+        if (lg && !(symOf(lg) && cdist(smB.fg, lg.fg) > 30)) {   // 기준이 반짝이 · 토큰 같은 대칭 도형이면 다른 색 조각은 붙이지 않음
+          const sm = smB;
+          if (!sm.complex && !sm.textBox && sm.h <= 0.5 * lg.h && sm.w <= 3 * lg.h &&
+              sameInk(sm, lg, sm.h <= 12 ? 90 : 60)) {
+            const sameLine = sm.w <= 1.5 * lg.h && sm.y0 >= lg.y0 - 0.25 * lg.h && sm.y1 <= lg.y1 + 0.25 * lg.h && dx <= 0.5 * lg.h;
+            // 위아래로 겹쳐 쌓인 가는 획(응 · 을 의 ㅡ 는 위 자음보다 넓다)은 글자 높이 3배 폭까지
+            const stacked = hov >= 0.3 * Math.min(sm.w, lg.w) && dy <= 0.35 * lg.h;
+            if (sameLine || stacked) { sm.attach = true; unite(ia, ib); return; }
+          }
+          // 작은 글씨(16px 이하)에선 ㅇ · 별표처럼 획이 채워져 보이는 조각도 글자 — 같은 줄 · 같은 색 · 비슷한 높이면 붙임
+          if (sm.shape && sm.h <= 24 && sm.h <= 1.3 * lg.h && sm.h >= 0.3 * lg.h && sameInk(sm, lg, 60) && vov >= 0.5 * Math.min(sm.h, lg.h) && dx <= 0.5 * lg.h) {
+            sm.attach = true; unite(ia, ib); return;
+          }
+        }
+        if (dy > 2 && dy > 0.35 * hmin) return;   // 아래 규칙은 이보다 먼 세로 간격을 묶지 않음
+        // C. 로고: 글자 조각 옆에 바짝 붙은 심볼(글자 높이 0.8~3배)
+        const tg = a.glyph && !b.glyph ? a : b.glyph && !a.glyph ? b : null;
+        if (tg) {
+          const sy = tg === a ? b : a;
+          const gap = sy.complex ? 0.25 * tg.h : 0.5 * tg.h;
+          // 심볼은 글자 왼쪽에 올 때만 — 줄 끝 · 글자 위 동전 · 토큰 장식은 로고가 아님
+          if (!sy.textBox && dy === 0 && sy.x1 < tg.x0 && vov >= 0.6 * tg.h && dx <= gap && sy.h >= 0.8 * tg.h && sy.h <= 3 * tg.h && sy.w <= 3 * tg.h) {
+            sy.lockup = true; unite(ia, ib); return;
+          }
+        }
+        // D. 사진·3D 그림끼리는 맞닿을 때만, 글자와는 묶지 않음
+        if (a.complex || b.complex) { if (a.complex && b.complex && dx <= 2 && dy <= 2) unite(ia, ib); return; }
+        // E. 글자(획 조각 · 글자 박스)끼리: 높이 3배 이내. 작은 글씨(24px 이하)의 채운 조각은 글자 조각과 짝일 때만 참여
+        const smallShape = (p) => p.shape && p.h <= 24;
+        const ta = a.glyph || a.textBox || (smallShape(a) && b.glyph), tb = b.glyph || b.textBox || (smallShape(b) && a.glyph);
+        if (!ta || !tb || hmax > 3 * hmin) return;
+        if (a.kind === 'blob' && b.kind === 'blob' && Math.min(a.contrast, b.contrast) < 0.5 * Math.max(a.contrast, b.contrast)) return;   // 대비가 반도 안 되면 다른 층(빛줄기 · 그림자)
+        // 90° 대칭 조각(반짝이 · 토큰 · 십자)은 떨어져 있는 글자 줄과 나란히 묶지 않음(겹칠 때만)
+        if ((dx > 0 || dy > 0) && symOf(a) !== symOf(b)) {
+          const sp = symOf(a) ? a : b, op = sp === a ? b : a;
+          if (sp.x0 > op.x1 || dy > 0) return;   // 줄 끝 · 위아래의 반짝이 · 토큰은 글자와 안 묶음(줄 앞 ※ 는 묶음)
+        }
+        const join = () => { if (smallShape(a)) a.attach = true; if (smallShape(b)) b.attach = true; unite(ia, ib); };
+        if (sameInk(a, b, 60)) {
+          if ((dx === 0 && dy === 0) ||
+              (dy === 0 && vov >= 0.5 * hmin && dx <= 0.4 * hmax) ||
+              (dx === 0 && hov >= 0.2 * Math.min(a.w, b.w) && dy <= Math.max(2, 0.3 * hmin))) join();
+        } else if (dy === 0 && vov >= 0.5 * hmin && dx <= 0.5 * hmin) join();
+      }
+
+      // 8b) 줄 잇기: 1단계 덩어리(음절 · 글자 · 표시)를 덩어리 높이로 잰 단어 간격으로 잇는다(첫 바퀴).
+      //     다음 세 바퀴는 작은 표시(점 · 쉼표 · 따옴표 · 물결)만 글줄 끝 · 앞에 붙인다 — 말줄임표 점이 하나씩 이어 붙음
+      // 가는 획은 글자색과 바탕색이 섞여 옅게 보인다(작은 ※ · 가는 글자) → 옅은 쪽 색이 '바탕 → 진한 쪽 색' 선 위면 같은 잉크
+      const inkLike = (a, b) => {
+        if (cdist(a.fg, b.fg) <= 60) return true;
+        if (!a.bgc || !b.bgc || cdist(a.bgc, b.bgc) > 20) return false;
+        const t = cdist(a.fg, a.bgc) < cdist(b.fg, b.bgc) ? a : b, f = t === a ? b : a;
+        if (!t.thin) return false;
+        let dot = 0, len = 0;
+        for (let k = 0; k < 3; k++) { const u = f.fg[k] - f.bgc[k]; dot += (t.fg[k] - f.bgc[k]) * u; len += u * u; }
+        if (!len) return false;
+        const al = dot / len;
+        if (al < 0.45) return false;
+        let res = 0;
+        for (let k = 0; k < 3; k++) res = Math.max(res, Math.abs(t.fg[k] - (f.bgc[k] + al * (f.fg[k] - f.bgc[k]))));
+        return res <= 20;
+      };
+      let prevMarks = [];
+      for (let round = 0; round < 4; round++) {
+        const cl = new Map();
+        for (let i = 0; i < n; i++) {
+          const r = find(i), p = pieces[i];
+          let c = cl.get(r);
+          if (!c) { c = { root: r, idx: [], x0: p.x0, y0: p.y0, x1: p.x1, y1: p.y1, text: false, box: false, complex: true, sym: true, fg: null, bgc: p.bgc, fgA: 0, con: 0, sw: 0, ng: 0 }; cl.set(r, c); }
+          c.idx.push(i);
+          if (p.x0 < c.x0) c.x0 = p.x0; if (p.y0 < c.y0) c.y0 = p.y0; if (p.x1 > c.x1) c.x1 = p.x1; if (p.y1 > c.y1) c.y1 = p.y1;
+          if (p.glyph || p.textBox) c.text = true;
+          if (p.glyph) { c.ng++; if (p.sw > c.sw) c.sw = p.sw; if (!symOf(p)) c.sym = false; }
+          if (p.textBox) { c.box = true; c.sym = false; }
+          if (!p.complex) c.complex = false;
+          if ((p.glyph || p.textBox || p.shape) && p.area > c.fgA) { c.fgA = p.area; c.fg = p.fg; c.bgc = p.bgc; }
+          if (p.contrast > c.con) c.con = p.contrast;
+        }
+        const cls = [...cl.values()].filter(c => !c.complex && c.fg && (c.text || c.idx.every(k => pieces[k].shape)));
+        for (const c of cls) {
+          c.h = c.y1 - c.y0 + 1; c.w = c.x1 - c.x0 + 1; c.mark = !c.text;
+          c.sym = c.text && c.sym; c.thin = c.text && c.sw <= 3.2;
+        }
+        const cellC = 64, gw = Math.ceil(W / cellC), gh = Math.ceil(H / cellC), g2 = new Map();
+        cls.forEach((c, k) => {
+          const r = Math.ceil(c.h);
+          for (let gy = Math.max(0, Math.floor((c.y0 - r) / cellC)); gy <= Math.min(gh - 1, Math.floor((c.y1 + r) / cellC)); gy++)
+            for (let gx = Math.max(0, Math.floor((c.x0 - r) / cellC)); gx <= Math.min(gw - 1, Math.floor((c.x1 + r) / cellC)); gx++) {
+              const key = gy * gw + gx; let arr = g2.get(key); if (!arr) { arr = []; g2.set(key, arr); } arr.push(k);
+            }
+        });
+        const marks = [];
+        const seenPair = new Set();
+        const lineJoin = (a, b) => {
+          if (a.mark && b.mark) return;
+          if (find(a.root) === find(b.root)) return;
+          const vov = Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) + 1;
+          const dx = Math.max(0, Math.max(a.x0, b.x0) - Math.min(a.x1, b.x1) - 1);
+          if (Math.min(a.con, b.con) < 0.5 * Math.max(a.con, b.con)) return;   // 대비가 반도 안 되면 다른 층(빛줄기 · 그림자)
+          if (round === 0) {
+            if (a.mark || b.mark) return;
+            const hmin = Math.min(a.h, b.h), hmax = Math.max(a.h, b.h);
+            if (hmax > 2.5 * hmin || vov < 0.5 * hmin) return;
+            if (a.sym !== b.sym) { const sp = a.sym ? a : b, op = sp === a ? b : a; if (sp.x0 > op.x1) return; }   // 줄 끝의 반짝이 · 토큰은 안 이음(줄 앞 ※ 는 이음)
+            // 조각 하나짜리끼리(점 무늬 · 빛 조각이 줄처럼 늘어선 것)는 1단계와 같은 간격, 음절 · 단어 덩어리가 끼면 단어 간격까지
+            const gap = a.idx.length === 1 && b.idx.length === 1 ? 0.6 * hmax : 0.9 * hmax;
+            if (inkLike(a, b) ? dx <= gap : dx <= 0.5 * hmin) unite(a.root, b.root);
+            return;
+          }
+          // 작은 표시: 채운 도형 또는 글자 조각 1~2개(박스 아님), 글줄 높이의 0.6배 이하 · 폭 0.9배 이하.
+          // 글자 조각 3개 이상인 글줄(박스 아님)에 세로로 걸치고(위아래로 줄 높이 0.45배까지 삐져나와도 됨) 줄 높이 절반 간격 이내면 붙임
+          const t = a.mark ? b : b.mark ? a : (a.h >= b.h ? a : b), m = t === a ? b : a;
+          if (t.mark || t.box || t.ng < 3 || m.box) return;
+          if (!m.mark && m.ng > 2) return;
+          if (m.h > 0.6 * t.h || m.w > 0.9 * t.h || (m.sym && m.x0 > t.x1)) return;
+          if (!(m.mark ? cdist(m.fg, t.fg) <= 60 : inkLike(m, t))) return;
+          if (vov <= 0 || m.y0 < t.y0 - 0.45 * t.h || m.y1 > t.y1 + 0.45 * t.h || dx > 0.5 * t.h) return;
+          // 둘째 바퀴부터는 앞 바퀴에 붙은 표시 바로 옆의 비슷한 표시만(말줄임표 다음 점) — 점 무늬가 줄줄이 붙지 않게
+          if (round > 1 && !prevMarks.some(q => find(q.root) === find(t.root) && Math.max(m.h, q.h) <= 1.6 * Math.min(m.h, q.h) &&
+              Math.min(m.y1, q.y1) - Math.max(m.y0, q.y0) + 1 >= 0.5 * Math.min(m.h, q.h) &&
+              Math.max(0, Math.max(m.x0, q.x0) - Math.min(m.x1, q.x1) - 1) <= Math.max(4, 2.5 * Math.max(m.w, q.w)))) return;
+          if (m.mark) for (const k of m.idx) pieces[k].attach = true;
+          marks.push({ root: m.root, x0: m.x0, y0: m.y0, x1: m.x1, y1: m.y1, h: m.h, w: m.w });
+          unite(a.root, b.root);
+        };
+        for (const arr of g2.values()) for (let s1 = 0; s1 < arr.length; s1++) for (let t1 = s1 + 1; t1 < arr.length; t1++) {
+          const ka = Math.min(arr[s1], arr[t1]), kb = Math.max(arr[s1], arr[t1]), key = ka * cls.length + kb;
+          if (ka === kb || seenPair.has(key)) continue;
+          seenPair.add(key);
+          lineJoin(cls[ka], cls[kb]);
+        }
+        if (round > 0) { if (!marks.length) break; prevMarks = marks; }
+      }
+
+      const groups = new Map();
+      for (let i = 0; i < n; i++) {
+        const r = find(i), p = pieces[i];
+        let g = groups.get(r);
+        if (!g) { g = { pieces: [] }; groups.set(r, g); }
+        g.pieces.push(p);
+      }
+
+      // 9) 묶음 분류: 글자 근거(획 조각 · 글자 박스 · 로고 심볼 · 붙은 부분)로만 범위를 잡고, 나머지는 그림(참고)
+      const elements = [];
+      const box4 = (ps) => {
+        let x0 = W, y0 = H, x1 = -1, y1 = -1, area = 0;
+        for (const p of ps) { if (p.x0 < x0) x0 = p.x0; if (p.y0 < y0) y0 = p.y0; if (p.x1 > x1) x1 = p.x1; if (p.y1 > y1) y1 = p.y1; area += p.area; }
+        return { x0, y0, x1, y1, w: x1 - x0 + 1, h: y1 - y0 + 1, area };
+      };
+      for (const g of groups.values()) {
+        const gl = g.pieces.filter(p => p.glyph);
+        const glyphs = gl.length;
+        const textBoxes = g.pieces.filter(p => p.textBox).length;
+        const strongBox = g.pieces.some(p => p.textBox && !p.weakBox);
+        const isCounted = (p) => p.glyph || p.textBox || p.lockup || p.attach;
+        const counted = g.pieces.filter(isCounted);
+        const cb = counted.length ? box4(counted) : null;
+        let isText = false, weak = false;
+        const sym = (p) => rotSymmetric(comps[p.comp].px, p.x0, p.y0, p.x1, p.y1, p.comp);
+        if (strongBox) isText = true;
+        else if (glyphs >= 3) isText = !gl.every(sym);              // 반짝이 · 십자처럼 90° 대칭 조각만 모인 묶음은 장식
+        else if (textBoxes) { isText = true; weak = true; }
+        else if (glyphs >= 1 && cb) {
+          // 짧은 글자(1~2 조각): 글자다운 모양만 — 대비 충분, 가로세로 비 적당, 90° 대칭 도형 아님
+          const letterish = gl.every(p => p.contrast >= Math.max(80, glyphCon) && p.seg2 <= P.TWO_COLOR && p.h >= 10 && p.area >= 40 && p.w / p.h >= 0.12 && p.w / p.h <= 5 && p.fill >= 0.2 && (p.fill <= 0.85 || Math.max(p.w, p.h) >= 3 * Math.min(p.w, p.h)) && !sym(p));
+          if (letterish) { isText = true; weak = true; }
+        }
+        const rest = isText ? g.pieces.filter(p => !isCounted(p)) : g.pieces;
+        if (isText) {
+          const ref = gl.length ? gl.reduce((a, p) => (p.area > a.area ? p : a), gl[0]) : counted[0];
+          elements.push(Object.assign(cb, { cls: textBoxes ? 'box' : 'text', weak, nPieces: counted.length, glyphs, textBoxes, fg: ref.fg }));
+        }
+        if (rest.length) {
+          const rb = box4(rest);
+          if (rb.area < P.NOISE_AREA && rb.w < P.NOISE_DIM && rb.h < P.NOISE_DIM) continue;   // 잡티
+          elements.push(Object.assign(rb, { cls: 'graphic', weak: false, nPieces: rest.length, glyphs: 0, textBoxes: 0 }));
+        }
+      }
+      // 10) 가장자리에 닿은 박스 · 글자 구조: 위 단계에선 가장자리에서 번진 배경에 먹혀 사라진다.
+      //     가장자리 바깥줄에서 배경 팔레트 색이 아닌 지점부터 '경계 아닌 · 팔레트 아닌' 화소로 영역을 키워
+      //     (a) 평평한 박스 안에 글자가 들었거나 (b) 글자 획 모양이 가장자리를 따라 3개 이상 이어지거나 (c) 이미 찾은 글자 줄에 바로 이어지면 더한다.
+      if (palette.length) rescueEdges();
+      function rescueEdges() {
+        const REG = new Int32Array(N).fill(-1);
+        const regs = [];
+        const S = new Float64Array(10 * 3);
+        const growFrom = (s) => {
+          const id = regs.length;
+          let x0 = W, y0 = H, x1 = -1, y1 = -1, n = 0, per = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+          S.fill(0);
+          const sx0 = s % W, sy0 = (s - sx0) / W;
+          const ok = (j) => REG[j] === -1 && !EDGE[j] && !nearPalette(j);
+          qh = 0; qt = 0; REG[s] = id; queue[qt++] = s;
+          while (qh < qt) {
+            const i = queue[qh++], x = i % W, y = (i - x) / W;
+            if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+            const u = x - sx0, v = y - sy0;
+            n++; sx += u; sy += v; sxx += u * u; syy += v * v; sxy += u * v;
+            const cs = [R[i], G[i], B[i]];
+            for (let c = 0; c < 3; c++) { const o = c * 10, val = cs[c]; S[o] += val; S[o + 1] += u * val; S[o + 2] += v * val; S[o + 3] += val * val; }
+            let edgeSide = false;
+            const nb = [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i >= W ? i - W : -1, i < N - W ? i + W : -1];
+            for (const j of nb) {
+              if (j < 0) { edgeSide = true; continue; }
+              if (REG[j] === id) continue;
+              if (ok(j)) { REG[j] = id; queue[qt++] = j; } else edgeSide = true;
+            }
+            if (edgeSide) per++;
+            if (n > 0.2 * N) break;   // 너무 큰 영역(배경급)은 중단
+          }
+          const Sxx = sxx - sx * sx / n, Syy = syy - sy * sy / n, Sxy = sxy - sx * sy / n, det2 = Sxx * Syy - Sxy * Sxy;
+          let resid = 0; const mean = [0, 0, 0];
+          for (let c = 0; c < 3; c++) {
+            const o = c * 10, s0 = S[o], s1 = S[o + 1], s2 = S[o + 2], s3 = S[o + 3];
+            mean[c] = s0 / n;
+            let ss = Math.max(0, s3 - s0 * s0 / n);
+            if (n >= 6 && det2 > 1e-6 * Math.max(1, Sxx * Syy)) {
+              const S1 = s1 - sx * s0 / n, S2 = s2 - sy * s0 / n;
+              const b = (S1 * Syy - Sxy * S2) / det2, d = (Sxx * S2 - Sxy * S1) / det2;
+              ss = Math.max(0, ss - b * S1 - d * S2);
+            }
+            resid = Math.max(resid, Math.sqrt(ss / n));
+          }
+          const r = { id, x0, y0, x1, y1, w: x1 - x0 + 1, h: y1 - y0 + 1, area: n, per, mean, resid, huge: n > 0.2 * N };
+          if (!r.huge && n <= 0.05 * N) r.px = queue.slice(0, qt);
+          regs.push(r);
+          return r;
+        };
+        // 띠(가장자리 4px) 안에서 팔레트 아닌 지점부터 — 가장자리에서 1~3px 떨어진 박스도 포함
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+          if (!inBand(x, y)) { x = W - band - 1; if (x < 0) break; continue; }
+          const i = y * W + x;
+          if (REG[i] === -1 && !EDGE[i] && !nearPalette(i)) growFrom(i);
+        }
+        if (P.DEBUG) dbgOut.regs = regs.map(r => ({ x0: r.x0, y0: r.y0, x1: r.x1, y1: r.y1, area: r.area, resid: Math.round(r.resid * 10) / 10, mean: r.mean.map(Math.round), huge: r.huge }));
+
+        const added = [];
+        const glyphCands = [];
+        for (const r of regs) {
+          if (r.huge || r.area < 8) continue;
+          const bgc = ringBg(r.x0, r.y0, r.x1, r.y1) || palette[0];
+          const con = cdist(r.mean, bgc);
+          if (con < glyphCon) continue;
+          // (a) 평평한 박스(가장자리를 넘는 알약 · 배지 · 리본) 안에 글자
+          if (r.area >= P.BOX_MIN_AREA && r.resid <= P.FLAT_STD && r.area >= 0.45 * r.w * r.h &&
+              r.w <= 0.6 * W && r.h <= 0.6 * H && r.area <= 0.15 * N && r.w >= 12 && r.h >= 8) {
+            const bc = regionContent(r, REG, bgc);
+            if (bc.row >= 2 || bc.short) {
+              const e = { x0: Math.max(0, r.x0 - (r.x0 > 0 ? 1 : 0)), y0: Math.max(0, r.y0 - (r.y0 > 0 ? 1 : 0)),
+                          x1: Math.min(W - 1, r.x1 + (r.x1 < W - 1 ? 1 : 0)), y1: Math.min(H - 1, r.y1 + (r.y1 < H - 1 ? 1 : 0)),
+                          cls: 'box', weak: bc.row < 2, rescued: true, fg: r.mean.map(Math.round) };
+              e.w = e.x1 - e.x0 + 1; e.h = e.y1 - e.y0 + 1; e.area = r.area;
+              added.push(e);
+              continue;
+            }
+          }
+          // (b)(c) 글자 획 조각 후보: 획 모양 · 채움 · 가로세로 비
+          if (r.px && r.h >= 6 && !isBlob(r.px, r.w, r.h) && r.area >= 0.15 * r.w * r.h &&
+              r.w / r.h >= 0.1 && r.w / r.h <= 6 && r.w <= 0.3 * W && r.h <= 0.3 * H) glyphCands.push(r);
+        }
+        // (c) 이미 찾은 글자 줄 끝에 바로 이어지는 가장자리 글자 조각 → 그 요소를 가장자리까지 넓힘
+        const used = new Set();
+        for (const g of glyphCands) {
+          for (const e of elements) {
+            if (e.cls === 'graphic' || !e.fg || e.weak) continue;
+            const vov = Math.min(e.y1, g.y1) - Math.max(e.y0, g.y0) + 1;
+            const hov = Math.min(e.x1, g.x1) - Math.max(e.x0, g.x0) + 1;
+            const dx = Math.max(0, Math.max(e.x0, g.x0) - Math.min(e.x1, g.x1) - 1);
+            const dy = Math.max(0, Math.max(e.y0, g.y0) - Math.min(e.y1, g.y1) - 1);
+            const lineH = Math.min(e.h, 2 * g.h);
+            if (cdist(g.mean, e.fg) > 70) continue;
+            if ((vov >= 0.5 * Math.min(g.h, e.h) && dx <= 0.8 * lineH) || (hov >= 0.5 * Math.min(g.w, e.w) && dy <= 0.5 * lineH)) {
+              e.x0 = Math.min(e.x0, g.x0); e.y0 = Math.min(e.y0, g.y0); e.x1 = Math.max(e.x1, g.x1); e.y1 = Math.max(e.y1, g.y1);
+              e.w = e.x1 - e.x0 + 1; e.h = e.y1 - e.y0 + 1; e.rescued = true; used.add(g.id);
+              break;
+            }
+          }
+        }
+        // (b) 가장자리를 따라 이어진 글자 획 조각 3개 이상(가장자리에 걸려 잘린 글줄)
+        const rest = glyphCands.filter(g => !used.has(g.id)).sort((a, b) => a.x0 - b.x0 || a.y0 - b.y0);
+        const taken = new Set();
+        for (let s = 0; s < rest.length; s++) {
+          if (taken.has(s)) continue;
+          const chain = [rest[s]];
+          let last = rest[s];
+          for (let t = s + 1; t < rest.length; t++) {
+            if (taken.has(t)) continue;
+            const b = rest[t];
+            const vov = Math.min(last.y1, b.y1) - Math.max(last.y0, b.y0) + 1;
+            const gap = b.x0 - last.x1 - 1;
+            const hmin = Math.min(last.h, b.h), hmax = Math.max(last.h, b.h);
+            if (gap > 1.0 * hmax) continue;
+            if (vov >= 0.5 * hmin && hmax <= 2 * hmin && cdist(b.mean, last.mean) <= 60) { chain.push(b); taken.add(t); last = b; }
+          }
+          if (chain.length >= 3) {
+            const e = { x0: W, y0: H, x1: -1, y1: -1, cls: 'text', weak: false, rescued: true, fg: chain[0].mean.map(Math.round), area: 0 };
+            for (const g of chain) { e.x0 = Math.min(e.x0, g.x0); e.y0 = Math.min(e.y0, g.y0); e.x1 = Math.max(e.x1, g.x1); e.y1 = Math.max(e.y1, g.y1); e.area += g.area; }
+            e.w = e.x1 - e.x0 + 1; e.h = e.y1 - e.y0 + 1;
+            added.push(e);
+          }
+        }
+        for (const e of added) elements.push(e);
+      }
+      // 가장자리 영역 안 내용(글자): 영역 밖 화소 중 영역색과 40 이상 다르고 bbox 안쪽 가장자리에 닿지 않는 묶음
+      function regionContent(r, REG, outBg) {
+        const xs = r.x0 + 1, xe = r.x1 - 1, ys = r.y0 + 1, ye = r.y1 - 1;
+        if (xe <= xs || ye <= ys) return { row: 0, short: false };
+        const items = [], st = [], mark = new Map();
+        for (let y = ys; y <= ye; y++) for (let x = xs; x <= xe; x++) {
+          const s = y * W + x;
+          if (REG[s] === r.id || mark.has(s) || diffC(s, r.mean) < 40) continue;
+          let area = 0, per = 0, cx0 = x, cx1 = x, cy0 = y, cy1 = y, sr = 0, sg = 0, sb = 0, edgeTouch = false; const ipx = [];
+          mark.set(s, 1); st.push(s);
+          const isC = (j) => REG[j] !== r.id && diffC(j, r.mean) >= 40;
+          while (st.length) {
+            const i = st.pop(), xx = i % W, yy = (i - xx) / W; area++; sr += R[i]; sg += G[i]; sb += B[i]; ipx.push(i);
+            if (xx < cx0) cx0 = xx; if (xx > cx1) cx1 = xx; if (yy < cy0) cy0 = yy; if (yy > cy1) cy1 = yy;
+            if (xx <= xs || xx >= xe || yy <= ys || yy >= ye) edgeTouch = true;
+            if (xx <= xs || xx >= xe || yy <= ys || yy >= ye || !isC(i - 1) || !isC(i + 1) || !isC(i - W) || !isC(i + W)) per++;
+            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+              const nx = xx + dx, ny = yy + dy;
+              if (nx < xs || nx > xe || ny < ys || ny > ye) continue;
+              const j = ny * W + nx;
+              if (!mark.has(j) && isC(j)) { mark.set(j, 1); st.push(j); }
+            }
+          }
+          if (edgeTouch || area < 4) continue;   // 박스 바깥(둥근 모서리 너머 배경)
+          const cw = cx1 - cx0 + 1, ch = cy1 - cy0 + 1;
+          items.push({ x0: cx0, y0: cy0, x1: cx1, y1: cy1, w: cw, h: ch, area, color: [sr / area, sg / area, sb / area],
+                       stroke: !isBlob(ipx, cw, ch) });
+        }
+        const strokes = items.filter(it => it.stroke && (!outBg || cdist(it.color, outBg) >= 40 || cdist(it.color, r.mean) >= 80)).sort((a, b) => a.x0 - b.x0);
+        let row = 0;
+        for (let s = 0; s < strokes.length; s++) {
+          let len = 1, last = strokes[s];
+          for (let t = s + 1; t < strokes.length; t++) {
+            const b = strokes[t];
+            const vov = Math.min(last.y1, b.y1) - Math.max(last.y0, b.y0) + 1;
+            if (b.x0 - last.x1 - 1 > Math.max(last.h, b.h)) break;
+            if (vov >= 0.5 * Math.min(last.h, b.h) && Math.max(last.h, b.h) <= 2.5 * Math.min(last.h, b.h)) { len++; if (b.x1 > last.x1) last = b; }
+          }
+          if (len > row) row = len;
+        }
+        const bh = r.h, bw = r.w;
+        const tall = strokes.filter(it => it.h >= 0.25 * bh && it.h <= 0.85 * bh && (!outBg || cdist(it.color, outBg) >= 40 || cdist(it.color, r.mean) >= 80));
+        let span = 0;
+        if (tall.length) { let a = W, b = -1; for (const it of tall) { if (it.x0 < a) a = it.x0; if (it.x1 > b) b = it.x1; } span = b - a + 1; }
+        return { row, short: bh <= 120 && tall.length >= 1 && tall.length <= 4 && span >= 0.2 * bw };
+      }
+
+      return { elements, pieces, BG, LB, edgeT: EDGE_T, palette: palette.length, dbg: dbgOut };
+    }
+
+    /* 가이드 여백(원본 크기별, nap 소재 가이드 원문) — 0은 그 방향 기준 없음 */
+    const MARGIN_GUIDES = {
+      '1200x600': { top: 0,  right: 30, bottom: 0,  left: 30 },
+      '720x780':  { top: 30, right: 65, bottom: 30, left: 65 }
+    };
+    const SIDE_KO = { top: '위', right: '오른쪽', bottom: '아래', left: '왼쪽' };
+
+    /* 요소 → 판정. crops = { '720x720': {x,y,w,h}, ... }(원본 좌표)
+       level: 'cut'(글자·박스가 출력에서 잘림) | 'guide'(잘리진 않지만 가이드 여백 안) | 'info'(그림 — 참고) */
+    function evaluateMargins(elements, W, H, guide, crops) {
+      const out = [];
+      for (const e of elements) {
+        const m = { top: e.y0, right: W - 1 - e.x1, bottom: H - 1 - e.y1, left: e.x0 };
+        const sides = [];
+        for (const s of ['top', 'right', 'bottom', 'left']) {
+          if (guide[s] > 0 && m[s] < guide[s]) sides.push({ side: s, margin: m[s], need: guide[s] });
+        }
+        const ew = e.x1 - e.x0 + 1, eh = e.y1 - e.y0 + 1;
+        const cuts = [];
+        for (const key of Object.keys(crops)) {
+          const c = crops[key];
+          const amt = { top: c.y - e.y0, right: e.x1 + 1 - (c.x + c.w), bottom: e.y1 + 1 - (c.y + c.h), left: c.x - e.x0 };
+          const size = { top: eh, bottom: eh, left: ew, right: ew };
+          const cs = [];
+          for (const s of ['top', 'right', 'bottom', 'left']) {
+            if (amt[s] > 0.5) cs.push({ side: s, px: Math.max(1, Math.min(size[s], Math.round(amt[s]))), whole: amt[s] >= size[s] });
+          }
+          if (cs.length) cuts.push({ size: key, sides: cs });
+        }
+        if (!sides.length && !cuts.length) continue;
+        out.push({ el: e, margins: m, sides, cuts, level: e.cls === 'graphic' ? 'info' : cuts.length ? 'cut' : 'guide' });
+      }
+      const rank = { cut: 0, guide: 1, info: 2 };
+      out.sort((a, b) => rank[a.level] - rank[b.level] || a.el.y0 - b.el.y0 || a.el.x0 - b.el.x0);
+      return out;
+    }
+
+    const LEVEL_KO = { cut: '잘림', guide: '가이드', pass: '넘김', info: '참고' };
+    const LEVEL_RANK = { cut: 0, guide: 1, pass: 2, info: 3 };
+    const CLS_KO   = { text: '글자·로고', box: '글자 박스', graphic: '그림' };
+    const inspectQueue = [];
+    let inspectBusy = false;
+
+    function guideText(g) {
+      const parts = [];
+      if (g.top) parts.push(`상하 ${g.top}px`);
+      if (g.left) parts.push(`좌우 ${g.left}px`);
+      return parts.join(' · ');
+    }
+
+    function queueInspection(items) {
+      for (const item of items) inspectQueue.push(item);
+      renderTableFooter();
+      runInspectionQueue();
+    }
+
+    function runInspectionQueue() {
+      if (inspectBusy) return;
+      const item = inspectQueue.shift();
+      if (!item) return;
+      inspectBusy = true;
+      item.inspect = { status: 'running' };
+      refreshInspectionViews(item);
+      // 화면을 한 번 그린 뒤 계산(이미지 1장에 0.1~1초)
+      setTimeout(() => {
+        try {
+          const t0 = performance.now();
+          const cv = document.createElement('canvas');
+          cv.width = item.width; cv.height = item.height;
+          const ctx = cv.getContext('2d', { willReadFrequently: true });
+          ctx.drawImage(item.element, 0, 0);
+          const data = ctx.getImageData(0, 0, item.width, item.height).data;
+          const res = detectMarginElements(data, item.width, item.height);
+          item.inspect = { status: 'done', elements: res.elements, ms: Math.round(performance.now() - t0) };
+        } catch (err) {
+          item.inspect = { status: 'error', error: err.message || String(err) };
+        }
+        inspectBusy = false;
+        refreshInspectionViews(item);
+        runInspectionQueue();
+      }, 30);
+    }
+
+    // 사람이 고친 판정(무시 / 검수 대상) 반영
+    function effectiveElements(item) {
+      return item.inspect.elements.map((e, idx) => {
+        const ov = item.overrides[idx];
+        let cls = e.cls;
+        if (ov === 'ignore') cls = 'graphic';
+        else if (ov === 'count' && cls === 'graphic') cls = 'text';
+        return { ...e, cls, idx, origCls: e.cls, ov, pass: !!item.passes[idx] };
+      });
+    }
+
+    // 사람이 넘긴 가이드 항목은 '넘김' — 잘리는 항목은 넘김을 눌러 두었어도 잘림 그대로
+    function judge(item, crops) {
+      const fs = evaluateMargins(effectiveElements(item), item.width, item.height, item.guide, crops);
+      for (const f of fs) if (f.level === 'guide' && f.el.pass) f.level = 'pass';
+      return fs.sort((a, b) => LEVEL_RANK[a.level] - LEVEL_RANK[b.level] || a.el.y0 - b.el.y0 || a.el.x0 - b.el.x0);
+    }
+
+    function tableFindings(item) {
+      if (item.inspect.status !== 'done' || !item.guide) return [];
+      return judge(item, item.autoCrops);
+    }
+
+    function editorFindings(item) {
+      if (item.inspect.status !== 'done' || !item.guide) return [];
+      return judge(item, { [item.selectedSize]: item.manualCrops[item.selectedSize] });
+    }
+
+    function countLevels(findings) {
+      const n = { cut: 0, guide: 0, pass: 0, info: 0 };
+      for (const f of findings) n[f.level]++;
+      return n;
+    }
+
+    function describeFinding(f) {
+      const parts = f.sides.map(s => `${SIDE_KO[s.side]} 여백 ${s.margin}px (기준 ${s.need})`);
+      const cutMap = new Map();
+      for (const c of f.cuts) {
+        const k = c.sides.map(s => s.whole ? `${{ top: '위쪽', right: '오른쪽', bottom: '아래쪽', left: '왼쪽' }[s.side]} 통째로` : `${SIDE_KO[s.side]} ${s.px}px`).join(', ');
+        cutMap.set(k, (cutMap.get(k) || []).concat(c.size.replace('x', '×')));
+      }
+      for (const [k, sizes] of cutMap) parts.push(`${sizes.join('·')}에서 ${k} 잘림`);
+      return parts.join(' · ');
+    }
+
+    function findingLabel(f) {
+      if (f.el.ov === 'count') return '요소(직접 지정)';
+      if (f.el.weak && f.el.cls === 'text') return '글자로 추정';
+      if (f.el.weak && f.el.cls === 'box') return '글자 박스로 추정';
+      return CLS_KO[f.el.cls] || '요소';
+    }
+
+    function inspectionBadgeHtml(item) {
+      const st = item.inspect.status;
+      if (st === 'wait' || st === 'running') return ' <span class="mi-badge">· 검수 중</span>';
+      if (st === 'error') return ' <span class="mi-badge cut">· 검수 실패</span>';
+      const n = countLevels(tableFindings(item));
+      if (n.cut) return ` <span class="mi-badge cut">· 잘림 ${n.cut}</span>`;
+      if (n.guide) return ` <span class="mi-badge guide">· 가이드 ${n.guide}</span>`;
+      return ' <span class="mi-badge ok">· 여백 OK</span>';
+    }
+
+    function fillInspectionCell(td, item, index) {
+      td.innerHTML = '';
+      const st = item.inspect.status;
+      if (st === 'wait' || st === 'running') {
+        td.innerHTML = `<span class="mi-chip wait">${st === 'running' ? '검사 중…' : '검사 대기'}</span>`;
+        return;
+      }
+      if (st === 'error') {
+        td.innerHTML = `<span class="mi-chip cut">검사 실패</span><div class="mi-lines">${escapeHtml(item.inspect.error)}</div>`;
+        return;
+      }
+      const fs = tableFindings(item);
+      const n = countLevels(fs);
+      const chips = document.createElement('div');
+      chips.className = 'mi-chips';
+      if (!n.cut && !n.guide) chips.innerHTML += `<span class="mi-chip ok">✓ 글자·로고 여백 OK</span>`;
+      if (n.cut) chips.innerHTML += `<span class="mi-chip cut">✗ 잘림 ${n.cut}</span>`;
+      if (n.guide) chips.innerHTML += `<span class="mi-chip guide">! 가이드 ${n.guide}</span>`;
+      if (n.pass) chips.innerHTML += `<span class="mi-chip pass">넘김 ${n.pass}</span>`;
+      if (n.info) chips.innerHTML += `<span class="mi-chip info">참고 ${n.info}</span>`;
+      td.appendChild(chips);
+
+      const lines = document.createElement('div');
+      lines.className = 'mi-lines';
+      fs.filter(f => f.level !== 'info').forEach((f) => {
+        const div = document.createElement('div');
+        div.innerHTML = `<span class="mi-lv ${f.level}">${LEVEL_KO[f.level]}</span>${escapeHtml(findingLabel(f))} — ${escapeHtml(describeFinding(f))}`;
+        lines.appendChild(div);
+      });
+      if (n.info) {
+        const div = document.createElement('div');
+        div.style.color = '#9ca3af';
+        div.textContent = `참고 ${n.info}건은 그림(장식)으로 보여 판정에서 뺐습니다 — 편집기에서 확인`;
+        lines.appendChild(div);
+      }
+      td.appendChild(lines);
+
+      if (fs.length) {
+        const actions = document.createElement('div');
+        actions.className = 'mi-actions';
+        const link = document.createElement('button');
+        link.className = 'mi-link';
+        link.textContent = '편집기에서 보기 →';
+        link.addEventListener('click', () => {
+          state.activeIndex = index;
+          state.hasDragged = false;
+          syncControls();
+          renderImageList();
+          renderEditor();
+          renderManualPreview();
+          editorPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        actions.appendChild(link);
+        if (n.cut || n.guide) {
+          const rj = document.createElement('button');
+          rj.className = 'mi-link';
+          rj.textContent = '반려 문구 보기';
+          rj.addEventListener('click', () => openRejectModal([item]));
+          actions.appendChild(rj);
+        }
+        td.appendChild(actions);
+      }
+    }
+
+    // 표 아래: 잘림 알림 · 반려 문구 모아 보기 단추
+    function renderTableFooter() {
+      const pending = state.images.some(it => it.inspect.status === 'wait' || it.inspect.status === 'running');
+      const rejectCount = state.images.filter(it => rejectFindings(it).length).length;
+      rejectAllBtn.disabled = pending || !rejectCount;
+      rejectAllBtn.textContent = !pending && rejectCount ? `반려 문구 모아 보기 (${rejectCount}장)` : '반려 문구 모아 보기';
+      if (pending) { zipNote.className = 'zip-note wait'; zipNote.textContent = '여백 검수 중…'; return; }
+      const cutImages = state.images.filter(it => countLevels(tableFindings(it)).cut > 0).length;
+      zipNote.className = 'zip-note';
+      zipNote.textContent = cutImages ? `글자·박스가 잘리는 이미지 ${cutImages}장 — 표의 여백 검수 칸 확인` : '';
+    }
+
+    function refreshInspectionViews(item) {
+      const index = state.images.indexOf(item);
+      const td = autoResizeArea.querySelector(`td[data-inspect-id="${item.id}"]`);
+      if (td && index >= 0) fillInspectionCell(td, item, index);
+      renderTableFooter();
+      renderImageList();
+      if (getActiveImage() === item) { renderEditor(); renderInspectPanel(); }
+    }
+
+    function setOverride(item, idx, value) {
+      if (value) item.overrides[idx] = value; else delete item.overrides[idx];
+      refreshInspectionViews(item);
+    }
+
+    function setPass(item, idx, on) {
+      if (on) item.passes[idx] = true; else delete item.passes[idx];
+      refreshInspectionViews(item);
+    }
+
+    function renderInspectPanel() {
+      const active = getActiveImage();
+      if (!active || !active.guide) { inspectPanel.style.display = 'none'; return; }
+      inspectPanel.style.display = '';
+      inspectGuideEl.textContent = `기준 ${active.width}×${active.height}: ${guideText(active.guide)} (텍스트·로고, 글자 든 박스는 박스 바깥선까지) · 잘림은 지금 크롭(${active.selectedSize.replace('x', '×')}) 기준`;
+      const st = active.inspect.status;
+      if (st !== 'done') {
+        inspectListEl.innerHTML = `<div class="inspect-wait">${st === 'error' ? '검사 실패: ' + escapeHtml(active.inspect.error) : '검사 중…'}</div>`;
+        return;
+      }
+      const fs = editorFindings(active);
+      // 넘김과 반려 문구는 표(자동 크롭) 판정 기준 — 편집기의 출력 크기 · 옮긴 크롭에서 주황이어도 표에서 잘리면 넘길 수 없다
+      const byTable = new Map(tableFindings(active).map(x => [x.el.idx, x]));
+      const infoCount = fs.filter(f => f.level === 'info').length;
+      inspectListEl.innerHTML = '';
+      if (!fs.some(f => f.level === 'cut' || f.level === 'guide')) {
+        const ok = document.createElement('div');
+        ok.className = 'inspect-ok';
+        ok.textContent = '✓ 가이드 여백 안쪽에 걸리는 글자·로고·박스가 없습니다';
+        inspectListEl.appendChild(ok);
+      }
+      fs.forEach((f) => {
+        if (f.level === 'info' && !state.showInfo) return;
+        const div = document.createElement('div');
+        div.className = `inspect-item ${f.level}`;
+        const head = document.createElement('div');
+        head.className = 'head';
+        head.innerHTML = `<span><span class="mi-lv ${f.level}">${LEVEL_KO[f.level]}</span>${escapeHtml(findingLabel(f))}</span>`;
+        const btns = document.createElement('span');
+        btns.className = 'btns';
+        const addBtn = (label, onClick) => {
+          const b = document.createElement('button');
+          b.textContent = label;
+          b.addEventListener('click', onClick);
+          btns.appendChild(b);
+        };
+        const tf = byTable.get(f.el.idx);
+        const tl = tf ? tf.level : null;
+        if (tl === 'pass') addBtn('되돌리기', () => setPass(active, f.el.idx, false));
+        else {
+          if (tl === 'guide') addBtn('넘김', () => setPass(active, f.el.idx, true));
+          if (f.el.ov) addBtn('되돌리기', () => setOverride(active, f.el.idx, null));
+          else if (f.el.cls === 'graphic') addBtn('글자·로고로 보기', () => setOverride(active, f.el.idx, 'count'));
+          else addBtn('장식이라 무시', () => setOverride(active, f.el.idx, 'ignore'));
+        }
+        head.appendChild(btns);
+        div.appendChild(head);
+        const body = document.createElement('div');
+        let note = '';
+        if (f.level === 'info') note = ' — 장식이면 그대로 두세요';
+        else if (tl === 'pass') note = ' — 넘김: 반려 문구에서 빠짐';
+        else if (tl === 'cut' && f.level !== 'cut') note = ` — ${tf.cuts.map(c => c.size.replace('x', '×')).join('·')} 자동 크롭에서 잘려 넘길 수 없음`;
+        body.textContent = describeFinding(f) + note;
+        div.appendChild(body);
+        const pos = document.createElement('div');
+        pos.className = 'pos';
+        pos.textContent = `x ${f.el.x0}–${f.el.x1}, y ${f.el.y0}–${f.el.y1}`;
+        div.appendChild(pos);
+        div.addEventListener('mouseenter', () => { state.hoverEl = f.el.idx; renderEditor(); });
+        div.addEventListener('mouseleave', () => { state.hoverEl = -1; renderEditor(); });
+        inspectListEl.appendChild(div);
+      });
+      if (infoCount) {
+        const tg = document.createElement('div');
+        tg.className = 'preview-coords-toggle';
+        tg.textContent = `${state.showInfo ? '▾' : '▸'} 참고(그림·장식) ${infoCount}건 ${state.showInfo ? '접기' : '보기'}`;
+        tg.addEventListener('click', () => { state.showInfo = !state.showInfo; renderInspectPanel(); renderEditor(); });
+        inspectListEl.appendChild(tg);
+      }
+      // 반려 문구는 자동 크롭(ZIP과 같은 기준) 판정으로 만든다
+      if (rejectFindings(active).length) {
+        const rj = document.createElement('button');
+        rj.className = 'btn-secondary inspect-reject';
+        rj.textContent = '반려 문구 보기';
+        rj.addEventListener('click', () => openRejectModal([active]));
+        inspectListEl.appendChild(rj);
+      }
+    }
+
+    function drawGuideOverlay(active, scale) {
+      const g = active.guide;
+      if (!g) return;
+      const cw = editorCanvas.width, ch = editorCanvas.height;
+      const sx = g.left * scale, sy = g.top * scale;
+      const sw = (active.width - g.left - g.right) * scale, sh = (active.height - g.top - g.bottom) * scale;
+      editorCtx.save();
+      editorCtx.fillStyle = 'rgba(236, 72, 153, 0.22)';
+      if (g.top) editorCtx.fillRect(0, 0, cw, sy);
+      if (g.bottom) editorCtx.fillRect(0, sy + sh, cw, ch - sy - sh);
+      if (g.left) editorCtx.fillRect(0, sy, sx, sh);
+      if (g.right) editorCtx.fillRect(sx + sw, sy, cw - sx - sw, sh);
+      editorCtx.setLineDash([6, 4]);
+      editorCtx.strokeStyle = 'rgba(219, 39, 119, 0.95)';
+      editorCtx.lineWidth = 1;
+      editorCtx.strokeRect(sx + 0.5, sy + 0.5, sw - 1, sh - 1);
+      editorCtx.setLineDash([]);
+
+      if (active.inspect.status === 'done') {
+        const COLORS = { cut: '#dc2626', guide: '#f59e0b', pass: '#64748b', info: '#9ca3af' };
+        editorCtx.font = 'bold 11px -apple-system, "Noto Sans KR", sans-serif';
+        editorCtx.textBaseline = 'top';
+        for (const f of editorFindings(active)) {
+          const e = f.el, hover = state.hoverEl === e.idx;
+          if (f.level === 'info' && !state.showInfo && !hover) continue;   // 참고(그림)는 펼쳤을 때만
+          const rx = e.x0 * scale, ry = e.y0 * scale;
+          const rw = (e.x1 - e.x0 + 1) * scale, rh = (e.y1 - e.y0 + 1) * scale;
+          editorCtx.strokeStyle = COLORS[f.level];
+          editorCtx.lineWidth = hover ? 3 : f.level === 'info' ? 1 : 2;
+          editorCtx.setLineDash(f.level === 'info' ? [4, 3] : []);
+          editorCtx.strokeRect(rx - 1, ry - 1, rw + 2, rh + 2);
+          editorCtx.setLineDash([]);
+          if (f.level === 'info' && !hover) continue;                      // 참고는 라벨 없이 점선만
+          let label = LEVEL_KO[f.level];
+          if (f.level === 'cut') label += ` ${Math.max(...f.cuts.flatMap(c => c.sides.map(s => s.px)))}px`;
+          else if (f.level === 'guide') { const s = f.sides[0]; label = `${SIDE_KO[s.side]} 여백 ${s.margin}px`; }
+          const tw = editorCtx.measureText(label).width + 8;
+          // 왼쪽에 걸린 요소는 라벨을 오른쪽 끝에 붙여 크롭 크기 글자(왼쪽 위)와 겹치지 않게
+          const leftSide = f.sides.some(s => s.side === 'left') || f.cuts.some(c => c.sides.some(s => s.side === 'left'));
+          const lx = Math.min(Math.max(leftSide ? rx + rw + 1 - tw : rx - 1, 0), cw - tw);
+          const ly = ry - 17 >= 0 ? ry - 17 : Math.min(ry + rh + 2, ch - 15);
+          editorCtx.fillStyle = COLORS[f.level];
+          editorCtx.fillRect(lx, ly, tw, 15);
+          editorCtx.fillStyle = '#ffffff';
+          editorCtx.fillText(label, lx + 4, ly + 2);
+        }
+      }
+      editorCtx.restore();
+    }
+
+    // ─── 반려 문구 (광고주 전달용 메일 본문) ───
+    // 원본에 여백 가이드를 적용했을 때 어긴 요소만 담는다(변환 크기 · 잘림 여부와 상관없음). 넘김 · 참고(그림)는 뺀다.
+    // 복사하면 글 + 그림이 HTML로 클립보드에 들어가 메일 본문에 한 번에 붙는다(글만 받는 곳엔 글만).
+    const SIDE_WORD = { top: '위', right: '오른쪽', bottom: '아래', left: '왼쪽' };
+    const SIDE_ORDER = { top: 0, bottom: 1, left: 2, right: 3 };   // 상하좌우 순
+    const CLS_AD    = { text: '텍스트·로고', box: '텍스트 박스' };
+    const REJECT_INTRO  = '아래 소재가 여백 가이드에 맞지 않아 수정 부탁드립니다.';
+    const REJECT_LEGEND = '이미지 표시: 분홍 = 여백 가이드 구역, 빨간 상자 = 가이드를 지키지 않은 요소, 숫자 = 아래 항목 번호';
+    const REJECT_OUTRO  = '수정한 소재로 다시 전달 부탁드립니다.';
+    const MAIL_IMG_W = { '1200x600': 640, '720x780': 480 };   // 메일 본문에 넣는 그림 폭(px)
+    const MAIL_FONT  = "font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:10pt;line-height:1.6;color:#111111;";
+
+    // 잘림 · 가이드 항목 중 가이드 여백을 어긴 변이 있는 것(자동 크롭에서 잘리는 요소는 늘 가이드도 어김)
+    function rejectFindings(item) {
+      return tableFindings(item).filter(f => (f.level === 'cut' || f.level === 'guide') && f.sides.length);
+    }
+
+    // 요소 가운데가 이미지를 3등분한 칸 중 어디인지: '하단 가운데' 등
+    function placeWord(e, W, H) {
+      const cx = (e.x0 + e.x1) / 2 / W, cy = (e.y0 + e.y1) / 2 / H;
+      const v = cy < 1 / 3 ? '상단' : cy > 2 / 3 ? '하단' : '중앙';
+      const h = cx < 1 / 3 ? '왼쪽' : cx > 2 / 3 ? '오른쪽' : '가운데';
+      return v === '중앙' && h === '가운데' ? '가운데' : `${v} ${h}`;
+    }
+
+    // 변마다 한 문장: '아래 여백 가이드 30px 준수 부탁드립니다. 현재 아래 여백이 16px로 14px 부족합니다.'
+    function rejectLines(f) {
+      return [...f.sides].sort((a, b) => SIDE_ORDER[a.side] - SIDE_ORDER[b.side]).map((s) => {
+        const w = SIDE_WORD[s.side];
+        return `${w} 여백 가이드 ${s.need}px 준수 부탁드립니다. 현재 ${w} 여백이 ${s.margin}px로 ${s.need - s.margin}px 부족합니다.`;
+      });
+    }
+
+    // 이미지 한 장의 반려 블록: 머리줄 · 가이드 줄 · 항목(번호 제목 + 변마다 한 문장)
+    function rejectBlocks(items) {
+      const out = [];
+      for (const item of items) {
+        const fs = rejectFindings(item);
+        if (!fs.length) continue;
+        out.push({
+          item, fs,
+          head: `■ ${item.name} (${item.width}×${item.height})`,
+          guide: `여백 가이드: ${guideText(item.guide)} (텍스트·로고 기준, 텍스트가 든 박스는 박스 바깥선까지)`,
+          entries: fs.map((f, i) => ({
+            title: `${i + 1}) ${placeWord(f.el, item.width, item.height)} ${CLS_AD[f.el.cls] || '텍스트·로고'}`,
+            lines: rejectLines(f),
+          })),
+        });
+      }
+      return out;
+    }
+
+    // 글만(그림 없이) — 붙이는 곳이 글만 받을 때와 같은 내용
+    function rejectText(items) {
+      const blocks = rejectBlocks(items);
+      if (!blocks.length) return '';
+      const body = blocks.map(b => [b.head, b.guide, ...b.entries.flatMap(e => [e.title, ...e.lines.map(l => `- ${l}`)])].join('\n'));
+      return [REJECT_INTRO, '', body.join('\n\n'), '', REJECT_OUTRO].join('\n');
+    }
+
+    // 메일에 넣는 그림: 원본을 메일 폭으로 줄이고, mark면 분홍 가이드 여백 + 어긴 요소마다 빨간 상자 · 번호.
+    // 분홍 여백 · 점선은 반려 항목이 남은 방향만, 상하 · 좌우를 한 쌍으로 — 위나 아래 중 하나라도 걸리면 위아래 둘 다,
+    // 왼쪽이나 오른쪽 중 하나라도 걸리면 좌우 둘 다(한쪽만 허용하는 경우는 없음, 2026-10-20 사용자 요청).
+    // 걸린 것이 없는 방향을 칠하면 그 안의 요소 · 장식이 침범한 것처럼 보이고, 넘김 · 장식이라 무시로 허용한 요소 자리는 아래에서 되살린다.
+    function rejectImage(item, fs, mark) {
+      const scale = (MAIL_IMG_W[`${item.width}x${item.height}`] || 480) / item.width;
+      const w = Math.round(item.width * scale), h = Math.round(item.height * scale);
+      const base = document.createElement('canvas');   // 표시 없는 줄인 원본(허용한 요소 자리를 되살릴 때 화소 그대로 복사)
+      base.width = w; base.height = h;
+      const bctx = base.getContext('2d');
+      bctx.fillStyle = '#ffffff';
+      bctx.fillRect(0, 0, w, h);
+      bctx.drawImage(item.element, 0, 0, w, h);
+      if (!mark) return { src: base.toDataURL('image/jpeg', 0.9), w, h };
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      const ctx = cv.getContext('2d');
+      ctx.drawImage(base, 0, 0);
+      const g = item.guide;
+      const hit = new Set(fs.flatMap(f => f.sides.map(s => s.side)));
+      const vert = hit.has('top') || hit.has('bottom'), horiz = hit.has('left') || hit.has('right');
+      const on = { top: vert && g.top > 0, bottom: vert && g.bottom > 0, left: horiz && g.left > 0, right: horiz && g.right > 0 };
+      // 여백 폭은 화소 칸에 맞춰 반올림(경계가 두 칸에 번져 흐려 보이지 않게)
+      const t = Math.round(g.top * scale), b = Math.round(g.bottom * scale);
+      const l = Math.round(g.left * scale), r = Math.round(g.right * scale);
+      // 한 경로로 칠해 두 쪽이 만나는 모서리도 한 번만 칠해진다
+      ctx.beginPath();
+      if (on.top) ctx.rect(0, 0, w, t);
+      if (on.bottom) ctx.rect(0, h - b, w, b);
+      if (on.left) ctx.rect(0, 0, l, h);
+      if (on.right) ctx.rect(w - r, 0, r, h);
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.28)';
+      ctx.fill();
+      // 그 쪽 여백의 안쪽 경계(가이드 선)만 점선 — 칠한 이웃 쪽이 있으면 그 경계에서 멈춰 모서리가 깔끔하게 만난다
+      const x0 = on.left ? l : 0, x1 = on.right ? w - r : w, y0 = on.top ? t : 0, y1 = on.bottom ? h - b : h;
+      ctx.beginPath();
+      if (on.top) { ctx.moveTo(x0, t + 0.5); ctx.lineTo(x1, t + 0.5); }
+      if (on.bottom) { ctx.moveTo(x0, h - b - 0.5); ctx.lineTo(x1, h - b - 0.5); }
+      if (on.left) { ctx.moveTo(l + 0.5, y0); ctx.lineTo(l + 0.5, y1); }
+      if (on.right) { ctx.moveTo(w - r - 0.5, y0); ctx.lineTo(w - r - 0.5, y1); }
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = 'rgba(219, 39, 119, 0.95)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // 넘김 · 장식이라 무시로 허용한 요소 자리는 분홍 · 점선을 걷어 내고(원본 화소), 남은 반려 요소 자리는 다시 표시한다
+      // — 허용한 요소가 남은 요소를 품거나 겹쳐도 남은 요소는 늘 분홍 위에 있게
+      const marked = document.createElement('canvas');
+      marked.width = w; marked.height = h;
+      marked.getContext('2d').drawImage(cv, 0, 0);
+      const pxBox = (e) => {
+        const ax = Math.max(0, Math.floor(e.x0 * scale) - 2), ay = Math.max(0, Math.floor(e.y0 * scale) - 2);
+        const bx = Math.min(w, Math.ceil((e.x1 + 1) * scale) + 2), by = Math.min(h, Math.ceil((e.y1 + 1) * scale) + 2);
+        return [ax, ay, bx - ax, by - ay];
+      };
+      for (const f of tableFindings(item)) {
+        if (!(f.level === 'pass' || f.el.ov === 'ignore')) continue;
+        const [x, y, bw, bh] = pxBox(f.el);
+        ctx.drawImage(base, x, y, bw, bh, x, y, bw, bh);
+      }
+      for (const f of fs) {
+        const [x, y, bw, bh] = pxBox(f.el);
+        ctx.drawImage(marked, x, y, bw, bh, x, y, bw, bh);
+      }
+      // 빨간 상자를 모두 그린 뒤 번호. 자리 후보: 상자 윗변 · 아랫변(21px 간격) → 좌우 변 가운데 → 상자 바깥으로 한 칸씩.
+      // 앞 번호와 겹치지 않으면서 다른 상자보다 제 상자에 가까운 자리 → 겹치지만 않는 자리 → 앞 번호에서 가장 먼 자리 순으로 고른다
+      const boxes = fs.map(f => ({ x: f.el.x0 * scale - 2, y: f.el.y0 * scale - 2,
+                                   w: (f.el.x1 - f.el.x0 + 1) * scale + 4, h: (f.el.y1 - f.el.y0 + 1) * scale + 4 }));
+      ctx.strokeStyle = '#dc2626';
+      ctx.lineWidth = 2;
+      for (const bx of boxes) ctx.strokeRect(bx.x, bx.y, bx.w, bx.h);
+      const R = 9, STEP = 2 * R + 3, GAP = 2 * R + 2;
+      const clamp = ([x, y]) => [Math.min(Math.max(x, R + 1), w - R - 1), Math.min(Math.max(y, R + 1), h - R - 1)];
+      // 점에서 상자 테두리까지 거리(상자 안이면 가장 가까운 변까지)
+      const toEdge = ([x, y], q) => {
+        const dx = Math.max(q.x - x, 0, x - q.x - q.w), dy = Math.max(q.y - y, 0, y - q.y - q.h);
+        return dx || dy ? Math.hypot(dx, dy) : Math.min(x - q.x, q.x + q.w - x, y - q.y, q.y + q.h - y);
+      };
+      const placed = [];
+      const room = c => placed.reduce((m, p) => Math.min(m, Math.hypot(c[0] - p[0], c[1] - p[1])), Infinity);
+      ctx.font = 'bold 12px "Malgun Gothic", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      boxes.forEach((bx, i) => {
+        const raw = [];
+        for (const y of [bx.y, bx.y + bx.h]) {
+          for (let x = bx.x; x < bx.x + bx.w; x += STEP) raw.push([x, y]);
+          raw.push([bx.x + bx.w, y]);
+        }
+        raw.push([bx.x, bx.y + bx.h / 2], [bx.x + bx.w, bx.y + bx.h / 2]);
+        for (let k = 1; k <= 3; k++) {
+          const d = k * GAP, mx = bx.x + bx.w, my = bx.y + bx.h;
+          raw.push([bx.x - d, bx.y], [mx + d, bx.y], [bx.x - d, my], [mx + d, my], [bx.x, bx.y - d], [mx, bx.y - d],
+                   [bx.x, my + d], [mx, my + d], [bx.x - d, bx.y + bx.h / 2], [mx + d, bx.y + bx.h / 2]);
+        }
+        const seen = new Set(), cands = [];
+        for (const p of raw) {
+          const c = clamp(p), key = `${c[0].toFixed(1)},${c[1].toFixed(1)}`;
+          if (!seen.has(key)) { seen.add(key); cands.push(c); }
+        }
+        const mine = c => boxes.every((q, j) => j === i || toEdge(c, bx) < toEdge(c, q));
+        const [px, py] = cands.find(c => mine(c) && room(c) >= GAP) || cands.find(c => room(c) >= GAP)
+                      || cands.reduce((a, c) => (room(c) > room(a) ? c : a));
+        placed.push([px, py]);
+        ctx.beginPath();
+        ctx.arc(px, py, R, 0, Math.PI * 2);
+        ctx.fillStyle = '#dc2626';
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(String(i + 1), px, py + 0.5);
+      });
+      return { src: cv.toDataURL('image/jpeg', 0.9), w, h };
+    }
+
+    let rejectImgs = [];   // 지금 창의 블록별 그림 { mark, plain }
+
+    // 메일 본문 HTML — 메일 프로그램이 받는 서식만(인라인 style · 줄마다 div · img width/height).
+    // Outlook(Word 엔진) 붙여넣기 실측: 들여쓰기는 p에만 먹고, 그림 바로 뒤에 br이 없으면 그림과 다음 줄이 한 문단으로 합쳐진다.
+    function rejectMailHtml(blocks) {
+      const div = (t, css = 'margin:0;') => `<div style="${css}">${escapeHtml(t)}</div>`;
+      const gap = '<div style="margin:0;"><br></div>';
+      let html = `<div style="${MAIL_FONT}">${div(REJECT_INTRO)}`
+               + `<div class="mail-legend" style="margin:0;color:#6b7280;font-size:9pt;">${escapeHtml(REJECT_LEGEND)}</div>`;
+      blocks.forEach((b, k) => {
+        const im = rejectImgs[k].mark;
+        html += gap + div(b.head, 'margin:0;font-weight:bold;')
+              + `<div class="mail-img" style="margin:4px 0 6px;"><img data-k="${k}" src="${im.src}" width="${im.w}" height="${im.h}" alt="${escapeHtml(b.item.name)}" style="border:1px solid #d1d5db;"><br></div>`
+              + div(b.guide);
+        for (const e of b.entries) {
+          html += div(e.title);
+          for (const l of e.lines) html += `<p style="margin:0 0 0 16px;">${escapeHtml(`- ${l}`)}</p>`;
+        }
+      });
+      return `${html}${gap}${div(REJECT_OUTRO)}</div>`;
+    }
+
+    // 글만: 본문 줄(div · p)마다 한 줄, 빈 줄은 빈 줄 — 그림 · 범례는 뺀다(innerText는 p 앞뒤에 빈 줄을 넣어서 직접 셈)
+    function rejectPlainText() {
+      const root = rejectPreviewEl.firstElementChild;
+      if (!root || rejectPreviewEl.children.length !== 1) return rejectPreviewEl.innerText.replace(/\n{3,}/g, '\n\n').trim();
+      const lines = [];
+      for (const n of root.childNodes) {
+        if (n.nodeType === Node.TEXT_NODE) {
+          if (n.textContent.trim()) lines.push(n.textContent.trim());
+        } else if (n.nodeType === Node.ELEMENT_NODE && !n.hidden && !n.matches('.mail-img, .mail-legend')) {
+          lines.push(n.innerText.replace(/\n+$/, ''));
+        }
+      }
+      return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    }
+
+    // 이미지 고르기: 표시 넣은 그림 / 원본 / 넣지 않음 — 글은 다시 만들지 않아 창에서 고친 글이 그대로 남는다
+    function applyRejectImgMode() {
+      const mode = rejectImgModeEl.value;
+      state.rejectImgMode = mode;
+      rejectPreviewEl.querySelectorAll('img[data-k]').forEach((img) => {
+        const im = rejectImgs[Number(img.dataset.k)];
+        if (im && mode !== 'none') img.src = (mode === 'mark' ? im.mark : im.plain).src;
+        const wrap = img.closest('.mail-img');
+        if (wrap) wrap.hidden = mode === 'none';
+      });
+      const lg = rejectPreviewEl.querySelector('.mail-legend');
+      if (lg) lg.hidden = mode !== 'mark';
+    }
+
+    // 복사할 내용: HTML(숨긴 그림 · 범례 빼고, 화면용 class · data 속성 지움) + 글(범례 빼고)
+    function rejectCopyPayload() {
+      const clone = rejectPreviewEl.cloneNode(true);
+      clone.querySelectorAll('[hidden]').forEach(n => n.remove());
+      clone.querySelectorAll('[class], [data-k]').forEach((n) => { n.removeAttribute('class'); n.removeAttribute('data-k'); });
+      return { html: clone.innerHTML, text: rejectPlainText(), images: clone.querySelectorAll('img').length };
+    }
+
+    function openRejectModal(items) {
+      const blocks = rejectBlocks(items);
+      rejectImgs = blocks.map(b => ({ mark: rejectImage(b.item, b.fs, true), plain: rejectImage(b.item, b.fs, false) }));
+      rejectTitleEl.textContent = items.length === 1 ? `반려 문구 — ${items[0].name}` : `반려 문구 — ${blocks.length}장`;
+      rejectPreviewEl.innerHTML = blocks.length ? rejectMailHtml(blocks) : '';
+      rejectImgModeEl.value = state.rejectImgMode;
+      applyRejectImgMode();
+      rejectStatusEl.textContent = '';
+      rejectModal.classList.add('open');
+      rejectPreviewEl.scrollTop = 0;
+      rejectCopyBtn.focus();
+    }
+
+    function closeRejectModal() {
+      rejectModal.classList.remove('open');
+    }
+
+    async function copyRejectText() {
+      const { html, text, images } = rejectCopyPayload();
+      let ok = false;
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+        })]);
+        ok = true;
+      } catch (_) {
+        // 클립보드 API가 막힌 경우: 미리보기 전체를 선택해 복사 명령(그림 · 서식도 함께 감)
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(rejectPreviewEl);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        try { ok = document.execCommand('copy'); } catch (__) { ok = false; }
+        sel.removeAllRanges();
+      }
+      rejectStatusEl.className = ok ? 'reject-status' : 'reject-status err';
+      rejectStatusEl.textContent = ok ? `✓ 복사했습니다${images ? ` (이미지 ${images}장 포함)` : ''} — 메일 본문에 붙여 넣으세요`
+                                      : '복사가 막혔습니다 — 미리보기를 클릭해 Ctrl+A, Ctrl+C로 복사하세요';
+    }
+
+    rejectAllBtn.addEventListener('click', () => openRejectModal(state.images));
+    rejectImgModeEl.addEventListener('change', applyRejectImgMode);
+    rejectCopyBtn.addEventListener('click', copyRejectText);
+    rejectCloseBtn.addEventListener('click', closeRejectModal);
+    // 바깥 어두운 곳을 눌렀다 뗄 때만 닫기(글을 끌어 선택하다 바깥에서 놓은 경우는 그대로)
+    let rejectPressOnBackdrop = false;
+    rejectModal.addEventListener('mousedown', (e) => { rejectPressOnBackdrop = e.target === rejectModal; });
+    rejectModal.addEventListener('click', (e) => { if (rejectPressOnBackdrop && e.target === rejectModal) closeRejectModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && rejectModal.classList.contains('open')) closeRejectModal(); });
+
+    // ─── 튜토리얼(게임식 안내) ───
+    // '튜토리얼 보기'를 누를 때만 켠다. 빌드 때 끼워 넣은 연습용 샘플(PNG)을 잠깐 올려 실제 화면으로 순서대로 보여 주고,
+    // 끝나면 지운다. 미리 올려 둔 이미지 · 선택은 그대로 둔다. 샘플도 이 페이지 안에서만 쓰고 밖으로 보내지 않는다.
+    const TOUR_SAMPLE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtAAAAMMCAIAAAD1vgcrAABhnklEQVR42u3ddXhT5wLH8TdJm7pACy0VtHhxhrs7w4tvuPuw3TEchrvLYLjLcCs63J0WK1qot6kn949CKUlaUk/b7+fZcy89OTk5eXNy8juvHYlvsEoAAACkJilFAAAACBwAAIDAAQAAQOAAAAAEDgAAQOAAAAAgcAAAAAIHAAAAgQMAABA4AAAAgQMAAIDAAQAACBwAAIDAAQAAQOAAAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAAgQMAAIDAAQAACBwAAAAEDgAAQOAAAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAACBwAAIDAAQAACBwAAAAEDgAAQOAAAAAEDgAAAAIHAADIOAzS8sVuP3h77orn9Tten3yD/fxDVSqVhblRrpyWJYs61K1eqKyrU6K2Nuh/uy9cfR77p7OD9YH1vSWSHzxr6sLjuw7dUVuY09b8+Jb+WtefvvjkjoO31BZaWZqc3TUo9s+Fa8+t335F69NlMqmBTGpsbGhpbuxgZ1m2hFPrxiVz2JhrrrnnyN3J84/F/tmrU6VBv1TXvTQS2IcEJPZVAADQ68Dx4rXPjCUnr95+rbY83Dfqs2/IvcfvN++9UaJIrmljmuZ2zKbLBj/7hly6/iLuEq93/tfvvv6pVO4k7J735+CXb3zzOmXXfOja7VfJeePR0croaGV4RFRAYKjXO78rt15t2Hlt3KB6zesX5+ADAAiaVFLQsxefug3brJk21Nx7/L7jgI0Pn33UZZsHT9xXKlWalQRJ3smrt15rjTUvvHxTtjQUoRF/zD586NRDDj4AAIEjxYSERgz8fVdQcLiOKw/5Y3dwyI9XPnD8vubC0xeeBQaHJW0/r2nLQ9d+FJKSbNqiE96fgzn+AACCJpUUsfvQnbi/rOZmRp1blatbrZCjvZWBgfSll+/uw3d3/ntLpfpWqbBu+5UhPWoksM27D9/FVjw45bKWy2XPX/kIIcIjog6dfNjx57JJCRx3X6tUQq0LyNUktadMGN6wdeOSQgilShUZGR0cEv7Yw3vd9is37nqJOPUcW/ffHNqzRioVe+w+AAAgskINx7krnt9eTCJZO8etf7eqhfLnMDOVG8kNChfIOX5wvb5dqsR9yr8nHyS8zX3H78X+u0bF/LUqu8T+uffoPd33TSaTGhl9iVz+AaHPXnirrRC3GcjMVJ7owpVIjOQGNtnMqv6Ub+XM9hXL5In7qPulZxx/AAACR8p4/zEw9t8O9laFC+TUXOfX9hXj/px7fw5+9cYvvg2Gh0cdc38c+2fNSi61Kn0LHE+fez98+kHXwCGVlCiSK/bPK99343j/MfDth4DY6FCqmGNyysHAQDrwl2pxl7x84xsRGc0hCAAgcKSAuEni46cgrR0XjIwMypd0/u7H3jsgvg2evPA0RBHxZeMm8rIlnVyL5rLJZiaS1HU07uuqNaDE/bNg/hwWZkbJLIoiLnbSOG02KpUIDArjEAQACPpwJF/hAjmfPv8U8+/IqOh+43aMG1RPc/DqwsmtddzgvjiNJpXL5zU0kAkhqlfIv+/Yl+VHzjwa1a+2sZGhLlsrW+Jb4Lh59010tFImk2q2p5Qv6fzZNySZRaE5R4hcLuMQBAAIajiS7+eGJeL++fyVT+/ftjfttmrWslOnLz7zC1AkamvvPgZcv/s6TntKgZh/1KryrVUlRBFx/OwTHTdYqqhDTGSJGSPzIE5zzLU7316o3PcVMElz7/F7perbUF65oczS3JhDEAAgqOFIvnIlnZvWLaY27cTbDwFb9t3csu+mECKvU/aKZfPUquxSsUweqVTyw9GwsT/ZUomkWoX8Mf+uXDavkZFBeHiU+Nqq0qKBqy67Z2RkULyw/e0Hb8XXWo2SRR2EEK/e+MW2/kgkoqyrU9yOI0kQFaVcvO68+L6FJfWKffL8Y3HnLdWqVaMSf45oxHcAAJBJJv76c0Sj2KoITS/f+G4/cKv/uJ2NuqzYfuCWShXvdlQqceD4twEsrkVyZbMyjc0NleKMAbn94K3uE3aVi9OqEjvxRtwOHAXy2FpbmSThjatUIjw86oN34NnLnr+O2HLr/pu4jzasWYTjDwBADUeKkRvKFkxqfeD4vTVbL3u98xfxzy8+Y8nJE+efLJzUWusY1Gt3Xr/7+K0zaY3vQ0zNyi5nL3vG6epxd3jvWrrVwTit3fYtqURERssNZXE7cCS2PUWX2oVcdpatmzBPBgBAUMORkiQS0bJhiQPre6+d27Fz63IF8+WI7y5r1+94jZl2QKmtomP/se/m2KhR8fvAUalA3G0ePPEgKkqpy76VLu4Y21E0PCLqzsO3KpW4fsdLaxVIijA1kc8Y28zE2JDjDwAgqOFIjdhRroRTuRJOQojA4LDbD97euPvm6q1Xjzy+u3/KhWsvzv3nGbcfqBAiRBFx6sK3mbLsc1oWyp8j7go22cxKFHG4++hdzJ++/gr3/zzqVS+ky89/EZecD558iL2pirWlSdzerGVLOKVgIeTLbTP1tybFC9unalEz0ygAIOsGjrgszY1rVCwQU0tx/8n7P2YdjtvrYtfhO2qB45j747DwyNg/P3gHlm4wO+GX2Hv0ri6BQwhRvqTzt8Bx+3XcHht5nbLbZjdL8tuUSiRyuYG5mdwmm1n+3Da1qrjUrVrIwEDKkQcAIHCkmBGT9p2++K1a4vA/fRzsrDRXcy2ca9GU1s1/WRO7xOPlZ7V19h27l9hX/+/6yw+fguxzWAgdZuPYsPNazL/vP3lvbGSQnAGx1C4AAJCmfTgK5vuu1eO/Gy/jW9PZIZuVxbdJKT75fDch6Qsv39i2Et0pVap9ut1apayrU+wcoNHRyiu3XmmdihQAAOhj4Chf6rtf6+0HbivjGfb62Tck7i3s49YxCI3uorrbf/yeMoGBtl9ZmBsV/L5HyLcsUtKJowQAAKHPTSrlSjrbZjeLnRT86XPvZRsuDPqlutCoipi59GTcZFC80Lc+lUqlKu79Yw0MpKe2D4xbHaKmabdVsTdde/8x8MrNV5XL5dVhNg6nJ57qd4t1ymVtZ2vBUQIAgNDnGg6pRPJL+wpxl6zZcnnIH3uu3HwVHBKuVKp8/RXulzx6jNh68vzTuKs1r/9tntCL117EvY9JxTJ5EkgbQojGdYrG/VPHe7lp7atRjvYUAABERhil0qFFmYMnHsStPDh3xfPcFc8EnlKyqEPTusVEnGaRuI/Wr1E44VdsWqfYmi2XY/90v+ThHxD6w6lCy5VwlkiEWvNL+fRrT1mz5XLcd6FVxTJ5Vv7VXiR18jEhhFQquXl0FF8DAIDI6BN/GRrIlkxt45TLWsf18zhlWzS5dexNVQICQ8/+5xm3PaV2lYLiRxNdFC6QM/bPyKjog3FaZOJjbWWSL7cNNRwAAGTUmUZz2JhvW9atSZ1iUokk4faXtk1LbVzQOW5txKHTjyKjonVvT4nRpE4x8f2EHEK32Tji/mmf01LrIF4AACD0c+IvczOj6WObDuhe9fDpR7fuv3nx2icwODwsLFIuN7DJZprXOXvp4o4NahTJ45RNJDid+Q/bU2I0rl104Zqzsb1Qn7/yufPwbalijuJH3Th2HLwdtxspxwcAAClC4husohQAAIDIBDdvAwAABA4AAAACBwAAIHAAAAAQOAAAAIEDAAAQOAAAAAgcAACAwAEAAAgcAAAABA4AAEDgAAAAIHAAAAACBwAAIHAAAAAQOAAAAIEDAAAQOAAAAAgcAACAwAEAAEDgAAAABA4AAEDgAAAAIHAAAAACBwAAAIEDAAAQOAAAAIEDAACAwAEAAAgcAACAwAEAAEDgAAAABA4AAAACBwAAIHAAAAACBwAAAIEDAAAQOAAAAIEDAACAwAEAAAgcAAAABA4AAEDgAAAABA4AAAACBwAAIHAAAAACBwAAAIEDAAAQOAAAAAgcAACAwAEAAAgcAAAABA4AAEDgAAAAWYYBRQAAgF4xf5xTl9WCi3hnoDcl8Q1W8dECAJAhQkbGDR8EDgAAMmrOyEDJg8ABAECGzxn6nzwIHAAAZKqooZ+xg8ABAEAmjBr6FjsYFgsAQGZOG+n+6oIaDgAAssKPvdCDqg5qOAAAyBJpI333h8ABAECWSBvpu1c0qQAAkCWihkjX5hVqOAAAyHJpI+33k8ABAECWSxtpv7cEDgAAsmLaSON9JnAAAAACBwAAgqqCDL/nBA4AALJu2kiz/SdwAACQpdNG2rwLAgcAABDUcAAAIKjeyOjvhcABAABpI9XfEYEDAAAImlQAABBUb2T090XgAAAAghoOAACo3sjw747AAQAABDUcAACAwAEAgKA9hfdI4AAAAIIaDgAAQOAAAAAiK7WnpMY7JXAAAABBDQcAACBwAAAAEDgAABB04Ejv90vgAAAAghoOAABA4AAAACBwAAAAAgcAACBwAAAAEDgAAACBAwAAgMABAAAIHAAAgMABAABA4AAAAAQOAAAykOAi3rxfAgcAABDUcAAAAAIHAAAAgQMAAEE3joz5TgkcAABAUMMBAAAIHAAACFpVeI8EDgAAIKjhAAAABA4AACCyUqtKarw7AgcAABDUcAAAQCVHhn9fBA4AACCo4QAAQFDJkdHfEYEDAAAyR6q/FwIHAAAQNKkAACCo5Mjo74LAAQBAVs8cabD/BA4AALJ05kibPSdwAAAAAgcAAIKqggy/zwQOAACyaOZIy70lcAAAkBUzRxrvp8Q3WMXBAQBAijN/nJOoIajhAAAgC1Z1pNdeETgAAMgqmSMd94cmFQAARKZvXkn36EMNBwAAmfz3Xh8qWqjhAABAZNaqDv1p0yFwAACQCWOHvnUfIXAAAJB5kofezgJC4AAAIMMnD/2fbYzAAQBAhgwfGWsadQIHAAAQDIsFAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAACBwAAIDAAQAACBwAAAAEDgAAQOAAAAAEDgAAAAIHAAAgcAAAABA4AAAAgQMAABA4AAAACBwAAIDAAQAACBwAAAAEDgAAQOAAAAAgcAAAAAIHAAAgcAAAABA4AAAAgQMAAGQVBhQBMp+Fi5YsWrREbeH6datr1KieOd7gxYuXunXvobZw7NjRvXv14NNPY56ezxs0bKK2sHXrn2fPmpl6L7rxn82TJk1RWzh37qyfW7bgEwGBA5lBAZciakuqVKn8z8b1abwb+/YfGDlyNGdbQN98+vT56tWrz5+/ePXa69WrVz4+PmGhYYrQ0NDQUCGEiYmJqYmJsYmxjY1Nnjx58ubJnS9f3goVKuTIYUvRETiAlLF6zbqZM2epLVyyZGHjRg3VFgYGBpYpW0FtYdOmTRYtnJch3mmVqjU/fvyYIpsaNGjA8GFD9OetrVixavaceRk650VHR9+5c/fixUtXr133/ujt4+sbGBhoZGRkbW2VO3fuEiVcq1SuVLVqFZlMpudvRKVU6rgwbbx69Xrr1m1nz51/+vRZAqsFBQUFBQXFrH/z5q3Y5YULF6pRo3rnTm7Ozs6cLQkcANKaS4ECFEJKiYyM3LVrz/IVK9++faf2kEKhUCgU7969v3z5yurVa7Nnz961S6dff+1uYWGht2/n3bt3mgvfvHmb9nvy8NGjxYuXnTx5SpmMuPPkydMnT56uXbu+QYN6gwcNLFKkMEcsgQMZyb1790+cOHn9+o0XL18GBARGR0dbWFg4OTkWL16sXt061atXMzDg09drhQsX0q/qAT27qtbdnTt3hwwdruPvsa+v78JFS7Zs3TZ16uR6devoY/WGSnXq9BnN5f8eOjJo0ACJRJJmu7F06fJFi5dGR0enyAaVSuXRo8dPnDg1dOjgAf37ptkbAYEDSXflytW/Zs25c+eu2nI/Pz8/P7979+5v27bDzs5u0MD+bm7tpVJGKukjCwsLFxf9quHw9/PXstA/QM9LctPmLVOnzoiMjBSJ7IvQt++AoUMGDRkySN/e0b59+1+8eKm53MPDY9u2HR07dkibtDFu/P927tydGs1e8+YtePf23bRpkzkPEDgg9LmJetr0mRs2/PPDNT9+/PjHhImHjxxdMH+ura0NRadvypUrq29Z8MHDh9oWPtLnYly+YtWcOfOSM9wpKipqxIhh+vOOXr58NXnK9PgenTptRtFiRUqXKpXau/H33xvjSxsSiaRMmdIVKvxUwtXV0dHB3t7e1NTE2NhYCBEWFqZQhH78+PHdu3f37t2/eu36jRs3VSqV5ka2bd9RqFDB7t27ciogcEAfRURE9Os/6OzZc7o/5b//Lrt17Lx50wY7OzsKUK/UqV1Lr/bHx8fn+vUbmsvd3c9GRUXpZ/Pc8eMnkpM2YixdtmLpshVCX7puvP/ll56BgYHxrRAWFtajR+9161anaubw9/efv2CR1qjRpk2rgQP65c6dW+sTzczMzMzMcuSwdXUt3qBBfSGE15s3K5av2r5jp2bsmDd/YcuWLaytrTgbEDigd0aNGpOotBHjxYuXvXr127lza8wlCJLp0sWziVrf2/tT9Rq1o6Ki1E7cdevW1qv3tW79Bq1N9X5+frv37O3Qvp2+fRD+/v7jxv+h9SFbW5sunTtVr1EtT+7cFhYW/v4BHh4ep06d2bZtuyI0VG8PrQcPHvbu3e+jt3fCqwUEBHbu3P2vmdOaNWuaSnty8N9DISEhagtlMtn8+XOaNmmcqE05OzlNmza5evVqQ4YOVzvAgoOD/z10qEvnTpxVBDONQq/s3bvv0OEjIqn9zKdOm5H2+zxo0NACLkXU/tMcE5u5bdq0WS1tCCEqV65kb2+vPzvp4em5fv2G+B6dP3+hHvbkWLp0hb+/lk4nbdu2dj9zavDggaVLlcqWLZuBgYGtrU2lShV//33smTMnK1asoJ+9RDdv3tqufUfNtGFqYmJqYqJZzzF02Mjff58QMwY1xV27el1zoZtb+8SmjViNGjXo6Kal68m1azc4txM4oF/8/PymTtM+rWGVKpXXrF5x5fLFu3du7N+3u1vXznK5XHO1bdt23Lp9h5JMY+Hh4Vu2btdc3r5dW/3ZyeDg4EGDhoaHh4v4+1eO+m2MUp+GqyhCQ7dt36H1R/GvmdNNTIzjq/nYuGFdxQo/6dVBcvvOnTZtO0z4c5LmR2Bqarpu3eoNG9aZm5tr7QZRp27D7Tt2pvhH80HbTDP16tVNzja1Vul9+PCBs4SgSQV6ZcGCxVov5kaMGDZwQL/YP11di7u6Fm/RonnffgN9fHzULqHatu1ASYo0b6fw8/NTW5grV67GjRvqyy+3QtGnT/9nzzwSXu3MGfc//pg4deokPRnKeOb0GYVCobYwd+7cE//84wcnRAODhQvn165TLzQ0LN3fxfXrNzZt3vLvv4e1dqu0trZevWp52bJlhBBbNm/s22/g+/fvhcYQ3/Hj/9j0z5Zu3bo0a9Y0vqSVWKnyKWvbJiNjqeGAfgkNDdu3/4Dm8u7du8ZNG7HKlCm9dMlC/Z9LMdPzevNmyZJlmst79+qhJ30wP3p7d+7S/crVa5oX1pp7uG37juEjRiVQEZKWLv13WXNhz56/GBoa/vC5OXLYttNWwzRkyCBPj8ea/x0/djgF91ypVD569HjFilX16jfq4Nb54MFDWtNG4cKF9u3bFZM2hBDFixc7eGBP1apVRDxtpmPH/V6pcrUJf046d/5C8vupODjk0lx48uSp5HV+uqS5MFcue04U1HBAjxw5cjQ4OFhtYZ48ucePGxPfU376qXyvXj1Wrlydmcph5MjRmjdY0Wd//jk5LEz9MtrJybFU6ZKa96wR6THEY8Kfkz59+qx50Tl3zl/+AQHjxv1P7aGDBw+9ePFy1l8z0n3KsiePnwgtA3907Ydbt06djRs3qQfE114pvp9RUVHvP3x4//79u3fv33i9uXnr9s2btxLueCGRSDp1chs7drRa141s2bL9vX7Nps1b58yZp9mjUwgRHBy8efPWzZu3GhgYlCjh+tNP5fPly+vs5OTk7OSQK1eirkAqVqhw4MC/ms2ylSpVbNK4URLK4caNm/9s2qL1hTjDEzigRw4cOKi5cPDggQlfJffp3XPTpi1aT0xIA2vWrtc6pGj06FFaO9mkccXGxIlTjh8/ofXRMaNHxQxo9P7orTk28v79By1atu7Xr8/AAf3S8Y281Zj529raWut1uVaursU1F/ppa7UUyW406drtV937WBQokH/SxAmVK1fS+qhUKu3WtXP9enVm/jXn0CHtDTExKefWrdu3bt0WX0eX7Nu7s1ixYrrvdrNmTWbNnhMQEKg2CdCQIcPPtT0/oH/f+IbFagoMDNy4cdPyFas0w7eFhUXTpo05VxA4IPSn+/ptjRlFLSwsmv9oRJy1tXWzpk2279iZjjuv+83bMplz587PmjVHc3mtWjWbNmn88NGjdJxU6u+/N+7evUdrrbtUKp345x+dO3cUX+8tlz179omTpqiNZoyKilqyZNnevft++aVb+3ZttfZnFKne0VU9SWfLZq37062sLGUymdr7CtXoFJJ8lSpV7Ne397LlK3+4pl3OnIMGDejQod0PqyJy5cq1cMHcvn17zZ+/8MyZs/HFjli9evVIVNoQQpibm48bO2bsuN81T0c7d+7euXN3mTKlK1asUMLV1cnJ0c7OzszM1MjISAgRHhERFhrq7f3pw4cPjx4/uXXz1vkLFyMiIuKLtvp8OxsQOLKc16+9NCtga9asoUsngHr16qZv4Mianj3zGDJ0hOacFhYWFtOmThLpM2VFwPnzFw4cPJjA71P27NnnzZtdvVrVuAs7dXIrVKjgsOGjNLsrvn37btq0mQsWLG7TplWjhg3Kly+Xvt2Gkt/90FBumBo7NmzYkP8uX4mtb9BUsmSJ7t27NmvaJFE9e4oVLbp61QpPz+d/b9i4b+/++Ppt5M2bZ2iS5m5v166Nh4fHmrXrtT4atwYlaX75pVvazNEOAgd0df/+faGli0Y5XZ5bsaKW4X9t2rSa9Ve8c3LoQ9+CDO3Bg4fdf+mptZF+1l/T02zuDZVK9e7d+6dPnz58+OjsufO3b99J+P5btWrVnDF9as6cOTQfKl++3L8H902bPmPv3v2aYSUkJGTjxk0bN24yNzevVq1KlcqVCxcu5OLiktrTR5qbm6mNUvH19dP96TE3OxQas2Smxq7KZLKFC+Y1bdYy7lEhkUgKFy7UoEH9Zk2bFCiQP8kbL1Ag/5TJE8ePG3vq1KmD/x6+ePFi3NE3Eolk+rQpMXUPSTBu3BhHJ6eZM2elbE9hIyOjMaNHMak5gQN6x8vrjebCgi4uujzXzMzM3t5ebaT78+cvKNVUcvPmrR49+2hNG3369IrpGJEGTp0+M3z4KB2779jb2//xv/GNGjUQCTXPWc2eNdOtQ/uJE6fE1x4UHBx89Ojxo0ePx/yZM2eOzZs25s+fL5Xeo6ODg7f3J7WJR9++fefo6KBbjn8gtDVVpNbeOjpMmzZ54sQpRYoULlqkSOkypSpVrJA9e/aU2r6JiXGzZk2bNWsaGRl589btK5evPHj46MmTp9WqVUnmRGfdunauWaP6jJmzTpw4mSK72rRJ41GjhuveBQQEDqSdII3xKUKIPHl0/brmzZtHLXB4eXll0KKYO3fWzy1biK/33Fq0aIle7d6hQ4fHjv1da812o0YNfhs1QsSpDPf0eJzw1i5evNSte4+k7UndOrWbN2+6bduOhFfLnj17nz69unbppOOc9+XKlT1wYM+Ro8cWLVryw3k72rZpnXppQwhRpGgRzYnsTp8507VLZ90y2WkttQX586feDjdt0jjJ03TqztDQsGKFn1J2ZrM8eXIPGTIwpQLHyJGkDQIH9DZwaLtc1r2bnmafLM3edhDJvoXvjJmz4psavGLFCvPmzk7jG8NOnvTn2zdvz1+4GF8M7dy5o5tbB805s8WP+kk0adyoUcMGp0+f2bx56/kLF7X2CClfvtywYUNS9Q1Wrlxpq8YUrmvX/u3Wof0Pp+L49Onzzp27NJf/MWHiHxMmcjwLnefqcHR0/PTpk7+/f3h4eEREpEqlMjQ0lMvlFhbm2bJle//+g6+vLwVF4EDGDhympqY6Pt1MY82wsDClUpk2v3+DBg0Vmb/Ny2vUb2O13mc1Jm2sXbMqyY3oIhn9BpYsWdiufcenT5/FLrS0tKxbp/bPP7esWrVycrpYSqXSevXq1qtX18vLa9++A0ePHX8cZ1YMa2vrhQvmpnYH0tq1a5mamqp14/Dy8po4acq0qZNFghNjDB06XB+mGc3oqlWtOmPG1ARWGDhoSGwTGwgcyACS2feemYNTtWLj7w0b589fGN+vV506tRYtXJBSs02LRHerNF+7ZlWnzt1y2duXK1emcuVKFStWSNkZTp2dnQcPHjh48MDXr1+fO3/h6tXr16/fmDplUhr0jTU1Meno1mHtuvWak1NFRUVN/HOC1mL//NlnyNDhmjOrAiBwQFiYW2i9/4WOrSrBGj0HTUyM07h6P1O6cvXajBl/3bt3P74VOnbsMGnihPQdKergkMv9zIk0eKHcuXN36dwpje8zPmBA3z1792neqmbXrj3u7me7dO5Uo0b1PHnyWFiYBwQEPH36LI1vT79ixarZc+bp1UH726gR/fr14csLAgfi64RhrrWdRcfAodkiky7TNGUmt+/cmT9/4YULl0T8Hfcm/PF7p05ulFWqsra2njF9Sr/+g7TWZCxYuHjBwsWUEkDggK4sLS2FtvkidRzC90JjEKyzszOlKpJ0C70jR45u277jxo2bCV/rL5g/p1SpkpRYGqhfv96Y0aP+0japq47kcvn6dasrVaqYwDqens8bNGySWcswyTUxO3bu2qGt723C6tRtIKiJIXBAP2kdQvbsmUd8d1sQ308i/tHbW21hvnx5KVWR+Hm0BgwcfO7cefGjyRkn/PG77l16kXx9+vSysLCYPGVafPNniwQnqlm6dFHCaQMAgSOrKFHCVXPh5StXunXr8sPnXr58RXPh7t17d+/em+L72btXj969eojM23V36ZKFPXv2vXrtWny5cMrkidWqVeGITXsdO3ZwdS0+eMjwRM0x4+pafO7cWS4FClCAAIEDQgjh6OiQPXt2teHs586dDwsL++F8TceOnaAAU4qpqem6dav79R+g1nvDxMS4d+9effv00nH6LEFHxdTJ5SeOH969e+/yFSvfvHkrfjSTVd++vdu2aZ2+XXoBAgf0TrlyZdWm+QsNDdu1e0/CgwI+ensfPcYg+JRkYmK8etWKAQOHnDnjLoSQyWQtWzYfNXK4nZ0dhZPuDA0N3dzat2vX5s6duxcuXLx67frHjx99fX2DgoKN5PLsNtnz5s1TqlSpmjWqlytXNg32p1+/PnREAIEDGUyrn1tqziu8bOmK1q1bJTBT5OLFS8PCmN0ohcnl8uXLFg8bPtLAwHDokEGpN3t31apVfjj9OYS2Gc/Kli1TtmwZigIgcCDR6tatrdmq8tHb+3//mzBv7mytTzl58tQPb6Whz35u2SL2tilaDR0yKGk33U6RK+mlSxZxWCJzoCYGBA7E+QgNDDq0b7t8xSq15fv3H7S1sR079je1ibzOnj03YuRorTe5QCoZN+5/SRgimFhjx47OxD1zs4ITJ05qThzSt2/v0b+NTPI2Z82eu3LlarWFK5YvqV+/Xmq8BX//gGvXrnl6Pn/56tXLl698fHwUitDQUIVCERodHW1oaGhiYmxpaWVjk93BwSFfvrxFihQuV7Zszpw5+PQJHMgYBgzot//AwXfv3qstX7tu/a3bt/v26VW6dGkTE2MPD89t23bs2r1HqVQKjXEWO3duK1O6VMIvVMClSIrv/K+/9jp3/kIalNL6datr1KjO0ZLF7d69d/SYcWoLh6RflVjm8Pmzz/btO864n71z567m6SVWeHh4eHi4v3/A69evb926HbvcxcWlUaMG7du1dXR0oDAJHBB6PkRi4sQJffr013zo5s1bffsN/OEW3Nza/zBtQGTt6nGtg1zmzp2VcPMWMrd3794vX7Fy9+694eHhSd6Ih4fHkiUey5evbNasycgRw4kdmRV3zcgk6tap3blzx6Q9t2jRIv/7fRxlCCBRdu3a07BR0y1btiUnbYg49zvcv/9go8bN9u7dR9kSOKDX/pzwv+bNmyb2Wfny5V2zeoU+zBIBIANZvHjpmLHjFQpFym5WoVCM+m3s0mUrKGFBkwqEHg/5mzd3dm5n5+UrViXQjBpXpUoVFy6YZ2trQ+kB+mnlytWavT7T3cGDh1L17nfz5i3ImzdP0yaNOQAIHNBTUql0xIhhderWnjlz9rVr1xNY087ObtDA/m5u7bkZfXq5eMHd3t4+ac+9dftO27YdKEN9UKBA/qw2J4pCoZg0eWp8j9rb29esUb1Y8aIuBQrY5rC1tbGRGxkZyeVCiPCIiIjw8M8+Pp8/ffbw9Hz44JH72XMfP37Uup2JE6fUrl0rgcmEQOBA+itdqtS2rZsePnp09Ojx69dvvHjxwt8/QKlUWlhYODo6uLoWr1unTvXqVQ0NDfVhb9evX5Pi25wydfrff2/kSABSw/79B/38/DSXFy5caOzY0dWrVZVIJFqfaGpiYmpiYm1t7VKgQMxd8VQq1fnzF2bMnPX06TO1lX19fQ8cOOjWoT0FTuCAvitWtGixokUpBwApy/3sOc2FJUuW2LxpQ2JvhiyRSGrUqF6+fLlOnbvdu3df/YXczxE4BJ1GAQBZ0/PnzzUXjhgxLLFpQ8QZ2D9i+FAdXwgEDgBAlhASomVkSt48uZOzzbx58+j4QhA0qQAAUlxqTG2eTBbm5po9Pe/evefs7Jzkbd69e09zobm5OQeAoIYDAJA1FXDJr7lw5l+z37x5m7QNenl5/TVrjuZyF20vBEENBwBkUIsWLVm0aEnKbrNevborVyzNlMVVo0b1Y8dOCI05zlv+3GbokEFt27XRfSyrQqHYsWPX4iVL/f0DNB+tVbMmByeBA0ByVa1Wi0KAyIATf7Vo0Xzu3AW+vr5C/Vax/pMmT501e0716tXLlC5VuHChXLly5chha2RsHDsPR3hYmLf3pw8fPjx+/OT2nbvnz58PDQ3T+io2NjbNmjXlACBwAACyKFMTkwl//D5suPaeJaGhYcePnzh+/EQyX+XPP/9nYsItFwR9OAAAWVfz5k0HDx6YetsfPmwI85oTOAAAEMOGDp42dXKKV0KYmpjMmDF10KABlDCBAwAAIYRwc2t/5PDBtm1bp8h9EgwNDdu3a3v4yMH27dpStoI+HACQobVp06pNm1aUQ0pxdnb+a+b0EcOHbt22w9397IMHD3W8VXXcW04WL16sdu1abm7t7XLmpEgJHACSbsaMqTNmTKUckLD69etl0BvP2tnZDRs6eNjQwX5+fleuXHv+4sXLly9fvnzl4+MTqghVhIYqFAohhKmpqamJiYmpiY2NTd68efLmzVsgf/4KFcpny5aNTz8rkPgGqygFAAAg6MMBAAAIHAAAAAQOAABA4AAAAAQOAAAAAgcAACBwAAAAAgcAAACBAwAAEDgAAAAIHAAAgMABAAAIHAAAAAQOAABA4AAAAAQOigAAABA4AAAAgQMAAIDAAQAACBwAAIDAAQAAQOAAAAAEDgAAAAIHAAAgcAAAAAIHAADAjxlQBEgpq48o1hxVqC1c0M+yclE5hYOMq/00v1fe0XGX2GeX7v8zu17t5NDlgZcfR6gtPD/HRm4o4RMEgQMZzJHr4RP/CVJbOLGrRePyRin4Kl1m+T97G5Vmb6qgo8Gm0dZ8uOnl3ythU7YEqy0c3srMrZZJkrfp8S7qv0eR159GfvCL9gtWKsJUlmbSbOZSRxtpxSLySkUNHW1klLyenEAGNDfrXs+EwiFwINMKDVfVGu2jtvDXBqb9mppSOEhBs3cF7zofprbw75HWRXOnypnn8uOIFYcUj16rB1afQKVPoNLjnTh7L0IIUaWYvF9T08JOnP0AAgcAJEaQQjXhn6BLDyN0WfnSw4j/HkX8XMV4ZBtzQyo7AAIHACHEhpOhyw6GCCqi4/fyY/So1YFen6J1f4pKJfZeDHv+PvqvHhbZLKTp0sHi5EwbCxM6WIDAASDrGbQ04NrTyORvZ7ybecvKxmmzz97+yoFLAj4HKpPw3DvPI4csD1w1zMpEzg+/6D7H/7FXynSfSvGuXRAMiwWAdBQWoRq1OjBpaSPG07dRf24MUqkoS0BQw4GshTEj0N2644onb7RclJvIJa2rGdcsIc9jJzMzlgaEKB97RZ28GX7sRrhSI1ucvRdx6GpYs4rGlCdA4EAKC4/SckEXrdTTq7zBywKuPlGv53efbZNwNXhImKrOGPWROBWLGC7qb5XhLuK1fIIRXJKLz4HK7WfDNJcXzW0wp5elrdW36ltbS2m14vJqxeXtapiMXqOlRmTVYUWDskZMWQEImlSQsgJCVDou1AfZzLUcpcGhP9jbQIVSx03pufc+WvpCvvOJ5jDefjZUM43lySlbNsgqbtqIq3geg2WDrUyN1IPFR3/lkevhFClA4EAK8w9W6rhQH1hrSwlBPwocWvOTdUYLHCqVuOWppRfnDY9Iuh2cv69lEOzvHc0184RaIhnY3EzHrQEQNKkgObT2RX/6Vk8vmq3NJNrmXVAKIUt04DDLYHXmtzwjP/gptQ7NuPY0skJhw5R9uSUD421vWndMsfKw+rz128dny2uXPhNZfPBTvvgQrVmBUSr/j8ukRSWjFYdDghTfHSHXnkZGRKnkBrSqfMd9lo2JEWUCQQ0HkujuCy2B471vtLe/kiYVvfL3CUUCCSArH8OvvbXkYx3v2iM3lJRzMdTsK6Ofxz9A4EBGFRktrscz14KOEzWKDNukYmWWkQ74s/cirjyOTKDy4/iNrNvtwCdISzhwzqFrdUvunFrW9AkkcACCJhWk3M/Y3XD/EO0n1r2Xwn6ukrjBgRP/CdK8IZNI0fvNavXnP0F/Jv51x64L1FyYzFuFpdYPaqByxvbghNeZtSu4VAFDO+useNkQqO0YNtd54k5zY6m2WjHG/gCCGg6kmD0Xw0T8fTsevIqiiNJdRKRqzNpAvyDlD28g8tvqwNAsOUTW3ESqdSy0jk8PCtVStkw0DhA4kGKuPI688SyhuasX7guhlNJXVLT4fUPQvZdRmj+HRhoTRTx5EzVuXVBk6vf31bdQk91CSzh45R2t++1XtG2T8yFA4EBKUCrFgr3BP7y7xLEbTEgg0rFuY/z6wHP31DvTSCRicjeL8W7mmk/571HE6DWBYalcz6G18iAd54pzstXSCePyI506IYVHqjQHG8sNJHbZOB8CBA6khNVHFc8//PgScM6u4Pe+zCsl0mXqzAFLAs7e0/Kr2aexaZVi8kbljbTeJPbSw4iBSwM+B6Rin0etw4KCQ9Otl6VzDpmjjXrmePAq6s7zH998bu/FMM23U66goREzjQIEDiTf1SeRfx/XqT9moEI1dl1QRBQd6EQaT2PV5S9/zZYUIUTnOiY9GpqKrzem76iti+v9l1FdZvlffJBa44y0DjP+4eDkVFXNVcsg2GlbgxXhqoQbU1Yc0vJFqO4q5yAEBKNUkEzPP0T/sSFIswJcKhEj25jP3xscFa3ee3TM2qC/elj88O4Sce9DrfsYk/j0bmzau7FpVvt03vpEL96vOHNHe0tW5zomQ1p+NzPmsFZmxnLJeo346BesHLEqsH4Zo0EtzexTunXg+XttM6z7puc40vY1jHdfCFU7dF95Rw9cEjC7t6WtpZYSePAq6rc1WrrZ2lpKm1TgdurpYNnBkGUHtfcbW9DPUseJVUDggL54+TF6wJIArUNh21QzblvdODJatWBviGYt/cjVgTN7WJoZU8+cWrw+RW8+E3rwcliUtiYsqVSMamPeppqWgcr9mprmsZNN3xqsWRF14lb42XsRraoad6plYp9dmlI3kPP6pGUXn75JzzFNTrayVlWMd55XH3X18HVU26l+baoZ1ywhz2tnYGokCVQoH3tFHb+h/W6xMUk34XsBAiBw4AeuPY38Y0OQn7b7pBTIJRvc0kwI0bGWyZ3nkWfuRGi2wnSZ5T+5m0WJvBwnKSkiSnXhfsS/V8MvPYyI75YoNpbSSV0tfioU70Tdjcsb5c0p+2NjkGYUiIhSbT8buvN8aM0SRs0rGlUqKpdJkzsXvtbf6UevkxI4fpnrn1Il2beJ2eXHkZolEBqu2nQqdNOpUF02UqWYvEUl7k0PEDggkj4mZcNJxaojCqW2am9LU8ns3paxveQmdbUICAm86RGpeVfSvgv9m1cy/rV+qrR0bDgZGl+FanoZ0NxMa8fM5PP2V954FnnhQcR/jyISnjGianH5H53MfzgRe9HcBv+Mtl6wJ2Tff2FaD4Azd8LP3Am3NpNWLW5Yrbi8jIth0iZ319qPVQjx9G3UB19lStWjJIGFqWR+X8se8/yTPGdXAQeDab9YSOnMBhA4kDQ3nkXO3RPi+U77BaiRoWROb8u4nfyNDCVz+1gOWhqgOfFXtFLsuxR2/Wlkt3omFGySzdgWrDUWqMlmIR3cwqypzv0JTOSScW7mDcoZzdoZrHVuCSGEf4jy0NXwQ1fDhRC9G5v2apTo7Hj6TrwjpU/dCe9cOz0PDOccssUDrEavCfyY+DuhlMhr8FdPS1NuTgYIRqlAJHEuh6UH400bhjIx41cLzZtqmhpJFvW30noDUgtTydw+lnIGDSbDoBZmWu/f8S37y0Tb6sY7f8/WNPG9F8sVNNw8JtvgFmaWpgl9Rq55DbrVTXQ4uOkR+SH+zqEHL4ep0ns8UxFngw2jrMsVTNy9c1tVNV4+xNrGknMgQA0HkkpuKFk8wGro8gDNMZaGMjGzp2XV4vJ4pouWLOxnNXdP8K44HfHkhpK5vS3z2skeeTHruUhO5f+8Ptor/w1kolkF418bmCanbcJAJrrUNWlV1Xibe+hW91DNm9vZZ5PO7pWU1LjhREI9IV58iHa/G167VDoP8chmIV02yOrcvYjVRxRP30b9sNNGv6amhZ04+4lM3IIJAgfSiJmxZNEAq2ErAuPOg2RhKpnV07KsS0IXglKp+K2tuWsew7l7goMUKqlETO5qrlkdApGkyv+ZPSyHLA+IHZNin13aspJxi8rGtil0nW1mLOnZyLRTHZMj18J3nQ/1/DqW1cRIMrePZRKm7n7yJury4x/M7bH2WGjNEkb60A2iRgl5dVf507dRlx9FXn8W8dFP6ResVISrLE2l2cwlzjlkFQrLKxU11JwxDACBA0lnaiRZ2N9yxMovXUELOhrM+NVCx/t3N/7JqEJhw1k7g8sVNEz3i9fMpFxBw9HtzDeeDK3uKq9RQl66gKFUkpR+taPamrerbpxAx47WVY1bVzV+8Crq1O1w9zsRw1ubuTgk+suuUon5e37cpffZ26itZ0N178nx90jrorm/7My/V8KmbAlOwRKWSERhJ4PCTgbd66fYdfOO37Nx6AIEDoiEexTO72s5bn1QQUdZr4amiapOt7GU/tXTMrX3sHs9k6xWodqysnHLymk0CLN4HoPieQzU5g3T3b5LYZr3HMmTU/bWJ1pt4pBVhxU1S8i13t8EAAgcWYKxXDK/b8rkhsbljWInFRXME5rZvfOJXnxAS/XG4JZmVx5HqE23FRahGrM2aM0wKxNGfAAgcCCjOHsvYvSawDR4oeWDrRLu0ZJlhYSpRq4K1JwspHwhw+qu8tIFDE/fifAJ/G7oise7qD82Bs3qZSmVpPO8uh2m+6kt7FDTZERrsyRvs/00P7Ub3+e3l20dl5LtLCqVUKmEUiWUKpVKJaKVIlopoqJV0dEiPEoVGq4KVKgCQpQBISrfIOU7X+Xbz9HvfKI71jJxq0WPSxA4oPf2/xc2fVtwar8KN0TIcKKV4ve/gzRvLGxkKBnTzlwIYWEi+d3NfMSqQM37z038J+jPLhYyhprqoN5Yn2Ru4c3nNL2rc0wqilZ9SUKRUaqIaBEeoQqNUCnCVcGhquBQlX+I0jdI+clf+d5P+do7evUwKxraQOAAILRO4jL+76D/HmkZmTL0529TiVQtLu9Q02T7WfURs8duhIdFqKZ2t2DWljTwPvVvnldrtE8yZ9clcEAw8RcAoXG7+SHLA8/f15I26pcxUruN3JCWZlrHS5+9F9FjfoDWm70hpQOHvheyt7+SjwkEDgBC7Sar3ef4aw5LEUK4OBj83slcaEw19lcPi1zZZVoHyvZdFKAIV1Gqqeqdr5LAAUGTCoAM5PC18Glbg6K0XTDbWknn9bXUevf2bBbS+X0tey/0D/p++lQTI8n0Xyz05x4l28+Garb+ZAKh4aqAEJWVmf62Xn0KIHCAwAE9VrOE/MpC25Td5uxd383XDjVVi8ld8xre1qjesDCVLOhraWcdb1VoPnvZwn5WA5cGhH6tzzA3kSzoZ1UiL+cWkfxJzOQGEiNDYWokMTOWmJtILU0l2cyltlZSO2upg40sr51Mn9OGEMLbn5Y1EDgQj/Fu5kmelmr1EcWaowrKMCOyMpMsGWg1bWvQkWvhavfWKeho8MPpxRYPsBq+IiAoVGVhKlnc3yp2IlHEWNjfUvl14KtKpYr5h/gyDvbL6I+YhCERQioVMqkwkEkM9Km3pVQihETIJEImk8ikwkAmDA0kMXnIWC4xkUvMjCXmxhILU6m1mcTGUmprJc2VXeZkS6s9CBwQzMMBoXZjv4ldLHLnkK06olCpRHYL6cL+loUcDXS8z/vqYdZTtwaNaW+u41Oymi8/2EIIoad1EhtGWfMxgcABZGBab4aSTHN2Bc/ZFZwat+js0dDUOads57mwyd0s7LMl4vI0n71s7XB+sQAQOADopn4Zo/pluGMfAAIHACRGik9tDkAwDwcAABDUcABJ062eycDmZpQDAAhqOAAAAAQ1HPih6duC0+AWsllK93om8Q0JgWCmUYDAAeiVjSdDN55M+d+MzrVNhvxMSw0ACJpUAAAAgQMAAIDAAQAABH04AGRWv7U1/62tOeUAgMCRpbWsbJzkG8MC+imvnezKQlvKAdBDEt9gFaUAAAAEfTgAAACBAwAAgMABAAAIHAAAgMABAABA4AAAAAQOAABA4AAAACBwAAAAAgcAAACBAwAAEDgAAACBAwAAgMABAAAIHAAAgMBBEQAAAAIHAAAgcAAAABA4AAAAgQMAABA4AAAACBwAAIDAAQAAQOAAAAAEDgAAQOAAAAAgcAAAAAIHAAAgcAAAABA4AAAAgQMAAIDAAQAACBwAAIDAAQAAQOAAAAAEDgAAQOAAAAAgcAAAAAIHAAAAgQMAABA4AAAAgQMAAIDAAQAACBwAAIDAAQAAQOAAAAAZhQFFgEym66+9hBD/rF+TwDqK0NBjx09cv3Hro7e3SqWyt7MrX65Mw/r1TE1N1dbs3rOPUqlcvWKpsZFRiuySLruXgu807TeVlY+rDL21VDpKAQIH4j3j6CJDn4nevXs/e96Czz4+sUtee3m99vJyP3t+5PAhuZ2dORLS3ZARv/n5+S2cNzt7tmyURvL5+fnt2rPv7v37oaFhueztG9avW7VKZYlEQsmAwIEslF0STjC6bCdR6Sc0NHTOgoWffXwK5M/Xrk2rgi4uKpXqmYfnrj17PZ+/mDVn/oypkywsLHTfYEBAwJ79B+/cuRsQGGhhYVHStXirli1sbLKn7zVripdb8ndbPy+aHzx8dPL0GQ9Pz+DgEAtz80KFCtavW6dwoYLpWNo6fnd03+CnT58nTp0WGBgU8+fLV69Wrln35u07t/Ztk1l6AYGBFy5eevDw0Zs3b4NDQoQQ5mZmjo4OxYoWrV61irW1FWdCEDiQaWsvfuj4yVOfPn3Ony/v/8aNMTD4cvy7Fi9WpHChKdNnPn/x8t/DRzt2aKfj1j58/Dhl+szYU7mfn9/Z8xdu3Lw1fsxvzs5OHEv6TKVSbdm24+jxE9+qAfz9r1y9duXqteZNm7Rv2zrTvNNVa9cFBga5uBT4pUtnB4dc7969/3vT5kNHjpYs4VqsaJEkb/bQkaN79h2IiIj4rirF39/P3//+g4d79x9o1bJFsyaNqEcBgQMZI7skvIXE1qMIIa5euyGEaN+2dWza+PJNMDBo16b1X3PmXb9xU8fAoVKplq1YHRgYVKhgwW6dO8acyjds2vzMw3PpylXTJk+USaX6Wf5JKDddxP72REREyOVyHR9KL/8ePnr0+AmJRNKoQf06tWva2th89vE54372yLETBw8dtrS0aNSgfrqUttp2klkz9MzD8/GTp5aWFqOGDTUzMxVC5MmTe9SwoaPH/37oyNEkB46Nm7acOHVaCFGsaJFaNWu45M9vbW0lkUj8/f2feT53P3vu4aPHO3bt9vX17d61M2dCEDigX7XxaePDx49CiIIuLpoPFXQpIITw/vRJx1+Ie/cfvHj5Mnu2bKOGDzExMflyKh8+dPT4P96+fXfr1u3y5cpmqSPn/fsPMf/wDwjImSNH3Id8ff1i/vH5s4+DQ65031U/f/89+/YLIX7p1qVOrZoxC+3t7Dp2aG9nZ7d+wz87d++tXKmilaVlRv9Qbty8JYSoWb16TNqIYWZmWrN6tYOHjiQtet67/+DEqdMyqbTHr91rVKsa9yFbW1tbW9vKFSucu3Bx7foNJ0+fKVumdAnX4pxXIRgWCyTZ9Rs3hRB1ateKSRsxTE1NY37Abty6neQth4eHi6+jaTJQgdy+ey/mHx8/eqs99OLVqy8X3J6e+rCr585fjIqKKlqkcGzaiFWnVs1iRYtEREScO38x3fcz9kgICwtL2hY8n78QQhQvVlRtueYS3Z064y6EaNK4oVraiKtGtapNGjWMXRmghgOpW3uR4t3fki+Xvd2r117PPDyKFysmNCqfhRDZs2VbOG+2+H5YrNZNvXz1SuuJu4Rr8b37D7x4+TLJOxnbKeST96c8eXJniMMmOjra/ey5r8njrtpF7e07d42NjcPCwm7eul2zejUdtzl0xG8/XMfIyGjNiqWJ3duHjx4JIWprpI0YtWrWePjo8cNHj5o3bZy+pRoQGBjzDx8fX0dHhyRs4aO3txDC3t5Obbm9vb0QQiqVbli7KrFNPx6ez4UQtWrUSHi1WjWr/3v4SMzKAIEDWc5P5cu9eu21c/e+woUKxe3GERUVtWvPPiFE2TKlddzUp88+Qgg7u5zqp3K7nEIIPz//JO/kay+vmH88evIkNnCkUseL+AJiYlPgqdPun318GjWof/T4ievXb3bq0F4mk8U8FBKiuH7j5s8tmh87cfLOnbt+fn7Z0nuw69t374UQBQvk1/pozPI3b9+m++H68tXrmH88fvo0aYEjJCRECGGpMfDKwtxcCKFSqZK8zezZf/Ah2mTPHrsyQOBA6lZLJL/qIsV/ZRvUq3v2/AXP58+n/TW7XetWLgXyq1QqD8/nu/bs9Xz+3NTUtHmzJkLnEbZCCNM47Snia6uKEEKhUCR55+8/eBjzjwsXLyW266JIp54x23ftzu3s3Mmt/eMnT1++enXG/Vy9urVjHj3w7yGlUlmtamWlUrlrz96Dh45069Ip4Q0uilPJlBpifgWtra21PmplZRWTk9K9YO9+baW6eOm/urVrJWELkZGRMX2i1ZYbGhomea8sLSx8/fz8/Pxz5LBNYDVfPz8hRCboBwMCB5AUJiYmo4YNnT1vgYeH54xZc7675rOwGD5kULrPNBUdHX3t+g0hRPFixR48fHjv/oOY5gnN9JbiaSxpATE6OnrFqjWRkZHdu3aWSCTdu3SaPH3mnn37y5QuZWOT3cfH9/jJU9WrVclmbd24Yf0z7mdPu5+tU7umk6MjR2PCwsLDr924KYSwy5nzmYenh4eni0uBxG7E0NAwIiIiKipKLWHEBJGk1XAUKuhy+eq1s+cvtG39cwKrnb9wUQhRsKALHyUIHMgwY09SdsccHHJNmzLx2PET167fjJna3C5nzrJlSjdqUC9RU36ZGBsHh4QoQkNjaqdjKRQKIYSxkdHqr30LEpUMLv53OSAw0NDQsF/vnlNmzNy0ddvUiROScz2auvFIqVyyfKXn8xfNmzYpVNBFCOHiUqD1zy137923bOXq8WNGLVu52kAma9WiuRBCLpd369Jp/qIly1aunvi/8ek4PtbMzCwgIMDf39/W1lbrGBYhhLmZWfqW7alTZxQKhUwmGzKo/9QZszZu3jppwu+JndbCzMwsIiIiMCgopoEjVlBwcJJ3rGGD+lev3/j38BEnR4dKFStoXefK1WsHDx2RSqUN69fj1AoCB0SWnSvd1MSkVcsWrVq2SM5GbG1tg0NCPn74aOHyXeB4/+GjECJp3RQiIiL27j8ohKhZo5q1tVWnDu0XLF66acu2X7t31YcGKU2rVq+9fuNmCdficS92f27RzNfPt0zp0hv+2fz02bNObu1jS6NsmdJ1a9c6dcZ9+ao1QwcNSNm91f0ocnJ0DAgIeOrhqTVwxHQfdnJKzzqYgICAA4cOCyEa1Kub29m5RbMm23fu3r13X9vWrRK1HbucOf38/D58+KgWOD58+JDkfXMpkL9jh3Zbtu1YumLV+YuXalSrWqBAfmsrKyFEQECg54sX585fuHP3nkQi6eTW3iWejjIgcAD4Tmwffk358uZ5+erVg0eP1Sq6Y3pg5MuXNwkvt3vvvs+fP5uamLRq0UIIUa5smaqVK512P2tra5vuIya0qla1SmBQ0NBBA6Tfz3LWo3s3IURIcHBISIhaN5SunTsGBAZWr1olHXfbtXjRBw8fnnE/V6VSRc1HT585K5I3cFQkexbUdRv+USgUuezt27RqKYRo3Kjh9Ru3Dvx72N7Orlpiiq5AgXyPnzx58PCR2tt58PBRcnJeowb17e3s5i5YdPfe/bv37mtdZ+SwIaVKluAcAgIHUveyUv/vppGoN651n8uVLXPm7LnTZ9wb1q9rbGwsvrannHY/K4Qop/NoFxFnYo8jx04IIdzat7O0/NK480v3rm/evt2xa3dYWFjb1j/rWKOeZoVcwrV4AtM6VataRfPXUSaTqdVtpH0tV/VqVffuP/j4yZNTZ9zVOmMeP3Hq6bNncrk8gUkmUtvuvftv3rptamo6dNAAIyMjIYRMKh08sN+kqTNWrV0fFhYe2yH3h8qXKXPo8NGz5883bdwodu6vkBDF2fMXkrmTpUuVjP2Unz575u8fIISwtLQsXNDl4n+XhRCkDRA4gJRRsoRrntzOr157zZm/sFuXTg65cr19937DP5sCAgIcctmXK1tGJHL2xmUrV6tUqooVfqpd69sMB8ZGRiOHD500ZfqBfw+9ePmy56/d1erGkQRWlpZtW/+8ZduODf9s/vDhY906tWKmNj9x6vSJk6eFEG7t2yaqQ08KNmDt2Xdg/8F/DQ0NRwwdHHcorE327GNGDp8yY+aGTZufPH3apZNbzGiahLm4FChSuPDjJ0/mLFj4S5fOjo4Ob9+++3vT5sDAoDKlSo4YNiT5+9+3Vw+h0Q+JYwwEDvz4sjK+egj9vNtnarf3J3AWlkgkA/r1nTp95pOnz36fMEnEmTd6QL++sbNQ6OKM+7mNm7dERUU5OOTq1eMXtUezWVuPHjVi1tx59+4/WL12/djfRqbZXWdFutY/pepuN27YICAw8NDho0ePn4h7CzeJRNKyedP6deukyxtfuWbdhYuXjI2NB/Xvq3nTWkdHhzGjRs5dsOjy1WtBwSFjfxuhWyD49c8p0zw8PP83cXLswpw5cnTv2oUTIAgcwHe69egtlUolEon06//FtisoVSqlUmmXM+f0KRPTfsccctlPmzJx774Dd+7eCwwKirk9/c8tm9va2CRqO0+ePo2KirK1tR01bKixkZHWF5r4v99XrF7bq0d3joeU4taubemSJY+fPPX0mUdwcLCFhXmhggUb1q9XKJEjOVMwGDWoV/f9+w89f+3m7OQUX8+hSRN+X7Vmne5Hgq2t7dSJE3bt2Xfn3n2FQpE9W7ZyZcs0bdwottkOIHAAIrYPXXR0dAIrfPbxSa8RHNmsrXv80i2ZG/mlW5eg4OAev3RLoLnE2tpKxytakYlGRKe2IoULFSlcSH/2J1/ePBP/GC9+NIPnuNGjEneUZsvWu+evnElA4IDIUl1QE15H7Zcvi/wQGhsb/zZiGD2OkRE/bt2X83ETOABBFxYAAIED/H6Djxt83CBwAIK5UHmben0fQQAEDoBLQwDI/CS+wSpKAQAApCopRQAAAAgcAACAwAEAAEDgAAAABA4AAEDgAAAAIHAAAAACBwAAAIEDAAAQOAAAAIEDAACAwAEAAAgcAACAwAEAAEDgAAAABA4AAAACBwAAIHAAAAACBwAAAIEDAAAQOAAAAIEDAACAwAEAAAgcAAAABA4AAEDgAAAABA4AAAACBwAAIHAAAAACBwAAAIEDAAAQOAAAAAgcAACAwAEAAAgcAAAABA4AAEDgAAAABA4AAAACBwAAIHAAAAAQOAAAAIEDAAAQOAAAAAgcAACAwAEAAAgcAAAABA4AAEDgAAAAIHAAAAACBwAAIHAAAAAQOAAAAIEDAAAQOAAAAAgcAAAgYzGgCJDJVBz6mUJA5nBloS2FgExD4husohRAwgDIHwCBAyBnACQPEDgAogZA7AAIHCBqAMQOgMABEDUAYgcEw2IB0gbAdwQgcIAzKcA3hW8KBE0qACdQQNC8AkENB0DaAPjuAAQOcMYEwDcIBA6AcyXA9wggcICzJMC3CSBwAJwfAb5TIHAAAAAQOMClGAC+WSBwAJwTAb5fIHAAnA0BvmUAgQMAABA4AC68AL5rQIIMKAJAf7Srbjytu3nMv4v2+RytTLEtLxtkWa+0XAhx/kFEz/mBFHWMUW3M+jQ2EUI8exfddIIfBQIQOMAlFxJBJhWPVn25g9fY9cF7LoYl6ulrh1tWLy4XQtz0iHSbGaB1ncldzd1qGgshXn+KrjeOn+oM843j1m4gcACZzeL+Fg3LGem4cumBPorwxN26uWJhw39+sxKpUB2SQQ1uYTq4hekPV/t9Q/DO82Ecn4CgDweo3gBSj1+Qku8dIKjhAJB1jG1v1qOBiRDic6CyygjfBNa8NC+7raVUCLH8kGL+XkVyXtQ3SEXJAwQOIPMYvDxIiKC4S+4stTExkggh/toZsvZYqD7spKmR5PZSm/geLeti+HSNepN/1ZG+nwL0sZJg8QHF4gPas0iDsvIlAyyFECqV8HwfxcEJCJpUIKjXBVJaORfDmH+8+BgdoFDx7eOQAIEDAFJeNVd5zD9uPIukNABBkwqQiUkkQm4o+fLFk6XEt1f23caFEAf+tC7inLgvtSJcVahX+l/v2lpKNdtuUkqp/AYFHb4U1uFr4RyKgKCGA8jEsptLZV+/cNZmKfDVMzOWiDhdMSjh+HStYxLzjw9+yv8eUcMBCGo4gMysdIFvX7fYC+7kcLSVxa0hCFREi2RPF9awnFGTn4xc8xrYWEiEEJ8DVfdfRh68En7yVoQyY/Z8KJbboHnFL7OhbDsbpmSECkDggKDPWqZWp5Q89t9lXAwNDURkgqMlYqcKFULUH+/3yls9TxRx+vb9dXGQPf8Q3WKSv+ZMo7rHl8X9LFzzfndOcLSRONoYNSxndMszauiKwA9+qTU4RfdhsYmNUBM6m8W0N30OVK4/Ecq3jylHIWhSATIxS1NJswrfZh21MJHUKWUkktcjpFpxw9g/KxeVJ2drFiaSTb9ZqaWNuMoUMNg82srcJIM13AxqYVq2wJdSWnpQERpO/QZA4AAytQHNTE2+72bxa33j5GywenF5Ditp3HkmktMRtU8TU0ebL1s7fSfCbUZAucE+5Qb7uM0MOHsvIma5cw5Z3yamGajM65WR92/6ZYevPonc6s505oCgSQXIzAo5GcT2W4xWipiuo2VdDOuVkZ+8FRHfsxK+PUrfJiZx/8xhJf25svGuC0n8Ta37tbnnpmfkgCWBsR0dbnpE9lscuXm0VVkXQyFE/TLyubtDREYYpVKhsOH8PhZSiRBCBChUo9YE0XsDENRwAJmYiVyyoI+F4ddsP3J10PMPX3pjTOxsbmWalEaKttWMfyr0paXg0NUv4zyHtzK1Mktik0dsZcm1J1FqP8zRSnH5caTaanquQVn5mqGWRoYSIURklBixMij1ep8AIHAAQh9uE7+ov4XL1zEpuy6EHb4WPnPHl0qCnNbS2b0sZIn8FpbMZzChk5n4OqvE+L+DYyYaz2Elndcn0VsTX/tsxvzjp0IGUon6W6hU5Eu48QnU959tA5kY0tJ0cX9LY7lECKFUiVFrgs4/iOBQBGhSATItM2PJgr4WNUt8aa249jTyz03BQgj3uxE7zoW1r2EshKhVUj61u/n/NgTreHP5CoUNlw/68mv63lf556bg0AjV5C0hi/tbCCGqF5cv6GsxcnVwdCLbD07eiiiQy0QIUdbFcMlAy1WHFR7voyVCFHQ06N/UpOzXecFP3U7hX+6ZO0Ji41esDSOtKhc1jCmoPosCdd9axcKG/+toVvjr4J3IKDHu76Aj15npCyBwAJlXuYKGs3qYO+f4Urfx2CtqwNLA2HGwU7eFuOY1KJbbQAjRpqpxTmvpuPXB3v4/CB3d65mMbW8WU4cRGqEavDwwIEQlhDh2I3zXBcO21YyFEA3LGdlYSrvNCUjU3q48omjykzxmb+uVltcrrWXMy1sf5YpDCqGvs7guHWBZr8y33fYJUg5cEnTTk2m+AEGTCpCZvfgQ7fP1Nui3n0d1mR0QEw5ihEWoei0IjJ1ao3px+ZRu5j/c5uXHkb5Byphr90FLg+6++DaPx5+bgmPuEhIarlq4T6FKZAfJ4FBVl9kBt5/HOzHI3RdRXWb56+1tz1QqMWd3yMevHTUuPYxsPcWftAFQwwFkfr5Byq6zA2b1NPf2V87ZrQiPVGl2m/hlXuD64ZZ57WRvPkePXRf8w20+eRPVfkbAvN4Wc/eEXH3y3a9pZJTotTBwUX+LFYdCrz2NTEJPjve+SrcZ/vXLGjWvaFQir4GN5ZeZRu+9iDx0NeLErfBo/e6/8fxDtNtfAYv7WWxxD0vyaB0ABA4g4wmPVA1dEZTACm8/R3eYETCvj8X0bcF+wTr9nr/9HN1hhr/Wh0LCVD3nByZnh5UqcexG+LEb4and2LR1jJUua9YqKU94rGzHvwLi3v317efo1lP9OfAAQZMKEIM5lWP5BSt/nRfw7F00RQG+gyBwAAAACJpUAGQYN55FFur1mXIABDUcAAAAghoOAAmLVgpqEQDoFYlvMHc0QvqoOJRfRHXtqhtP626uy83bAEGPUQhqOAAkyc7zYTvPM4cEAEEfDgAAAAIHBPW6APjegcABAAAIHAAXWwDfOIDAAQAACBwAl1wA3zWAwAEAAAgc4MILAN8yEDgAzoYA3y+AwAHOiQD4ZoHAAQAACBwAl2IA3ymAwAHOjwD4NoHAAXCWBPgeAQQOcK4E+AYBBA6AMybAdweZksQ3WEUpQJ9VHPqZQgCIGhDUcACcQwG+KQCBA5xJAb4jgKBJBRA0rwBEDRA4AGIHQNQACBwgdgBEDYDAAZA8AHIGCBwEDpA/ABIGQOAAAACCYbEAAAAEDgAAQOAAAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAACBwAAIDAAQAACBwAAAAEDgAAQOAAAAAgcAAAAAIHAAAgcAAAABA4AAAAgQMAABA4AAAACBwAAIDAAQAAQOAAAAAEDgAAQOAAAAAgcAAAAAIHAAAgcAAAABA4AAAAgQMAAIDAAQAACBwAAIDAAQAAQOAAAAAEDgAAQOAAAABIGQYUAQAAGYt8wpGEV4iY3Fjf9lniG6zikwMAIEMnDP3PHwQOAAAybdTQn9hB4AAAIDPnDD1JHgQOAACyStRIx9jBKBUAALJc2kjj1xLUcAAAkNWihkiPqg5qOAAAyLppI81encABAEDWTRtptg8EDgAAsnTaSJs9IXAAAJDV00Ya7A+BAwAA0kaq7xWBAwAA0kaq7xuBAwAA0kaq7yGBAwAA0kaq7yeBAwAA0kaq7y2BAwAACObhAABAUL2R0feZwAEAAGkj1fecwAEAAARNKgAACKo3Mvr+EzgAAICghgMAABA4AACAyLTtKSn1LggcAABAUMMBAICgeiOjvxcCBwAAENRwAAAAAgcAAACBAwAAEDgAABD0GM3074jAAQAABDUcAACAwAEAAEDgAAAABA4AAEDgAAAAIHAAAAACBwAAAIEDAAAQOAAAAIEDAABoFzG5Me+IwAEAAAQ1HAAAgMABAABA4AAAAAQOAAAE/UazznshcAAAAEENBwAAgkqOjP4uCBwAAEBQwwEAAAgcAABAZOZWlRTZfwIHAAAQ1HAAACCo5Mjoe07gAACAzJHq+0zgAAAAgiYVAAAElRwZfW8JHAAAkDlSfT8JHAAAkDlSfQ8JHAAAkDlSfd8IHAAAkDlSfa8IHAAAkDlSfX8IHAAAkDlSfU8IHAAAZPXMkQb7QOAAACBLZ460eXWJb7CKTxoAAH0gn3AkswYdajgAABBZsKojjatVqOEAAEBkqaqOdGnBIXAAAJAlkkf69hQhcAAAkMljhz4MhCFwAACQ2fKHHk5jSuAAAACCUSoAAIDAAQAAQOAAAAAEDgAAQOAAAAAgcAAAAAIHAAAAgQMAABA4AAAAgQMAAIDAAQAACBwAAIDAAQAAQOAAAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAAgQMAAIDAAQAACBwAAAAEDgAAQOAAAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAACBwAAIDAAQAACBwAAAAEDgAAQOAAAAAEDgAAAAIHAAAgcAAAABA4AAAAgQMAABA4AAAACBwAAIDAAQAACBwAAAAEDgAAQOAAAAAgcAAAAAIHAAAgcAAAABA4AAAAgQMAABA4AAAACBwAAIDAAQAAQOAAAAAEDgAAQOAAAAAgcAAAAAIHAAAgcAAAAKQwA4ogA/F65UEhAEBcznlcKIQMQeIbrKIUyBkAQPIAgYOoAQAgdgj6cIC0AQCcOSGo4eALAwCCqg4IajhA2gAAzqUEDgAAAAIHkRwAwBlV0IcDmfG70WfQ6IRXWLVkVhrsg+arvH7zdu/+Ix7PXxrIDPLkdmzWuL5Lgbyxj/YbMnbx3KmGhuqT0Dx4+OTshcsvX78JDgpWCWFhYZ43t1Ot6pWLFS2U/D1UKpX9hozV3NWEy/D30UPy5HZKjSLSh6ckalPxFWDCW0jBvUrV102R/UzCRiIjowYOH5/an3UafwqCzhyCib+QGSXhVJWoDWpdP+EX9XrzbuGSNS2aNezRzU0lxK3b95asWN/7107FixVO4Fmn3S+cPHOhZbOGbu1aWpibCSGCgkOeejzftG1P/To1atesouMbHDzif/P+mqiZZlI1k/n7B2zfffDBoycSiaRE8SLtWze3tLRIwqeQwM4k4SlJEx0dLYQICws3NjZK2uGUzF3SJdkk4XU1n2Ikly+eNzXRn3VA4I7dB+8/fCKEKFGscPs2za2sLNM9PqbGBwECBzJP9caav7c0blDH0cFe66Nv3r4/cux07x6d0zejJLZKQAix58CRFk0b1KxWKebPmtUrCyH2HjyacOA4furcgL7dczs5xi7Jns260k9lHeztlq/eqHvgUAmVEImuNRw1fsqc6X/EXTJy3OS5Mybo8tzw8Ig5C1eUKlF8+sSxQogjx8/MXbTyf2OGGhoapmDBxq6f2lerb96+F0JcvHytbq1quh8eKbhXvn7+Mf+bPZt1Cr6u2mqBQcF/zV2a2H0Lj4iYs2BFmVLFp08cI4Q4esJ97qKV/xszTC43zHDXHml8dqWSg8CB9NSgbs2Va//p16ubQy47IcTsBStUKuXo4QNiTvor127qo0PaSOBXKr1OQB4eL3p0c4u7pGzpEpu37034B1Umk6mUKq3Xu1KpRMeXVihCIyIi/fwDc+awSdQ+h4aGaiwJ0/G5Z85etLW1ade6Wcyf7Vo3e/v+g/u5/+rXrZHiZatUKr+WSWp1/zp6wl0mkx094W5sZFS18k9pf/ycu3DZ0NDA/fx/rVs0Tr1XefX6TW5nh8Q+64z7xZw5bNv83DTmz7atmr59/8H9/KUGdWtyQgOBA/ort7Njz+4dV6zZ2L93t1z2diqVMvYSc+XaTb17dHJ2ckiNy5q0zygqIXLYZp82caz42odDc502PzddtW5z00Z1CxcqYGlhHnMN+uSp54FDx10TrBqJ6/FTDyHEf1eut2zWUMe3HPuQ5joxS35YJrfuPmjaqG7cJXVrVj107HRqBI7gEIUQIigo+IfV+Elz8PCJG7futm3VtETxomv+3nLpyo3mjesVKpg/4XwTFhYeE9FMTIyTuQOPn3hcunJj5JB+y1b9XbSwS9HCBUWCHSCEEBERkUmoYLh1+37CG4/vs27epF7cJXVqVj109BSBAwQOCD3vLpont1PP7h2Xr/6nf+9uces2evfoFLdxQWSoqlcXl3y3bt+r8bVJRQhx89a9Eq7FEn5W2dKuTo72/5s0y9HBPjAwKEQRKpPJrCwtfP3827ZqqlP1RmjovoNHy5UpYWhocPnqzUoVysZ9yzE9A1KjNN5/8FaLho6OuT588E6VA9XrrRDC88WrsqVLpOyWA4OCd+359/rNO+3bNK9Xu7oQ4vfRQy5fvbl7/+EC+fO6tW2RUAl89BZC+PkHDP1tQnL24catezt2HxjYp3u+vLkH9ft1xZp/2rVuVq5MyfjW/+zjI4TwDwjImcM2US8UFBR8+94DHY8rtc/a0SHXd5+1g30qfdaZ7xxLqwqBA+ksT26nnt3dlq/eOKBPt+ho5Yo1//Tp0Vn3tKFjw79ItYEwmlq1aLRw6VohkZQp5SpUqpt37p9yvzBu1KAfPjHmZ+PP8SPUdsDY2FiXngfr/9luYmzcvXN7IyP52g1bn3m+aNqobgL9AFJKRERETC/XWJYW5mHh4anxWrfvPRRCXL56M8UDx8HDJ4JDFL+PGRrbqUgqlVapVL5KpfI/fO7d+4+M5PLnL17F7VqRqFf3fP7q2En3sLDwUcP657DNLoTIm8d59IgBm7ftuXz1ZsN6teKOchLfhjU9FUJ4vXmf2MCx98DRqpXKm5qaJLaUwsPDE/6sY9+4Lp2vLSzMZ04eL9J2RBs9SQkcyKJmzV8mkUh/G9avZ3e3Zas2KpXK3r92yu3sGLs8NeoqEptREvsquZ0chw7ouefAkZ27D0qkkmJFCg4d2DMJJ/dEcT93KY+zk1u7ljG16z27d9z/77H9/x77tWuHFMlSCRSCkZE8MCg4brIJDAo2NjJK8fcYolBcvnojf77cUVHRr16/Sf543bg6d2iV8ApSqVRrIURGRno+f1mxQtmbt+9Xq1IhCS+9ZcfeDx8/1apeWS1FZc9mPbh/j7v3Hx08fMLePkfHdj+L77uzXLpyPWcO21t37pUrU0L3j/XazTuPnj6bMHZ4En6SjY2NgoJDsllbxfdZa31uAhuMaRUSWbtLKQgcSFMymUylUslkMplMlpbnnVQa8pDb2XHYwF7xPbpi0cwEfvjj60uR8HmzS8c2cf+USCQ/N2+UNqfgXPZ2Xm/exQ0cXm/e5cqVM8VLdfuuAxERka2aNzY2Nvpny+4xIwfqPvpXCDFr3jIhETEtdymYR4+fPFuhfGknh1wz5y798NHb3i7Rb7xT+1YJDAot6Vq0pGtRzWedPHPe2ckht7PjvgNHAwODYschx87DofW1Hj15tnnbnqEDe2l2N9HleMhln9Przbu4gcPrzTt7+6R/1oaGBkQBEDiQFmLO/l5v3q1at7lvzy5SqXTl2n96/9o5mb8K+nBxo/vvVmrvXsz247tAT36bVNnSrqfcL5Qq8a2Tyin3Cyne5HHz9v3LV282alC7cKECQoiyZUqsXr+5b88uuidUlVBJhCQ5R4tmWb185XXr7oPxvw2WSqVFC7vs2X9kQJ/uaXB0vXr95sjxM3+OG25ubnba/eL+Q8e7fp84tfrvyo3tuw706dklXx7npL1umVKup89ejBuATrlfKFPKNTnzaqT7rFwgcCCriE0bTo65hBB9enSJGRAb86cuvwqaJyx9OIUldg4rpVJ54dLVazfvvHv/UaEIValU5mamDrnsy5crVa3yT7qPAk3BBiMdU13tGlUuXLq2Y/fBJg3rCCEOHT0VEBBYq3rlFIyM12/eWbthW8WfyrT6Wm3TpGGdzdv3zl+yulf3jtZxLrgTMGbEwJT9iF+/ebts1YYBfbrHfDod27eaNH2e+7n/atWonKqHlufzV8tW/d3FrXXMG+/ZvePsBcsLFsgXt5uwGu9PPnv2H37x8vXwwb2T0xRVu0bVi/9d27n33yYN6qhUqkNHT/n7B9SuUUWkVWQ3NzebN/NPXWc2M5IvnjuVcywIHPhyyl69bktM2pg9f7mQSH4b1q9Pj86r1m3q06NLwpkjzfQdPEYmk0mlEqlUKpFIYsKBkVw+J8F5sRLbbXDdxm1BQSEN69XM7exkamKsUonQ0NDXb96edr/09NnzXr90TH7W0bpLSegVK9RrxQ1HDumzY8+/4yfOFEJS0rXIyCF9EzvrV8I8PF/WrlmlXatmMeUvvva6+PfIyQOHTnTr3DYt58sX3ybMuNKiaYO8X2sLcuaw+aVr+0ePnqX2AXnpyvVGDWrHjl7Jny93145tnj57nkDgOO1+QS43nDB+uJmpaXJeWi43HDmk747dB8f9OVMIlWuxIiOG9NVxUG6q1kpSRwICR4bhnMcl7UfGvn7zdtXazf16dY0JFiqhEiqVEMLJMVdMPUdstUeq/pAkPClyck5kiXrurTv3p08cG3d6CUNDC9diRQrkyztq/BQ9709nZWXZ+9dOqbeHbu1aal3erHG9dCyQLm6t1Zb8VLbUT2VLpfZhqdl68sPRNPEVYBI/6yTN/5uoHJwpz7H80BA4kG6OHnePTRtCfNebz8kxV+8enQ4dPdm3Z9cs0k29VIniGzbvqle7mrOTQ0yHvtDQMK83786cu1S6RDGOFsHNgAAQOJDEKocEr5NyOzmmYNrQt5vZav7M9Ozudu7ClcPHT79//zFEESqEMDM1yZXLrlzpkjWqVUzVuUP0cHr4DPTBIfWmtAEIHIJWFaT4latMJqtds4ruN2mj8ZsqB0qV9hQkisQ3WEUpiKw9wTkAEDiQ2qQUAd8KAOC8CgIH3w0AAGdUAgcAAACBg0gOAJxLIeg0CkEfUgAgaghqOMB3BgA4c0JQwyGo6gAAogZRg8ABkgcAkDMIHJQCAAAQ9OEAAAAEDgAAAAIHAAAgcAAAAAIHAAAAgQMAABA4AAAAgQMAAIDAAQAACBwAAAAEDgAAQOAAAAAEDgAAgGT6Pw1vhnKCb1b+AAAAAElFTkSuQmCC';
+    const TOUR_SAMPLE_NAME = '튜토리얼_샘플_720x780.png';
+    const tourBtn = document.getElementById('tourBtn');
+    const tourEl = document.getElementById('tour');
+    const tourHole = document.getElementById('tourHole');
+    const tourBubble = document.getElementById('tourBubble');
+    const tourCount = document.getElementById('tourCount');
+    const tourBar = document.getElementById('tourBar');
+    const tourTitle = document.getElementById('tourTitle');
+    const tourText = document.getElementById('tourText');
+    const tourHint = document.getElementById('tourHint');
+    const tourPrev = document.getElementById('tourPrev');
+    const tourNext = document.getElementById('tourNext');
+    const tourSkip = document.getElementById('tourSkip');
+    const tourBlocks = [...tourEl.querySelectorAll('.tour-block')];
+    const tour = { open: false, i: 0, sample: null, prevActive: -1, prevDragged: false, raf: 0, key: '', busy: false };
+
+    const tourCell = () => (tour.sample ? autoResizeArea.querySelector(`td[data-inspect-id="${tour.sample.id}"]`) : null);
+    const buttonIn = (root, label) => (root ? [...root.querySelectorAll('button')].find(b => b.textContent.trim() === label) || null : null);
+
+    // 샘플: data URL → File(네트워크 호출 없이) → 평소 올리기와 같은 길
+    async function tourAddSample() {
+      if (tour.sample && state.images.includes(tour.sample)) return;
+      const bin = atob(TOUR_SAMPLE_SRC.split(',')[1]);
+      const bytes = new Uint8Array(bin.length);
+      for (let k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+      const file = new File([bytes], TOUR_SAMPLE_NAME, { type: 'image/png' });
+      await handleFiles([file]);
+      tour.sample = state.images.find(it => it.file === file) || null;
+      if (!tour.open) tourRemoveSample();   // 올리는 사이에 튜토리얼을 닫았으면 남기지 않고 바로 지운다
+    }
+
+    function tourRemoveSample() {
+      const item = tour.sample;
+      tour.sample = null;
+      const idx = item ? state.images.indexOf(item) : -1;
+      if (idx < 0) return;
+      const q = inspectQueue.indexOf(item);
+      if (q >= 0) inspectQueue.splice(q, 1);
+      state.images.splice(idx, 1);
+      URL.revokeObjectURL(item.url);
+      state.activeIndex = Math.min(tour.prevActive, state.images.length - 1);
+      state.hasDragged = tour.prevDragged;
+      renderAutoResizeTable();
+      renderImageList();
+      syncControls();
+      renderEditor();
+      renderManualPreview();
+    }
+
+    // 편집기 · 옆 목록을 샘플로
+    function tourShowSample() {
+      const idx = tour.sample ? state.images.indexOf(tour.sample) : -1;
+      if (idx < 0 || state.activeIndex === idx) return;
+      state.activeIndex = idx;
+      state.hasDragged = false;
+      syncControls();
+      renderImageList();
+      renderEditor();
+      renderManualPreview();
+    }
+
+    function tourOpenSampleMail() {
+      if (tour.sample && !rejectModal.classList.contains('open')) openRejectModal([tour.sample]);
+    }
+
+    // 단계: target = 밝힐 곳, action = 그곳을 직접 눌러야(또는 '다음') 넘어감, enter = 들어올 때 화면 맞추기
+    const TOUR_STEPS = [
+      { title: '튜토리얼', next: '시작하기',
+        text: '소재 이미지를 올려 <b>규격별로 자르고</b>, <b>여백 가이드를 검수</b>하고, <b>광고주 반려 메일</b>까지 만드는 순서를 하나씩 보여 드려요.<br>연습용 샘플 이미지를 잠깐 올렸다가 끝나면 지웁니다(미리 올려 둔 이미지는 그대로).' },
+      { target: () => dropArea, title: '1. 이미지 올리기', next: '샘플 올리기', onNext: tourAddSample,
+        text: '소재 이미지를 여기로 끌어 놓거나 눌러서 고릅니다. <b>1200×600</b>과 <b>720×780</b>만 받고, 여러 장을 한 번에 올려도 돼요.<br>지금은 연습용 샘플을 대신 올려 볼게요.' },
+      { target: () => (tourCell() ? tourCell().previousElementSibling : null), title: '2. 자동 리사이징',
+        text: '올리자마자 출력 크기별로 잘라서 보여 줘요. <b>720×780 → 720×720 · 627×627</b>, <b>1200×600 → 1200×627 · 720×360</b>.' },
+      { target: tourCell, title: '3. 여백 검수',
+        text: '글자 · 로고 · 글자가 든 박스가 가이드 여백(720×780은 상하 30 · 좌우 65px, 1200×600은 좌우 30px)에 들어왔는지 자동으로 봐요.<br><span class="t-cut">✗ 잘림</span> 변환하면 실제로 잘림 · <span class="t-guide">! 가이드</span> 여백 안이지만 안 잘림 · <span class="t-info">참고</span> 그림이라 판정에서 뺌' },
+      { target: () => buttonIn(tourCell(), '편집기에서 보기 →'), title: '4. 편집기로 가기', action: true,
+        text: '자세히 보려면 편집기로 가요. <b>편집기에서 보기 →</b>를 눌러 보세요.' },
+      { target: () => editorWrap, title: '5. 박스 크롭 편집기', enter: tourShowSample,
+        text: '<b>분홍</b> = 가이드 여백 구역, <b>빨강 · 주황 상자</b> = 걸린 요소예요. 흰 크롭 상자를 끌어 위치를 옮기고, 위의 <b>출력 사이즈</b>로 크기를 바꾼 뒤 <b>크롭 결과 다운로드</b>로 받을 수 있어요.' },
+      { target: () => inspectPanel, title: '6. 항목별 판단', enter: tourShowSample,
+        text: '감지는 추정이라 마지막 판단은 사람이 해요. 항목마다 <b>넘김</b>(가이드만 걸린 주황 항목 허용) · <b>장식이라 무시</b>(글자가 아닌 장식) · <b>되돌리기</b>(원래대로)를 고를 수 있어요.' },
+      { target: () => buttonIn(inspectListEl.querySelector('.inspect-item.guide'), '넘김'), title: '7. 넘김 해 보기', action: true,
+        enter: () => {
+          tourShowSample();
+          if (tour.sample) for (const k of Object.keys(tour.sample.passes)) setPass(tour.sample, Number(k), false);
+        },
+        text: '샘플의 <b>SAMPLE</b> 로고는 왼쪽 여백이 31px라 가이드(65px)에 걸렸지만 잘리지는 않아요. 괜찮다고 보면 <b>넘김</b>으로 허용해 보세요. 반려 문구에서 빠지고, 표에는 ‘넘김’으로 남아요.' },
+      { target: () => buttonIn(inspectListEl, '반려 문구 보기'), title: '8. 반려 문구 만들기', action: true,
+        enter: () => { tourShowSample(); closeRejectModal(); },
+        text: '아래 안내 박스는 720×720 · 627×627로 바꾸면 잘려서 넘길 수 없어요. 남은 항목으로 광고주에게 보낼 메일을 만들어 볼게요. <b>반려 문구 보기</b>를 눌러 보세요.' },
+      { target: () => rejectPreviewEl, title: '9. 반려 메일 미리보기', enter: tourOpenSampleMail,
+        text: '원본에 가이드를 적용해 <b>어긴 요소만</b> 담아요. 이미지에는 여백 가이드(분홍)와 번호 상자가 표시되고, 넘김한 로고 쪽(좌우)은 칠하지 않아요. 글은 여기서 바로 고칠 수 있어요.' },
+      { target: () => rejectCopyBtn.parentElement, title: '10. 복사해서 붙여 넣기', enter: tourOpenSampleMail,
+        text: '위의 <b>이미지</b>에서 표시 · 원본 · 넣지 않음을 고르고 <b>복사</b>를 누른 뒤, Outlook 메일 본문에 붙여 넣으면 글과 이미지가 한 번에 들어가요.' },
+      { target: () => document.querySelector('.table-footer'), title: '11. 여러 장 한 번에', enter: closeRejectModal,
+        text: '여러 장을 올렸다면 <b>반려 문구 모아 보기</b>로 한 메일에 모으고, <b>ZIP 다운로드</b>로 변환본을 한 번에 받아요.' },
+      { target: () => tourBtn, title: '끝!', next: '마치기', enter: () => { closeRejectModal(); tourRemoveSample(); },
+        text: '연습용 샘플은 지웠어요. 다시 보고 싶으면 언제든 여기 <b>튜토리얼 보기</b>를 누르세요.' },
+    ];
+    const TOUR_LAST = TOUR_STEPS.length - 1;
+
+    // 지금 단계에서 밝힐 요소(없거나 안 보이면 null → 말풍선을 가운데에)
+    function tourTarget() {
+      const step = TOUR_STEPS[tour.i];
+      const el = step.target ? step.target() : null;
+      if (!el || !el.isConnected) return null;
+      const b = el.getBoundingClientRect();
+      return b.width || b.height ? el : null;
+    }
+
+    function tourRender() {
+      const step = TOUR_STEPS[tour.i];
+      tourCount.textContent = tour.i === 0 ? '시작' : `${tour.i} / ${TOUR_LAST}`;
+      tourBar.style.width = `${(tour.i / TOUR_LAST) * 100}%`;
+      tourTitle.textContent = step.title;
+      tourText.innerHTML = step.text;
+      tourHint.textContent = step.action ? '👆 반짝이는 곳을 직접 눌러 보세요(또는 다음)' : '';
+      tourPrev.hidden = tour.i === 0 || tour.i === TOUR_LAST;
+      tourSkip.hidden = tour.i === TOUR_LAST;
+      tourNext.textContent = step.next || '다음';
+      tourNext.disabled = false;
+      tour.key = '';
+    }
+
+    function tourGo(i) {
+      if (i < 0 || i > TOUR_LAST) { endTour(); return; }
+      tour.i = i;
+      const step = TOUR_STEPS[i];
+      if (step.enter) step.enter();
+      tourRender();
+      const el = tourTarget();
+      if (el) {
+        const b = el.getBoundingClientRect();
+        if (b.top < 8 || b.bottom > innerHeight - 8) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+      tourNext.focus();
+    }
+
+    async function tourNextStep() {
+      if (tour.busy) return;
+      if (tour.i === TOUR_LAST) { endTour(); return; }
+      const step = TOUR_STEPS[tour.i];
+      if (step.action) {
+        const el = tourTarget();
+        if (el) { el.click(); return; }   // 직접 누른 것과 같은 길 — 아래 클릭 감지가 다음 단계로 넘긴다
+      }
+      if (step.onNext) {
+        tour.busy = true;
+        tourNext.disabled = true;
+        tourNext.textContent = '샘플 검사 중…';
+        try {
+          await step.onNext();
+          while (tour.open && tour.sample && tour.sample.inspect.status !== 'done' && tour.sample.inspect.status !== 'error') {
+            await new Promise(r => setTimeout(r, 100));
+          }
+        } finally {
+          tour.busy = false;
+        }
+        if (!tour.open) return;
+      }
+      tourGo(tour.i + 1);
+    }
+
+    // 말풍선 · 구멍 · 클릭 막는 4칸을 대상 위치에 맞춘다(스크롤 · 창 크기 · 다시 그리기를 따라가도록 매 프레임 확인)
+    function tourLayout() {
+      if (!tour.open) return;
+      const step = TOUR_STEPS[tour.i];
+      const el = tourTarget();
+      // 보이는 화면 크기(스크롤 막대 제외) — 말풍선이 막대 밑으로 들어가지 않게
+      const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight, pad = 6;
+      let r = null;
+      if (el) {
+        const b = el.getBoundingClientRect();
+        r = { x: b.left - pad, y: b.top - pad, w: b.width + pad * 2, h: b.height + pad * 2 };
+      }
+      const key = `${tour.i}|${vw}|${vh}|${r ? [r.x, r.y, r.w, r.h].map(Math.round).join(',') : '-'}|${tourBubble.offsetHeight}`;
+      if (key !== tour.key) {
+        tour.key = key;
+        const hole = r || { x: vw / 2, y: vh / 2, w: 0, h: 0 };
+        const put = (n, x, y, w, h) => Object.assign(n.style, { left: `${x}px`, top: `${y}px`, width: `${Math.max(0, w)}px`, height: `${Math.max(0, h)}px` });
+        put(tourHole, hole.x, hole.y, hole.w, hole.h);
+        tourHole.className = `tour-hole${!r ? ' none' : step.action ? ' action' : ''}`;
+        tourHole.style.pointerEvents = r && step.action ? 'none' : 'auto';   // 따라 하기 단계만 구멍을 눌러 지나가게
+        put(tourBlocks[0], 0, 0, vw, hole.y);
+        put(tourBlocks[1], 0, hole.y + hole.h, vw, vh - hole.y - hole.h);
+        put(tourBlocks[2], 0, hole.y, hole.x, hole.h);
+        put(tourBlocks[3], hole.x + hole.w, hole.y, vw - hole.x - hole.w, hole.h);
+        const bw = tourBubble.offsetWidth, bh = tourBubble.offsetHeight, m = 14;
+        let bx, by;
+        if (!r) { bx = (vw - bw) / 2; by = (vh - bh) / 2; }
+        else if (r.y + r.h + m + bh <= vh - 8) { bx = r.x; by = r.y + r.h + m; }
+        else if (r.y - m - bh >= 8) { bx = r.x; by = r.y - m - bh; }
+        else if (r.x + r.w + m + bw <= vw - 8) { bx = r.x + r.w + m; by = r.y; }
+        else if (r.x - m - bw >= 8) { bx = r.x - m - bw; by = r.y; }
+        else { bx = vw - bw - 16; by = vh - bh - 16; }   // 화면을 거의 다 덮는 대상: 오른쪽 아래 구석
+        tourBubble.style.left = `${Math.min(Math.max(bx, 16), vw - bw - 16)}px`;
+        tourBubble.style.top = `${Math.min(Math.max(by, 16), vh - bh - 16)}px`;
+      }
+      tour.raf = requestAnimationFrame(tourLayout);
+    }
+
+    function startTour() {
+      if (tour.open) return;
+      closeRejectModal();
+      tour.open = true;
+      tour.sample = null;
+      tour.prevActive = state.activeIndex;
+      tour.prevDragged = state.hasDragged;
+      tourEl.hidden = false;
+      tourGo(0);
+      tour.raf = requestAnimationFrame(tourLayout);
+    }
+
+    function endTour() {
+      if (!tour.open) return;
+      tour.open = false;
+      cancelAnimationFrame(tour.raf);
+      tourEl.hidden = true;
+      closeRejectModal();
+      tourRemoveSample();
+      tourBtn.focus();
+    }
+
+    tourBtn.addEventListener('click', startTour);
+    tourNext.addEventListener('click', tourNextStep);
+    tourPrev.addEventListener('click', () => { if (!tour.busy) tourGo(tour.i - 1); });
+    tourSkip.addEventListener('click', endTour);
+    // 따라 하기 단계: 밝힌 곳을 누르면(그 단추의 원래 동작이 먼저 끝난 뒤) 다음 단계로
+    document.addEventListener('click', (e) => {
+      if (!tour.open || tour.busy || !TOUR_STEPS[tour.i].action) return;
+      const el = tourTarget();
+      if (!el || !el.contains(e.target)) return;
+      const at = tour.i;
+      setTimeout(() => { if (tour.open && tour.i === at) tourGo(at + 1); }, 80);
+    }, true);
+    // 튜토리얼 중엔 키를 먼저 받는다: Esc = 그만 보기, → = 다음, ← = 이전
+    document.addEventListener('keydown', (e) => {
+      if (!tour.open) return;
+      const go = { Escape: endTour, ArrowRight: tourNextStep, ArrowLeft: () => { if (!tourPrev.hidden && !tour.busy) tourGo(tour.i - 1); } }[e.key];
+      if (!go) return;
+      e.preventDefault();
+      e.stopPropagation();
+      go();
+    }, true);
 
     // ─── Init ───
     renderAutoResizeTable();
