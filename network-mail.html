@@ -27,6 +27,81 @@
     line-height: 1.6;
   }
   .wrap { max-width: 640px; margin: 0 auto; }
+  /* 히스토리가 붙으면 가로로 넓어진다 */
+  .wrap:has(> .작업영역:not([hidden])) { max-width: 1000px; }
+  .작업영역 { display: flex; align-items: flex-start; gap: 20px; }
+  .작업영역 > form { flex: 1; min-width: 0; }
+
+  .입장칸 { max-width: 460px; margin: 0 auto; padding: 34px 32px 30px; }
+  .입장제목 { font-size: 18px; margin: 0 0 20px; }
+  .입장줄 { display: flex; align-items: center; gap: 8px; }
+  .입장줄 select { flex: 1; min-width: 0; }
+  .입장버튼 {
+    width: auto;
+    flex: none;
+    padding: 9px 20px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+  .입장칸 .담당자메일 { display: block; margin: 12px 0 0; }
+
+  /* 보낸 기록 */
+  .히스토리 {
+    flex: none;
+    width: 300px;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+  .히스토리머리 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .히스토리제목 { font-size: 14px; font-weight: 600; }
+  .기록목록 { list-style: none; margin: 0; padding: 0; }
+  .기록목록 > li { border-top: 1px solid var(--line); }
+  .기록목록 > li:first-child { border-top: 0; }
+  .기록머리 {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 9px 0;
+    cursor: pointer;
+  }
+  .기록제목 {
+    flex: 1;
+    min-width: 0;
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .기록때 { display: block; margin-top: 2px; font-size: 11px; color: var(--muted); }
+  .기록화살 { flex: none; font-size: 10px; color: var(--muted); padding-top: 3px; }
+  .기록상세 {
+    padding: 0 0 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .기록상세 dl { margin: 0 0 10px; }
+  .기록상세 .줄 { display: flex; gap: 6px; padding: 2px 0; }
+  .기록상세 .이름 { flex: none; width: 58px; color: var(--muted); }
+  .기록상세 .값 { flex: 1; min-width: 0; color: var(--text); word-break: break-word; }
+  .기록없음 { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+  /* 보관 기간이 지나 소재가 사라진 건에만 켜진다 */
+  .소재사라짐 { margin: 2px 0 8px; font-size: 11px; color: var(--danger); }
+  .적용버튼.지움 { background: #f3f4f6; color: var(--danger); }
+  .적용버튼.지움:hover { background: #e9ebef; }
+
+  @media (max-width: 900px) {
+    .작업영역 { flex-direction: column; }
+    .히스토리 { width: 100%; position: static; max-height: none; }
+  }
   h1 { font-size: 22px; margin: 0 0 6px; }
   .sub { color: var(--muted); font-size: 14px; margin: 0 0 28px; }
   .card {
@@ -45,7 +120,7 @@
   }
   .req { color: var(--danger); margin-left: 2px; }
   /* 라벨과 시트 바로가기를 한 줄 양끝에 둔다 */
-  .칸머리 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .칸머리 { display: flex; align-items: baseline; gap: 8px; }
   .시트링크 {
     flex: none;
     margin-bottom: 6px;
@@ -147,7 +222,22 @@
   }
   .기간줄 { display: flex; align-items: flex-start; gap: 8px; }
   .시작묶음, .종료묶음 { flex: 1; min-width: 0; }
-  .시작묶음 input[type="date"], .종료묶음 input[type="date"] { width: 100%; }
+  /* 날짜와 시간을 한 줄에 나란히 */
+  .날짜시간 { display: flex; gap: 4px; }
+  .날짜시간 input[type="date"] { flex: 1; min-width: 0; }
+  /* 브라우저 시계 위젯이 좁은 칸에서 잘려서, 그냥 손으로 적는 칸으로 둔다 */
+  input[type="text"].시간칸 {
+    flex: none;
+    width: 84px;
+    padding: 9px 8px;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    background: #fff;
+    color: var(--text);
+  }
   .물결 { color: var(--muted); flex: none; padding-top: 9px; }
   .별도 {
     display: block;
@@ -211,6 +301,147 @@
     cursor: pointer;
   }
   .파일지우기:hover { color: var(--danger); }
+  /* 템플릿 추가 */
+  .템플릿칸 {
+    margin-top: 10px;
+    padding: 14px;
+    background: #fbfcfd;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .템플릿칸 input, .템플릿칸 textarea { margin-bottom: 8px; }
+  .템플릿칸 code {
+    padding: 1px 4px;
+    background: #eef1f5;
+    border-radius: 3px;
+    font-size: 11px;
+  }
+  .템플릿버튼줄 { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+  .머리링크 { display: flex; gap: 12px; flex: none; margin-left: auto; }
+  .전체선택 {
+    flex: none;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .전체선택 input { margin-right: 4px; }
+  .칸머리 > .시트링크 { margin-left: auto; }
+  .담당자메일 {
+    flex: none;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* 템플릿 관리 */
+  .관리목록 { list-style: none; margin: 0; padding: 0; }
+  .관리목록 li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 2px;
+    font-size: 13px;
+  }
+  .관리목록 li + li { border-top: 1px solid var(--line); }
+  .관리이름 { flex: 1; min-width: 0; font-weight: 600; }
+  .관리기본 {
+    flex: none;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: #eef1f5;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .관리버튼 {
+    width: auto;
+    flex: none;
+    padding: 3px 10px;
+    background: #eef1f5;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+  }
+  .관리버튼:hover { background: #dfe4ea; }
+  .관리버튼.지움 { color: var(--danger); }
+  .관리손잡이 {
+    flex: none;
+    padding: 0 2px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1;
+    cursor: grab;
+    user-select: none;
+  }
+  .관리목록 li.끄는중 { opacity: 0.4; }
+  .관리목록 li.끄는중 .관리손잡이 { cursor: grabbing; }
+  /* 끌어다 놓으면 어디에 끼워지는지 선으로 보여 준다 */
+  .관리목록 li.위에 { box-shadow: inset 0 2px 0 var(--accent); }
+  .관리목록 li.아래에 { box-shadow: inset 0 -2px 0 var(--accent); }
+  .관리버튼:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* 미리보기 */
+  .펼치기버튼 {
+    width: 100%;
+    padding: 10px;
+    background: #eef1f5;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-align: left;
+  }
+  .펼치기버튼:hover { background: #e6eaf0; }
+  .미리보기칸 {
+    margin-top: 10px;
+    padding: 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .미리보기머리 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .꾸미기 { display: flex; gap: 4px; }
+  .꾸미기 button {
+    width: auto;
+    padding: 4px 10px;
+    background: #eef1f5;
+    color: var(--text);
+    font-size: 12px;
+    border-radius: 4px;
+  }
+  .꾸미기 button:hover { background: #dfe4ea; }
+  select.미리보기대상 { width: auto; max-width: 200px; padding: 4px 8px; font-size: 12px; }
+  .제목줄 {
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .제목줄 span { color: var(--text); font-weight: 600; }
+  .본문칸 {
+    min-height: 200px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: 'Malgun Gothic', sans-serif;
+    font-size: 10pt;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  .본문칸:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  /* 붙여넣은 그림·표가 칸을 넘지 않게 한다 */
+  .본문칸 img { max-width: 100%; height: auto; }
+  .본문칸 table { max-width: 100%; }
   .note { font-size: 13px; color: var(--muted); }
   .error { font-size: 13px; color: var(--danger); }
   hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
@@ -304,7 +535,7 @@
 <body class="잠금">
 
 <!-- 버전과 만든 사람. 고칠 때 여기 글자만 바꾸면 됩니다 -->
-<div class="만든이">v1.0 · 제작: 김유진</div>
+<div class="만든이">v1.2 (10/29) · 제작: 김유진</div>
 
 <div class="wrap">
 
@@ -320,18 +551,79 @@
     <button type="button" id="들어가기">들어가기</button>
   </div>
 
-  <form id="요청폼" method="POST" enctype="multipart/form-data" hidden>
+  <!-- 로그인 뒤 누구 자리로 들어갈지 고르는 화면 -->
+  <div class="card 입장칸" id="입장칸" hidden>
+    <h2 class="입장제목">나의 워크스페이스 들어가기</h2>
+    <div class="입장줄">
+      <select id="담당자">
+        <option value="">선택하세요</option>
+      </select>
+      <button type="button" id="입장하기" class="입장버튼">선택</button>
+    </div>
+    <p class="담당자메일" id="담당자메일"></p>
+  </div>
+
+  <div class="작업영역" id="작업영역" hidden>
+
+  <form id="요청폼" method="POST" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" id="접근키" name="접근키" value="">
+    <input type="hidden" id="담당자칸" name="담당자" value="">
     <div class="card">
 
       <div class="field">
-        <label class="title" for="메일종류">메일 종류<span class="req">*</span></label>
+        <div class="칸머리">
+          <label class="title" for="메일종류" id="종류라벨">메일 종류<span class="req">*</span></label>
+          <span class="머리링크">
+            <a class="시트링크" href="#" id="템플릿추가열기">＋ 템플릿 추가</a>
+            <a class="시트링크" href="#" id="템플릿관리열기">템플릿 관리</a>
+          </span>
+        </div>
         <select id="메일종류" name="메일 종류" required>
           <option value="">선택하세요</option>
           <option value="최초 라이브 요청">최초 라이브 요청</option>
+          <option value="OK캐시백 라이브">OK캐시백 라이브</option>
           <option value="트래픽 푸시">트래픽 푸시</option>
           <option value="소재 및 문구 교체">소재 및 문구 교체</option>
         </select>
+
+        <!-- 템플릿 추가 화면. 평소에는 접혀 있다 -->
+        <div class="템플릿칸" id="템플릿칸" hidden>
+          <p class="hint" style="margin:0 0 10px">
+            바꿔 넣을 자리를 <code>{{광고주명}}</code> 처럼 적어주세요.
+            쓸 수 있는 이름: 광고주명 · 뎁스 · 캠페인ID · OS · 프리퀀시 · 기간 · 단가 · 메인문구 · 서브문구 · 상세문구 · 보내는사람 · 서명
+          </p>
+          <input type="text" id="새템플릿이름" placeholder="템플릿 이름 — 예) OK캐시백 라이브">
+          <input type="text" id="새템플릿제목"
+                 placeholder="메일 제목 — 예) [nap reward] {{광고주명}} {{뎁스}} 캠페인 연동 요청">
+          <textarea id="새템플릿본문" style="min-height:220px" placeholder="메일 본문 — 예)
+
+안녕하세요,
+KT나스미디어 nap reward팀입니다.
+
+{{광고주명}} {{뎁스}} 캠페인 라이브 부탁드리겠습니다.
+
+캠페인id : {{캠페인ID}}
+OS : {{OS}}
+단가 : {{단가}}원
+
+감사합니다.
+{{보내는사람}}
+{{서명}}"></textarea>
+          <p id="템플릿오류" class="error" style="min-height:18px;margin:8px 0 0"></p>
+          <div class="템플릿버튼줄">
+            <button type="button" class="적용버튼" id="템플릿취소" style="background:#9aa4b2">닫기</button>
+            <button type="button" class="적용버튼" id="템플릿생성">생성하기</button>
+          </div>
+        </div>
+
+        <!-- 템플릿 관리 화면 -->
+        <div class="템플릿칸" id="관리칸" hidden>
+          <ul class="관리목록" id="관리목록"></ul>
+          <p id="관리오류" class="error" style="min-height:18px;margin:8px 0 0"></p>
+          <div class="템플릿버튼줄">
+            <button type="button" class="적용버튼" id="관리닫기" style="background:#9aa4b2">닫기</button>
+          </div>
+        </div>
       </div>
 
       <!-- 메일 종류를 고르기 전에는 아래를 통째로 감춘다 -->
@@ -340,6 +632,7 @@
         <div class="field">
           <div class="칸머리">
             <label class="title">네트워크사<span class="req">*</span></label>
+            <label class="전체선택"><input type="checkbox" id="네트워크사전체">전체 선택</label>
             <a class="시트링크"
                href="https://docs.google.com/spreadsheets/d/1XSIybup_l0V5QeXxFRnU-hooE1asgpwbgF3eNdtgaR8/edit"
                target="_blank" rel="noopener">주소록 시트 열기 ↗</a>
@@ -366,7 +659,7 @@
             <label><input type="radio" name="상품유형" value="CPSNS">CPSNS</label>
             <label><input type="radio" name="상품유형" value="CPA">CPA</label>
           </div>
-          <input type="text" id="뎁스" name="뎁스" class="상세뎁스" required>
+          <input type="text" id="뎁스" name="뎁스" class="상세뎁스" placeholder="상세 뎁스 — 비우면 메일에 유형만 들어갑니다">
         </div>
 
         <div class="field">
@@ -374,22 +667,38 @@
           <input type="text" id="캠페인ID" name="캠페인 ID" required>
         </div>
 
-        <!-- 최초 라이브 요청에서만 쓰는 항목 -->
-        <fieldset id="그룹_라이브" style="border:0;padding:0;margin:0" disabled hidden>
+        <!-- 메일 종류마다 쓰는 묶음이 달라서 따로 나눠 둔다 -->
+        <fieldset id="그룹_OS" style="border:0;padding:0;margin:0" disabled hidden>
           <div class="field">
-            <label class="title">OS<span class="req">*</span></label>
-            <div class="radios">
-              <label><input type="radio" name="OS" value="AOS" required>AOS</label>
-              <label><input type="radio" name="OS" value="iOS">iOS</label>
-              <label><input type="radio" name="OS" value="AOS, iOS">AOS, iOS</label>
+            <div class="칸머리">
+              <label class="title">OS<span class="req">*</span></label>
+              <label class="전체선택"><input type="checkbox" id="OS전체">전체 선택</label>
             </div>
+            <div class="radios" id="OS칸">
+              <label><input type="checkbox" name="OS선택" value="AOS">AOS</label>
+              <label><input type="checkbox" name="OS선택" value="iOS">iOS</label>
+              <label><input type="checkbox" name="OS선택" value="WEB">WEB</label>
+            </div>
+            <input type="hidden" id="OS값" name="OS" value="">
           </div>
 
+          <!-- CPCV 일 때만 쓰는 항목 -->
+          <div class="field" id="프리퀀시줄" hidden>
+            <label class="title" for="프리퀀시">프리퀀시</label>
+            <input type="text" id="프리퀀시" name="프리퀀시" autocomplete="off">
+          </div>
+        </fieldset>
+
+        <fieldset id="그룹_기간" style="border:0;padding:0;margin:0" disabled hidden>
           <div class="field">
             <label class="title">기간<span class="req">*</span></label>
             <div class="기간줄">
               <div class="시작묶음">
-                <input type="date" id="시작일" name="시작일" required>
+                <div class="날짜시간">
+                  <input type="date" id="시작일" name="시작일" required>
+                  <input type="text" id="시작시간" name="시작시간" class="시간칸"
+                         placeholder="14:00" autocomplete="off">
+                </div>
                 <label class="별도">
                   <input type="checkbox" id="시작일ASAP" name="시작일ASAP" value="on">
                   ASAP
@@ -397,7 +706,11 @@
               </div>
               <span class="물결">~</span>
               <div class="종료묶음">
-                <input type="date" id="종료일" name="종료일" required>
+                <div class="날짜시간">
+                  <input type="date" id="종료일" name="종료일" required>
+                  <input type="text" id="종료시간" name="종료시간" class="시간칸"
+                         placeholder="23:59" autocomplete="off">
+                </div>
                 <label class="별도">
                   <input type="checkbox" id="종료일별도" name="종료일별도" value="on">
                   별도 요청 시
@@ -405,9 +718,16 @@
               </div>
             </div>
           </div>
+        </fieldset>
 
+        <fieldset id="그룹_단가" style="border:0;padding:0;margin:0" disabled hidden>
           <div class="field">
-            <label class="title">단가<span class="req">*</span></label>
+            <div class="칸머리">
+              <label class="title">단가<span class="req">*</span></label>
+              <label class="전체선택" id="단가전체칸" hidden>
+                <input type="checkbox" id="단가전체">전체 선택
+              </label>
+            </div>
             <p class="hint" id="단가안내">상품 유형을 먼저 선택 부탁드립니다.</p>
             <ul class="단가현황" id="단가현황"></ul>
             <div class="직접지정줄" id="직접지정줄" hidden>
@@ -438,8 +758,8 @@
           </div>
 
           <div class="field">
-            <label class="title" for="소재파일">소재 파일<span class="req">*</span></label>
-            <input type="file" id="소재파일" name="소재파일" multiple required>
+            <label class="title" for="소재파일">소재 파일</label>
+            <input type="file" id="소재파일" name="소재파일" multiple>
             <div class="파일상자" id="파일상자">
               <p class="파일없음" id="파일없음">여기로 파일을 끌어다 놓을 수 있습니다</p>
               <ul class="파일목록" id="파일목록"></ul>
@@ -447,22 +767,59 @@
           </div>
         </fieldset>
 
-        <!-- 세 유형 모두에서 쓰는 자유 입력. 적은 내용이 있을 때만 메일에 들어간다 -->
+
+        <!-- 보내기 전 최종 확인. 접혀 있다가 펼쳐서 고칠 수 있다 -->
         <div class="field">
-          <label class="title" for="기타">기타</label>
-          <textarea id="기타" name="기타"
-                    placeholder="미작성 시 메일에 포함되지 않습니다."></textarea>
+          <button type="button" class="펼치기버튼" id="미리보기토글">
+            <span id="미리보기화살표">▶</span> 미리보기 · 최종 확인
+          </button>
+
+          <div class="미리보기칸" id="미리보기칸" hidden>
+            <div class="미리보기머리">
+              <div class="꾸미기">
+                <button type="button" data-꾸밈="bold"><b>B</b></button>
+                <button type="button" data-꾸밈="red" style="color:#d00000">A</button>
+                <button type="button" data-꾸밈="mark" style="background:#ffef3d">형광</button>
+                <button type="button" data-꾸밈="clear">지우기</button>
+              </div>
+              <select id="미리보기대상" class="미리보기대상"></select>
+            </div>
+
+            <p class="제목줄">제목 : <span id="미리보기제목"></span></p>
+            <div class="본문칸" id="미리보기본문" contenteditable="true"></div>
+            <p class="hint" style="margin:8px 0 0">
+              여기서 고친 내용 그대로 발송됩니다. 단가는 네트워크사마다 자동으로 바뀝니다.<br>
+              엑셀·아웃룩의 표와 그림을 그대로 붙여넣을 수 있습니다.
+            </p>
+          </div>
         </div>
 
       </div>
+      <input type="hidden" id="제목칸" name="제목" value="">
+      <input type="hidden" id="본문HTML칸" name="본문HTML" value="">
+      <input type="hidden" id="발신자메일칸" name="발신자메일" value="">
     </div>
 
     <p id="안내" class="note" style="margin:16px 0 10px"></p>
     <button type="submit" id="보내기" disabled>메일 종류를 먼저 고르세요</button>
     <p class="note" style="text-align:right;margin:10px 0 0">
+      <a href="#" id="자리바꾸기" style="color:var(--muted)">담당자 바꾸기</a>
+      <span style="color:var(--line);margin:0 6px">|</span>
       <a href="#" id="로그아웃" style="color:var(--muted)">로그아웃</a>
     </p>
   </form>
+
+  <!-- 내가 보낸 메일 기록. 이 브라우저에 담당자별로 쌓인다 -->
+  <aside class="히스토리" id="히스토리">
+    <div class="히스토리머리">
+      <span class="히스토리제목">보낸 기록</span>
+      <a href="#" class="시트링크" id="기록비우기">비우기</a>
+    </div>
+    <ul class="기록목록" id="기록목록"></ul>
+    <p class="기록없음" id="기록없음">아직 보낸 기록이 없습니다.</p>
+  </aside>
+
+  </div>
 
 </div>
 
@@ -470,14 +827,22 @@
 (function () {
   'use strict';
 
-  // n8n 주소. 서버가 바뀌면 이 두 줄만 고치면 된다
+  // n8n 주소. 서버가 바뀌면 이 세 줄만 고치면 된다
   var 접수주소 = 'https://n8n.nasmedia.co.kr/webhook/mail-request';
   var 목록주소 = 'https://n8n.nasmedia.co.kr/webhook/network-list';
+  var 템플릿저장주소 = 'https://n8n.nasmedia.co.kr/webhook/save-template';
 
   var 폼 = document.getElementById('요청폼');
   var 종류칸 = document.getElementById('메일종류');
+  var 담당자칸 = document.getElementById('담당자');
+  var 담당자메일 = document.getElementById('담당자메일');
+  var 담당자숨김 = document.getElementById('담당자칸');
+  var 입장칸 = document.getElementById('입장칸');
+  var 작업영역 = document.getElementById('작업영역');
   var 본문영역 = document.getElementById('본문영역');
-  var 라이브그룹 = document.getElementById('그룹_라이브');
+  var OS그룹 = document.getElementById('그룹_OS');
+  var 기간그룹 = document.getElementById('그룹_기간');
+  var 단가그룹 = document.getElementById('그룹_단가');
   var 문구그룹 = document.getElementById('그룹_문구');
   var 목록칸 = document.getElementById('네트워크사목록');
   var 보내기 = document.getElementById('보내기');
@@ -485,12 +850,222 @@
 
   폼.action = 접수주소;
 
-  // 메일 종류별로 어떤 묶음을 쓰는지
-  var 구성 = {
-    '최초 라이브 요청': { 라이브: true, 문구: true },
-    '트래픽 푸시': { 라이브: false, 문구: false },
-    '소재 및 문구 교체': { 라이브: false, 문구: true }
-  };
+  // ── 템플릿 ───────────────────────────────────────────────
+  // 기본으로 들고 있는 네 가지. 시트에 추가한 것은 뒤에 붙는다.
+  // 바꿔 넣을 자리는 {{항목}} 으로 적는다.
+  var 기본템플릿 = [
+    {
+      name: '최초 라이브 요청',
+      subject: '[nap reward] {{광고주명}} {{뎁스}} 캠페인 연동 요청',
+      body: [
+        '안녕하세요,',
+        'KT나스미디어 nap reward팀입니다.',
+        '',
+        '{{광고주명}} {{뎁스}} 캠페인 연동 요청드립니다.',
+        '완료 후 간단히 공유주시면 감사하겠습니다.',
+        '',
+        '캠페인id : {{캠페인ID}}',
+        'OS : {{OS}}',
+        '프리퀀시 : {{프리퀀시}}',
+        '기간 : {{기간}}',
+        '단가 : {{단가}}원',
+        '소재 : 첨부파일',
+        '문구',
+        '-메인 : {{메인문구}}',
+        '-서브 : {{서브문구}}',
+        '-상세 : {{상세문구}}',
+        '',
+        '감사합니다.',
+        '{{보내는사람}}',
+        '{{서명}}'
+      ].join('\n')
+    },
+    {
+      name: 'OK캐시백 라이브',
+      subject: '[nap reward] {{광고주명}} {{뎁스}} 캠페인 연동 요청',
+      body: [
+        '안녕하세요,',
+        'KT나스미디어 nap reward팀입니다.',
+        '',
+        '{{광고주명}} {{뎁스}} 캠페인 라이브 부탁드리겠습니다.',
+        '',
+        '캠페인id : {{캠페인ID}}',
+        'OS : {{OS}}',
+        '프리퀀시 : {{프리퀀시}}',
+        '단가 : {{단가}}원',
+        '',
+        '감사합니다.',
+        '{{보내는사람}}',
+        '{{서명}}'
+      ].join('\n')
+    },
+    {
+      name: '트래픽 푸시',
+      subject: '[nap reward] {{광고주명}} {{뎁스}} 캠페인 트래픽 푸시 요청',
+      body: [
+        '안녕하세요,',
+        'KT나스미디어 nap reward팀입니다.',
+        '',
+        '{{광고주명}} {{뎁스}} 캠페인 트래픽 푸시 부탁드립니다.',
+        '완료 후 간단히 공유주시면 감사하겠습니다.',
+        '',
+        '캠페인id : {{캠페인ID}}',
+        '',
+        '감사합니다.',
+        '{{보내는사람}}',
+        '{{서명}}'
+      ].join('\n')
+    },
+    {
+      name: '소재 및 문구 교체',
+      subject: '[nap reward] {{광고주명}} {{뎁스}} 캠페인 소재 및 문구 교체 요청',
+      body: [
+        '안녕하세요,',
+        'KT나스미디어 nap reward팀입니다.',
+        '',
+        '{{광고주명}} {{뎁스}} 캠페인 소재 및 문구 교체 부탁드립니다.',
+        '완료 후 간단히 공유주시면 감사하겠습니다.',
+        '',
+        '캠페인id : {{캠페인ID}}',
+        '소재 : 첨부파일',
+        '문구',
+        '-메인 : {{메인문구}}',
+        '-서브 : {{서브문구}}',
+        '-상세 : {{상세문구}}',
+        '',
+        '감사합니다.',
+        '{{보내는사람}}',
+        '{{서명}}'
+      ].join('\n')
+    }
+  ];
+
+  var 템플릿들 = 기본템플릿.slice();
+
+  // ── 담당자 ───────────────────────────────────────────────
+  // 시트의 담당자 탭에서 받아온다. 고른 사람이 발신인이 되고 서명이 들어간다.
+  var 담당자들 = [];
+  var 담당자저장키 = 'nap-reward-담당자';
+
+  function 담당자찾기(이름) {
+    for (var i = 0; i < 담당자들.length; i++) {
+      if (담당자들[i].name === 이름) return 담당자들[i];
+    }
+    return null;
+  }
+
+  function 담당자목록다시() {
+    담당자칸.innerHTML = '<option value="">선택하세요</option>';
+    담당자들.forEach(function (한명) {
+      var 옵션 = document.createElement('option');
+      옵션.value = 한명.name;
+      옵션.textContent = 한명.name;
+      담당자칸.appendChild(옵션);
+    });
+
+    // 전에 들어왔던 사람이면 고르는 단계를 건너뛴다
+    var 기억 = '';
+    try { 기억 = localStorage.getItem(담당자저장키) || ''; } catch (e) {}
+
+    if (담당자찾기(기억)) {
+      담당자칸.value = 기억;
+      자리로들어가기();
+    } else {
+      입장칸.hidden = false;
+      작업영역.hidden = true;
+      담당자바뀜();
+    }
+  }
+
+  function 담당자바뀜() {
+    var 한명 = 담당자찾기(담당자칸.value);
+    담당자메일.textContent = 한명 ? 한명.email : '';
+  }
+
+  function 자리로들어가기() {
+    var 한명 = 담당자찾기(담당자칸.value);
+    if (!한명) {
+      담당자바뀜();
+      return;
+    }
+
+    try { localStorage.setItem(담당자저장키, 한명.name); } catch (e) {}
+    담당자숨김.value = 한명.name;
+    입장칸.hidden = true;
+    작업영역.hidden = false;
+    설명.textContent = 한명.name + ' 님의 워크스페이스입니다. 메일 종류를 선택하시면 필요한 항목이 노출됩니다.';
+    기록그리기();
+  }
+
+  담당자칸.addEventListener('change', 담당자바뀜);
+  document.getElementById('입장하기').addEventListener('click', 자리로들어가기);
+
+  document.getElementById('자리바꾸기').addEventListener('click', function (이벤트) {
+    이벤트.preventDefault();
+    try { localStorage.removeItem(담당자저장키); } catch (e) {}
+    입장칸.hidden = false;
+    작업영역.hidden = true;
+    설명.textContent = '';
+  });
+
+  // 드롭다운에 뜨는 순서. 사람마다 자주 쓰는 게 달라 이 브라우저에 저장한다
+  var 순서저장키 = 'nap-reward-템플릿순서';
+
+  function 저장된순서() {
+    try {
+      var 값 = JSON.parse(localStorage.getItem(순서저장키) || '[]');
+      return Array.isArray(값) ? 값 : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function 순서저장() {
+    try {
+      localStorage.setItem(순서저장키, JSON.stringify(템플릿들.map(function (하나) { return 하나.name; })));
+    } catch (e) {}
+  }
+
+  // 저장해 둔 순서대로 줄 세운다. 거기 없는 건 뒤에 붙는다
+  function 순서적용() {
+    var 순서 = 저장된순서();
+    if (!순서.length) return;
+    템플릿들.sort(function (ㄱ, ㄴ) {
+      var a = 순서.indexOf(ㄱ.name);
+      var b = 순서.indexOf(ㄴ.name);
+      return (a === -1 ? 999 : a) - (b === -1 ? 999 : b);
+    });
+  }
+
+  function 템플릿찾기(이름) {
+    for (var i = 0; i < 템플릿들.length; i++) {
+      if (템플릿들[i].name === 이름) return 템플릿들[i];
+    }
+    return null;
+  }
+
+  // 본문에 쓰인 {{항목}} 이름을 모두 뽑는다
+  function 쓰인항목(템플릿) {
+    var 글 = (템플릿.subject || '') + '\n' + (템플릿.body || '');
+    var 찾은 = 글.match(/\{\{\s*([^}]+?)\s*\}\}/g) || [];
+    return 찾은.map(function (t) {
+      return t.replace(/[{}]/g, '').trim();
+    });
+  }
+
+  // 템플릿이 쓰는 항목으로 어떤 묶음을 켤지 정한다
+  function 구성계산(템플릿) {
+    var 항목 = 쓰인항목(템플릿);
+    var 본문 = 템플릿.body || '';
+    var 있나 = function (이름) { return 항목.indexOf(이름) !== -1; };
+    return {
+      OS: 있나('OS'),
+      기간: 있나('기간'),
+      단가: 있나('단가'),
+      문구: 있나('메인문구') || 있나('서브문구') || 있나('상세문구')
+            || 본문.indexOf('첨부파일') !== -1
+    };
+  }
 
   // disabled 로 꺼두면 제출도 안 되고 필수 검사도 걸리지 않는다
   function 묶음전환(요소, 켬) {
@@ -500,11 +1075,15 @@
 
   function 종류바뀜() {
     var 값 = 종류칸.value;
-    var 설정 = 구성[값];
+    var 템플릿 = 템플릿찾기(값);
+    var 설정 = 템플릿 ? 구성계산(템플릿) : null;
 
     if (!설정) {
       본문영역.hidden = true;
-      묶음전환(라이브그룹, false);
+      미리보기접기();
+      묶음전환(OS그룹, false);
+      묶음전환(기간그룹, false);
+      묶음전환(단가그룹, false);
       묶음전환(문구그룹, false);
       보내기.disabled = true;
       보내기.textContent = '메일 종류를 먼저 고르세요';
@@ -512,30 +1091,44 @@
     }
 
     본문영역.hidden = false;
-    묶음전환(라이브그룹, 설정.라이브);
+    묶음전환(OS그룹, 설정.OS);
+    묶음전환(기간그룹, 설정.기간);
+    묶음전환(단가그룹, 설정.단가);
     묶음전환(문구그룹, 설정.문구);
+    프리퀀시보이기();
     보내기.disabled = false;
     보내기.textContent = '메일 보내기';
   }
 
   종류칸.addEventListener('change', 종류바뀜);
 
-  // 체크를 켜면 짝이 되는 날짜 칸을 비우고 잠근다
-  function 날짜잠금(체크, 날짜칸) {
+  // 체크를 켜면 짝이 되는 날짜·시간 칸을 비우고 잠근다
+  function 날짜잠금(체크, 날짜칸, 시간칸) {
     체크.addEventListener('change', function () {
       if (체크.checked) {
         날짜칸.value = '';
+        시간칸.value = '';
         날짜칸.required = false;
         날짜칸.disabled = true;
+        시간칸.disabled = true;
       } else {
         날짜칸.disabled = false;
+        시간칸.disabled = false;
         날짜칸.required = true;
       }
     });
   }
 
-  날짜잠금(document.getElementById('시작일ASAP'), document.getElementById('시작일'));
-  날짜잠금(document.getElementById('종료일별도'), document.getElementById('종료일'));
+  날짜잠금(
+    document.getElementById('시작일ASAP'),
+    document.getElementById('시작일'),
+    document.getElementById('시작시간')
+  );
+  날짜잠금(
+    document.getElementById('종료일별도'),
+    document.getElementById('종료일'),
+    document.getElementById('종료시간')
+  );
 
   // ── 상품 유형과 단가 ─────────────────────────────────────
   // 단가는 주소록 시트에서 네트워크사별로 따라옵니다. CPA 처럼 시트에 값이
@@ -544,6 +1137,7 @@
   var 단가현황 = document.getElementById('단가현황');
   var 단가안내 = document.getElementById('단가안내');
   var 직접지정줄 = document.getElementById('직접지정줄');
+  var 단가전체칸 = document.getElementById('단가전체칸');
   var 직접값 = document.getElementById('단가직접값');
   var 단가적용 = document.getElementById('단가적용');
   var 단가맵칸 = document.getElementById('단가맵');
@@ -593,11 +1187,13 @@
     if (!유형) {
       단가안내.hidden = false;
       직접지정줄.hidden = true;
+      단가전체칸.hidden = true;
       return;
     }
 
     단가안내.hidden = true;
     직접지정줄.hidden = false;
+    단가전체칸.hidden = false;
 
     if (!고른곳.length) {
       var 안내 = document.createElement('li');
@@ -673,7 +1269,330 @@
     // 유형이 바뀌면 덮어쓴 값은 의미가 없어진다
     수동단가 = {};
     적용체크 = {};
+    프리퀀시보이기();
     단가현황그리기();
+  });
+
+  // ── 미리보기 ─────────────────────────────────────────────
+  var 미리보기토글 = document.getElementById('미리보기토글');
+  var 미리보기화살표 = document.getElementById('미리보기화살표');
+  var 미리보기칸 = document.getElementById('미리보기칸');
+  var 미리보기제목 = document.getElementById('미리보기제목');
+  var 미리보기본문 = document.getElementById('미리보기본문');
+  var 미리보기대상 = document.getElementById('미리보기대상');
+  var 제목칸 = document.getElementById('제목칸');
+  var 본문HTML칸 = document.getElementById('본문HTML칸');
+
+  var 글자막기 = function (s) {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  };
+
+  // 기간은 시간 부분만 빨간 글씨로 만든다
+  function 기간HTML() {
+    var 시작바로 = document.getElementById('시작일ASAP').checked;
+    var 종료별도 = document.getElementById('종료일별도').checked;
+    var 날짜 = function (값) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(값 || ''));
+      return m ? Number(m[2]) + '/' + Number(m[3]) : String(값 || '');
+    };
+    var 시간 = function (값) {
+      var t = String(값 || '').trim();
+      return t ? ' <span style="color:#d00000">' + 글자막기(t) + '</span>' : '';
+    };
+
+    var 첫날 = 시작바로
+      ? 'ASAP'
+      : 글자막기(날짜(document.getElementById('시작일').value))
+        + 시간(document.getElementById('시작시간').value);
+    var 끝날 = 종료별도
+      ? '별도 요청 시'
+      : 글자막기(날짜(document.getElementById('종료일').value))
+        + 시간(document.getElementById('종료시간').value);
+
+    return 첫날 + ' ~ ' + 끝날;
+  }
+
+  // 폼에 적힌 값들을 {{항목}} 이름으로 모은다. 값은 이미 HTML 로 안전한 상태
+  function 값모으기(단가표시) {
+    return {
+      '광고주명': 글자막기(document.getElementById('광고주명').value),
+      '뎁스': 뎁스표시(),
+      '캠페인ID': 글자막기(document.getElementById('캠페인ID').value),
+      'OS': 글자막기(OS값.value),
+      '프리퀀시': 글자막기(document.getElementById('프리퀀시').value),
+      '기간': 기간HTML(),
+      '단가': '<span data-var="단가">' + 글자막기(단가표시) + '</span>',
+      '메인문구': 글자막기(document.getElementById('메인문구').value),
+      '서브문구': 글자막기(document.getElementById('서브문구').value),
+      '상세문구': 글자막기(document.getElementById('상세문구').value),
+      '보내는사람': 보내는사람표시(),
+      '서명': 서명HTML()
+    };
+  }
+
+  // 유형과 상세를 "CPI(리워드)" 로 합친다. 상세를 비우면 유형만 쓴다
+  function 뎁스표시() {
+    var 유형 = 고른유형();
+    var 상세 = document.getElementById('뎁스').value.trim();
+    if (유형 && 상세) return 글자막기(유형 + '(' + 상세 + ')');
+    return 글자막기(유형 || 상세 || '');
+  }
+
+  // 감사합니다 밑에 들어갈 "김유진 드림"
+  function 보내는사람표시() {
+    var 한명 = 담당자찾기(담당자칸.value);
+    return 한명 && 한명.name ? 글자막기(한명.name) + ' 드림' : '';
+  }
+
+  // 서명 바로 위 가로줄. 메일 프로그램이 hr 을 제멋대로 그려서 표로 긋는다
+  var 서명구분선 =
+    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse">' +
+    '<tr><td style="border-top:1px solid #000;font-size:0;line-height:0;height:14px">&nbsp;</td></tr></table>';
+
+  // 시트 서명은 표 폭이 글 길이만큼만 잡혀서 위 구분선보다 짧아 보인다.
+  // 바깥 표에 폭이 안 적혀 있으면 구분선과 같은 100% 로 맞춰 준다.
+  function 폭맞추기(서명) {
+    return 서명.replace(/^(\s*<table\b)([^>]*)>/i, function (전체, 머리, 속성) {
+      if (/\bwidth\s*=/i.test(속성)) return 전체;
+      return 머리 + 속성 + ' width="100%">';
+    });
+  }
+
+  // 시트에 HTML 로 적었으면 그대로, 글자로만 적었으면 줄바꿈만 살린다. 위에 구분선을 붙인다
+  function 서명HTML() {
+    var 한명 = 담당자찾기(담당자칸.value);
+    if (!한명 || !한명.signature) return '';
+    var 원문 = String(한명.signature);
+    var 서명 = /<[a-z][\s\S]*>/i.test(원문)
+      ? 폭맞추기(원문)
+      : 글자막기(원문).replace(/\n/g, '<br>');
+    return 서명구분선 + 서명;
+  }
+
+  // {{항목}} 을 값으로 바꾼다.
+  // 그 줄에 쓰인 항목이 전부 비어 있으면 "프리퀀시 : " 처럼 꼬리만 남으므로 줄째로 없앤다.
+  function 채우기(글, 값들) {
+    return 글.split('\n').filter(function (줄) {
+      var 쓴것 = 줄.match(/\{\{\s*([^}]+?)\s*\}\}/g);
+      if (!쓴것) return true;
+      return 쓴것.some(function (t) {
+        return !!값들[t.replace(/[{}]/g, '').trim()];
+      });
+    }).map(function (줄) {
+      return 줄.replace(/\{\{\s*([^}]+?)\s*\}\}/g, function (_, 이름) {
+        var 값 = 값들[String(이름).trim()];
+        return 값 === undefined ? '' : 값;
+      });
+    }).join('\n');
+  }
+
+  function 첫단가표시() {
+    var 맵 = {};
+    try { 맵 = JSON.parse(단가맵칸.value || '{}'); } catch (e) {}
+    var 고른곳 = 고른네트워크사();
+    var 대상 = 미리보기대상.value || 고른곳[0];
+    var 값 = Number(맵[대상]);
+    return Number.isFinite(값) && 값 > 0 ? 값.toLocaleString('ko-KR') : '';
+  }
+
+  function 미리보기그리기() {
+    var 템플릿 = 템플릿찾기(종류칸.value);
+    if (!템플릿) return;
+
+    // 어느 네트워크사 기준으로 볼지 고르는 목록
+    var 고른곳 = 고른네트워크사();
+    var 이전 = 미리보기대상.value;
+    미리보기대상.innerHTML = '';
+    고른곳.forEach(function (이름) {
+      var 옵션 = document.createElement('option');
+      옵션.value = 이름;
+      옵션.textContent = 이름 + ' 기준';
+      미리보기대상.appendChild(옵션);
+    });
+    if (고른곳.indexOf(이전) !== -1) 미리보기대상.value = 이전;
+    미리보기대상.hidden = 고른곳.length < 2;
+
+    var 값들 = 값모으기(첫단가표시());
+    미리보기제목.textContent = 채우기(템플릿.subject || '', 값들).replace(/<[^>]+>/g, '');
+    미리보기본문.innerHTML = 채우기(템플릿.body || '', 값들).replace(/\n/g, '<br>');
+  }
+
+  function 미리보기접기() {
+    미리보기칸.hidden = true;
+    미리보기화살표.textContent = '▶';
+  }
+
+  미리보기토글.addEventListener('click', function () {
+    if (미리보기칸.hidden) {
+      미리보기그리기();
+      미리보기칸.hidden = false;
+      미리보기화살표.textContent = '▼';
+    } else {
+      미리보기접기();
+    }
+  });
+
+  미리보기대상.addEventListener('change', 미리보기그리기);
+
+  // 붙여넣은 이미지는 메일 프로그램이 막는 경우가 많아 미리 알려준다
+  // 붙여넣은 그림은 data: 주소로 본문에 들어가고,
+  // 발송할 때 n8n 이 메일에 직접 품어 보낸다(cid). 표·글자는 브라우저 기본 동작에 맡긴다.
+  var 그림최대 = 3 * 1024 * 1024;
+  var 넣을자리 = null;
+
+  // 파일을 읽는 동안 커서를 잃으므로 미리 자리를 적어 둔다
+  function 자리기억() {
+    try {
+      var 고른것 = window.getSelection();
+      if (고른것 && 고른것.rangeCount) 넣을자리 = 고른것.getRangeAt(0).cloneRange();
+    } catch (e) {
+      넣을자리 = null;
+    }
+  }
+
+  // 메일 본문 폭에 맞춘다. 아웃룩은 style 의 max-width 를 무시해서 width 를 직접 적는다
+  var 그림최대폭 = 600;
+
+  function 그림넣기(주소) {
+    var 미리 = new Image();
+    미리.onload = function () {
+      var 너비 = Math.min(미리.naturalWidth || 그림최대폭, 그림최대폭);
+      넣기('<img src="' + 주소 + '" width="' + 너비 + '">');
+    };
+    미리.onerror = function () {
+      넣기('<img src="' + 주소 + '">');
+    };
+    미리.src = 주소;
+  }
+
+  function 넣기(조각) {
+    미리보기본문.focus();
+    try {
+      if (넣을자리) {
+        var 고른것 = window.getSelection();
+        고른것.removeAllRanges();
+        고른것.addRange(넣을자리);
+      }
+    } catch (e) {
+      // 자리를 못 찾으면 끝에 붙는다
+    }
+    document.execCommand('insertHTML', false, 조각);
+    자리기억();
+  }
+
+  미리보기본문.addEventListener('paste', function (이벤트) {
+    var 자료 = 이벤트.clipboardData;
+    if (!자료) return;
+
+    var 그림들 = Array.prototype.filter.call(자료.items || [], function (하나) {
+      return String(하나.type || '').indexOf('image/') === 0;
+    });
+    if (!그림들.length) return;
+
+    이벤트.preventDefault();
+    자리기억();
+
+    그림들.forEach(function (하나) {
+      var 파일 = 하나.getAsFile();
+      if (!파일) return;
+      if (파일.size > 그림최대) {
+        alert('붙여넣은 그림이 ' + Math.round(파일.size / 1024 / 1024)
+          + 'MB 입니다. 3MB 아래로 줄여서 넣어 주세요.');
+        return;
+      }
+      var 읽개 = new FileReader();
+      읽개.onload = function () { 그림넣기(읽개.result); };
+      읽개.readAsDataURL(파일);
+    });
+  });
+
+  // 굵게 · 빨강 · 지우기
+  document.querySelectorAll('.꾸미기 button').forEach(function (버튼) {
+    버튼.addEventListener('mousedown', function (이벤트) {
+      이벤트.preventDefault();
+      미리보기본문.focus();
+      var 종류 = 버튼.getAttribute('data-꾸밈');
+      if (종류 === 'bold') {
+        document.execCommand('bold');
+      } else if (종류 === 'red') {
+        document.execCommand('foreColor', false, '#d00000');
+      } else if (종류 === 'mark') {
+        // 브라우저마다 형광펜 명령 이름이 달라서 둘 다 시도한다
+        document.execCommand('styleWithCSS', false, true);
+        if (!document.execCommand('hiliteColor', false, '#ffef3d')) {
+          document.execCommand('backColor', false, '#ffef3d');
+        }
+      } else {
+        document.execCommand('removeFormat');
+      }
+    });
+  });
+
+
+  // ── OS · 프리퀀시 · 전체선택 ─────────────────────────────
+  var OS칸 = document.getElementById('OS칸');
+  var OS값 = document.getElementById('OS값');
+  var OS전체 = document.getElementById('OS전체');
+  var 프리퀀시줄 = document.getElementById('프리퀀시줄');
+
+  function 고른OS() {
+    var 값들 = [];
+    OS칸.querySelectorAll('input[name="OS선택"]:checked').forEach(function (칸) {
+      값들.push(칸.value);
+    });
+    return 값들;
+  }
+
+  function OS반영() {
+    var 고른것 = 고른OS();
+    var 전부 = OS칸.querySelectorAll('input[name="OS선택"]').length;
+    OS값.value = 고른것.join(', ');
+    OS전체.checked = 고른것.length === 전부 && 전부 > 0;
+  }
+
+  OS칸.addEventListener('change', OS반영);
+
+  OS전체.addEventListener('change', function () {
+    OS칸.querySelectorAll('input[name="OS선택"]').forEach(function (칸) {
+      칸.checked = OS전체.checked;
+    });
+    OS반영();
+  });
+
+  // 프리퀀시는 CPCV 일 때만 쓴다
+  function 프리퀀시보이기() {
+    var 쓸때 = 고른유형() === 'CPCV' && !OS그룹.disabled;
+    프리퀀시줄.hidden = !쓸때;
+    if (!쓸때) document.getElementById('프리퀀시').value = '';
+  }
+
+  // 네트워크사 전체선택
+  var 네트워크사전체 = document.getElementById('네트워크사전체');
+
+  function 네트워크사전체반영() {
+    var 전부 = 폼.querySelectorAll('input[name="네트워크사"]');
+    var 고른것 = 폼.querySelectorAll('input[name="네트워크사"]:checked');
+    네트워크사전체.checked = 전부.length > 0 && 전부.length === 고른것.length;
+  }
+
+  네트워크사전체.addEventListener('change', function () {
+    폼.querySelectorAll('input[name="네트워크사"]').forEach(function (칸) {
+      칸.checked = 네트워크사전체.checked;
+    });
+    단가현황그리기();
+  });
+
+  // 단가 적용 대상 전체선택
+  var 단가전체 = document.getElementById('단가전체');
+
+  단가전체.addEventListener('change', function () {
+    단가현황.querySelectorAll('input.적용대상').forEach(function (칸) {
+      칸.checked = 단가전체.checked;
+      적용체크[칸.value] = 단가전체.checked;
+    });
   });
 
   // ── 첨부파일 목록 ────────────────────────────────────────
@@ -728,6 +1647,7 @@
     고른파일.forEach(function (파일) { 담기.items.add(파일); });
     파일칸.files = 담기.files;
     파일그리기();
+    첨부보관();
   }
 
   // 이미 담은 것은 두고 새로 고른 것만 뒤에 이어 붙인다
@@ -746,6 +1666,102 @@
   파일칸.addEventListener('change', function () {
     파일추가(파일칸.files);
   });
+
+  // ── 소재 파일 보관 ───────────────────────────────────────
+  // 보낸 기록은 localStorage 에 글자로 저장되는데 파일 덩어리는 글자가 아니라 담기지 않는다.
+  // 그래서 파일만 IndexedDB 에 따로 쌓고, 담당자별 최근 10건치만 남긴다.
+  var 파일보관최대 = 10;
+  var 보관이름 = "nap-reward-소재";
+  var 보관칸 = "파일";
+  var 이번첨부열쇠 = null;
+
+  function 첨부앞머리() {
+    return "첨부-" + (담당자숨김.value || "공용") + "-";
+  }
+
+  function 보관열기() {
+    return new Promise(function (풀기, 막힘) {
+      try {
+        var 요청 = indexedDB.open(보관이름, 1);
+        요청.onupgradeneeded = function () {
+          var 창고 = 요청.result;
+          if (!창고.objectStoreNames.contains(보관칸)) 창고.createObjectStore(보관칸);
+        };
+        요청.onsuccess = function () { 풀기(요청.result); };
+        요청.onerror = function () { 막힘(요청.error); };
+      } catch (e) {
+        막힘(e);
+      }
+    });
+  }
+
+  function 보관쓰기(열쇠, 파일들) {
+    return 보관열기().then(function (창고) {
+      return new Promise(function (풀기, 막힘) {
+        var 거래 = 창고.transaction(보관칸, "readwrite");
+        거래.objectStore(보관칸).put(파일들, 열쇠);
+        거래.oncomplete = function () { 창고.close(); 풀기(); };
+        거래.onerror = function () { 창고.close(); 막힘(거래.error); };
+      });
+    });
+  }
+
+  function 보관읽기(열쇠) {
+    return 보관열기().then(function (창고) {
+      return new Promise(function (풀기, 막힘) {
+        var 요청 = 창고.transaction(보관칸, "readonly").objectStore(보관칸).get(열쇠);
+        요청.onsuccess = function () { 창고.close(); 풀기(요청.result || []); };
+        요청.onerror = function () { 창고.close(); 막힘(요청.error); };
+      });
+    });
+  }
+
+  function 보관열쇠들() {
+    return 보관열기().then(function (창고) {
+      return new Promise(function (풀기) {
+        var 거래 = 창고.transaction(보관칸, "readonly");
+        var 요청 = 거래.objectStore(보관칸).getAllKeys();
+        var 모음 = [];
+        요청.onsuccess = function () { 모음 = (요청.result || []).map(String); };
+        거래.oncomplete = function () { 창고.close(); 풀기(모음); };
+        거래.onerror = function () { 창고.close(); 풀기([]); };
+      });
+    });
+  }
+
+  // 이 담당자의 열쇠 가운데 남길 것만 두고 나머지를 지운다
+  function 보관정리(남길것) {
+    var 앞머리 = 첨부앞머리();
+    return 보관열기().then(function (창고) {
+      return new Promise(function (풀기) {
+        var 거래 = 창고.transaction(보관칸, "readwrite");
+        var 칸 = 거래.objectStore(보관칸);
+        var 요청 = 칸.getAllKeys();
+        요청.onsuccess = function () {
+          (요청.result || []).forEach(function (열쇠) {
+            if (String(열쇠).indexOf(앞머리) !== 0) return;
+            if (남길것.indexOf(열쇠) === -1) 칸.delete(열쇠);
+          });
+        };
+        거래.oncomplete = function () { 창고.close(); 풀기(); };
+        거래.onerror = function () { 창고.close(); 풀기(); };
+      });
+    });
+  }
+
+  // 보낼 때 저장하면 화면이 넘어가며 끊길 수 있어, 파일을 넣고 뺄 때마다 보관한다
+  function 첨부보관() {
+    if (!고른파일.length) {
+      이번첨부열쇠 = null;
+      return;
+    }
+    if (!이번첨부열쇠) {
+      이번첨부열쇠 = 첨부앞머리() + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+    }
+    보관쓰기(이번첨부열쇠, 고른파일.slice()).catch(function () {
+      // 보관이 막혀도 발송에는 지장이 없다
+    });
+  }
 
   // 끌어다 놓기
   ['dragenter', 'dragover'].forEach(function (이름) {
@@ -811,7 +1827,10 @@
       체크.value = 하나.name;
       체크.id = 'net' + 순번;
       체크.checked = 유지할것.indexOf(하나.name) !== -1;
-      체크.addEventListener('change', 단가현황그리기);
+      체크.addEventListener('change', function () {
+        네트워크사전체반영();
+        단가현황그리기();
+      });
       라벨.appendChild(체크);
       라벨.appendChild(document.createTextNode(하나.name));
       목록칸.appendChild(라벨);
@@ -869,13 +1888,15 @@
     try { localStorage.removeItem(접근저장키); } catch (e) {}
   }
 
+  // 비밀번호를 통과하면 담당자 고르는 단계로 넘어간다.
+  // 전에 들어왔던 사람이면 담당자목록다시() 가 그 단계를 건너뛴다.
   function 폼열기(열쇠, 목록) {
     접근키칸.value = 열쇠;
     document.body.classList.remove('잠금');
     로그인칸.hidden = true;
-    폼.hidden = false;
-    설명.textContent = '메일 종류를 고르면 그 메일에 필요한 항목만 아래에 나타납니다.';
+    설명.textContent = '';
     목록그리기(목록, false);
+    담당자목록다시();
   }
 
   function 확인시도(열쇠, 조용히) {
@@ -895,6 +1916,34 @@
           throw new Error('비밀번호가 맞지 않습니다.');
         }
         var 목록 = 목록다듬기(자료.items || 자료.networks);
+
+        // 담당자 목록
+        if (Array.isArray(자료.managers)) {
+          담당자들 = 자료.managers.map(function (한명) {
+            return {
+              name: String((한명 && 한명.name) || '').trim(),
+              email: String((한명 && 한명.email) || '').trim(),
+              signature: String((한명 && 한명.signature) || '')
+            };
+          }).filter(function (한명) { return 한명.name && 한명.email; });
+        }
+
+        // 시트에 저장해 둔 템플릿을 기본 네 가지 뒤에 붙인다
+        if (Array.isArray(자료.templates)) {
+          템플릿들 = 기본템플릿.slice();
+          자료.templates.forEach(function (하나) {
+            var 이름 = String((하나 && 하나.name) || '').trim();
+            if (!이름 || 템플릿찾기(이름)) return;
+            템플릿들.push({
+              name: 이름,
+              subject: String(하나.subject || ''),
+              body: String(하나.body || '')
+            });
+          });
+          순서적용();
+          종류목록다시();
+        }
+
         // 처음 통과할 때만 시각을 적어 24시간을 센다
         if (!조용히) 접근기억(열쇠);
         폼열기(열쇠, 목록);
@@ -931,6 +1980,8 @@
   document.getElementById('로그아웃').addEventListener('click', function (이벤트) {
     이벤트.preventDefault();
     접근지우기();
+    // 들어왔던 자리도 잊는다. 다시 들어오면 워크스페이스부터 고르게 된다
+    try { localStorage.removeItem(담당자저장키); } catch (e) {}
     location.reload();
   });
 
@@ -939,6 +1990,603 @@
   if (기억된키) {
     확인시도(기억된키, true);
   }
+
+  // ── 템플릿 추가 ──────────────────────────────────────────
+  var 템플릿칸 = document.getElementById('템플릿칸');
+  var 템플릿오류 = document.getElementById('템플릿오류');
+  var 새이름 = document.getElementById('새템플릿이름');
+  var 새제목 = document.getElementById('새템플릿제목');
+  var 새본문 = document.getElementById('새템플릿본문');
+  var 템플릿생성 = document.getElementById('템플릿생성');
+
+  function 종류목록다시() {
+    var 이전 = 종류칸.value;
+    종류칸.innerHTML = '<option value="">선택하세요</option>';
+    템플릿들.forEach(function (하나) {
+      var 옵션 = document.createElement('option');
+      옵션.value = 하나.name;
+      옵션.textContent = 하나.name;
+      종류칸.appendChild(옵션);
+    });
+    if (템플릿찾기(이전)) 종류칸.value = 이전;
+  }
+
+  // 템플릿을 만드는 동안에는 다른 항목을 감춰서 헷갈리지 않게 한다
+  var 종류라벨 = document.getElementById('종류라벨');
+  var 추가열기 = document.getElementById('템플릿추가열기');
+
+  var 관리칸 = document.getElementById('관리칸');
+  var 관리목록 = document.getElementById('관리목록');
+  var 관리오류 = document.getElementById('관리오류');
+  var 관리열기 = document.getElementById('템플릿관리열기');
+  var 수정중이름 = null;
+
+  // 'add' | 'manage' | null(평소 화면)
+  function 화면전환(모드) {
+    var 다른화면 = 모드 === 'add' || 모드 === 'manage';
+
+    템플릿칸.hidden = 모드 !== 'add';
+    관리칸.hidden = 모드 !== 'manage';
+    종류칸.hidden = 다른화면;
+    담당자줄.hidden = 다른화면;
+    추가열기.hidden = 다른화면;
+    관리열기.hidden = 다른화면;
+    보내기.hidden = 다른화면;
+    안내.hidden = 다른화면;
+    템플릿오류.textContent = '';
+    관리오류.textContent = '';
+
+    종류라벨.innerHTML =
+      모드 === 'add' ? (수정중이름 ? '템플릿 수정' : '템플릿 추가')
+      : 모드 === 'manage' ? '템플릿 관리'
+      : '메일 종류<span class="req">*</span>';
+
+    if (다른화면) {
+      본문영역.hidden = true;
+    } else {
+      수정중이름 = null;
+      템플릿생성.textContent = '생성하기';
+      종류바뀜();
+    }
+  }
+
+  // 지금 끌고 있는 줄의 자리. 끌지 않을 때는 null
+  var 끄는자리 = null;
+
+  function 표시지우기() {
+    관리목록.querySelectorAll('li').forEach(function (하나) {
+      하나.classList.remove('끄는중', '위에', '아래에');
+    });
+  }
+
+  function 관리목록그리기() {
+    표시지우기();
+    관리목록.innerHTML = '';
+
+    템플릿들.forEach(function (하나, 자리) {
+      var 기본인가 = 기본템플릿.some(function (b) { return b.name === 하나.name; });
+      var 줄 = document.createElement('li');
+
+      // 줄을 통째로 끌어서 원하는 자리에 끼워 넣는다
+      줄.draggable = true;
+
+      var 손잡이 = document.createElement('span');
+      손잡이.className = '관리손잡이';
+      손잡이.textContent = '⠿';
+      손잡이.title = '끌어서 순서 바꾸기';
+      줄.appendChild(손잡이);
+
+      줄.addEventListener('dragstart', function (이벤트) {
+        끄는자리 = 자리;
+        줄.classList.add('끄는중');
+        이벤트.dataTransfer.effectAllowed = 'move';
+        try { 이벤트.dataTransfer.setData('text/plain', String(자리)); } catch (e) {}
+      });
+
+      줄.addEventListener('dragend', function () {
+        끄는자리 = null;
+        표시지우기();
+      });
+
+      줄.addEventListener('dragover', function (이벤트) {
+        if (끄는자리 === null || 끄는자리 === 자리) return;
+        이벤트.preventDefault();
+        이벤트.dataTransfer.dropEffect = 'move';
+        줄.classList.toggle('위에', 자리 < 끄는자리);
+        줄.classList.toggle('아래에', 자리 > 끄는자리);
+      });
+
+      줄.addEventListener('dragleave', function () {
+        줄.classList.remove('위에', '아래에');
+      });
+
+      줄.addEventListener('drop', function (이벤트) {
+        이벤트.preventDefault();
+        if (끄는자리 === null || 끄는자리 === 자리) return;
+        자리옮기기(끄는자리, 자리);
+      });
+
+      var 이름 = document.createElement('span');
+      이름.className = '관리이름';
+      이름.textContent = 하나.name;
+      줄.appendChild(이름);
+
+      if (기본인가) {
+        var 표 = document.createElement('span');
+        표.className = '관리기본';
+        표.textContent = '기본';
+        줄.appendChild(표);
+
+        // 기본 템플릿은 못 고치는 대신, 복사해서 새로 만들 수 있게 한다
+        var 복사 = document.createElement('button');
+        복사.type = 'button';
+        복사.className = '관리버튼';
+        복사.textContent = '복사해서 만들기';
+        복사.addEventListener('click', function () {
+          수정중이름 = null;
+          새이름.value = 하나.name + ' 복사본';
+          새제목.value = 하나.subject;
+          새본문.value = 하나.body;
+          템플릿생성.textContent = '생성하기';
+          화면전환('add');
+        });
+        줄.appendChild(복사);
+      } else {
+        var 수정 = document.createElement('button');
+        수정.type = 'button';
+        수정.className = '관리버튼';
+        수정.textContent = '수정';
+        수정.addEventListener('click', function () {
+          수정중이름 = 하나.name;
+          새이름.value = 하나.name;
+          새제목.value = 하나.subject;
+          새본문.value = 하나.body;
+          템플릿생성.textContent = '저장하기';
+          화면전환('add');
+        });
+        줄.appendChild(수정);
+
+        var 삭제 = document.createElement('button');
+        삭제.type = 'button';
+        삭제.className = '관리버튼 지움';
+        삭제.textContent = '삭제';
+        삭제.addEventListener('click', function () {
+          if (!confirm('“' + 하나.name + '” 템플릿을 지울까요?\n지우면 되돌릴 수 없습니다.')) return;
+          템플릿지우기(하나.name, 삭제);
+        });
+        줄.appendChild(삭제);
+      }
+
+      관리목록.appendChild(줄);
+    });
+  }
+
+  // 끌어다 놓은 자리에 끼워 넣는다. 둘을 맞바꾸는 게 아니다
+  function 자리옮기기(이자리, 저자리) {
+    if (저자리 < 0 || 저자리 >= 템플릿들.length || 이자리 === 저자리) return;
+    var 꺼낸것 = 템플릿들.splice(이자리, 1)[0];
+    템플릿들.splice(저자리, 0, 꺼낸것);
+    순서저장();
+    종류목록다시();
+    관리목록그리기();
+  }
+
+  function 템플릿보내기(내용, 끝났을때) {
+    var 보낼것 = new URLSearchParams();
+    보낼것.set('key', 접근키칸.value);
+    Object.keys(내용).forEach(function (k) { 보낼것.set(k, 내용[k]); });
+
+    return fetch(템플릿저장주소, { method: 'POST', body: 보낼것 })
+      .then(function (응답) {
+        if (!응답.ok) throw new Error('HTTP ' + 응답.status);
+        return 응답.json();
+      })
+      .then(function (자료) {
+        if (자료 && 자료.ok === false) {
+          throw new Error(자료.message || '처리하지 못했습니다.');
+        }
+        return 자료;
+      })
+      .then(끝났을때);
+  }
+
+  function 템플릿지우기(이름, 버튼) {
+    버튼.disabled = true;
+    버튼.textContent = '지우는 중…';
+    관리오류.textContent = '';
+
+    템플릿보내기({ action: 'delete', template_name: 이름 }, function () {
+      템플릿들 = 템플릿들.filter(function (하나) { return 하나.name !== 이름; });
+      종류목록다시();
+      관리목록그리기();
+      if (!템플릿찾기(종류칸.value)) 종류칸.value = '';
+    }).catch(function (오류) {
+      관리오류.textContent = '삭제 실패: ' + 오류.message;
+      버튼.disabled = false;
+      버튼.textContent = '삭제';
+    });
+  }
+
+  추가열기.addEventListener('click', function (이벤트) {
+    이벤트.preventDefault();
+    수정중이름 = null;
+    새이름.value = '';
+    새제목.value = '';
+    새본문.value = '';
+    템플릿생성.textContent = '생성하기';
+    화면전환(템플릿칸.hidden ? 'add' : null);
+  });
+
+  관리열기.addEventListener('click', function (이벤트) {
+    이벤트.preventDefault();
+    if (관리칸.hidden) {
+      관리목록그리기();
+      화면전환('manage');
+    } else {
+      화면전환(null);
+    }
+  });
+
+  document.getElementById('템플릿취소').addEventListener('click', function () {
+    화면전환(null);
+  });
+
+  document.getElementById('관리닫기').addEventListener('click', function () {
+    화면전환(null);
+  });
+
+  템플릿생성.addEventListener('click', function () {
+    var 이름 = 새이름.value.trim();
+    var 제목 = 새제목.value.trim();
+    var 본문 = 새본문.value;
+
+    if (!이름 || !제목 || !본문.trim()) {
+      템플릿오류.textContent = '이름, 제목, 본문을 모두 채워 주세요.';
+      return;
+    }
+
+    // 수정 중에는 자기 이름과 겹치는 건 괜찮다
+    var 겹침 = 템플릿찾기(이름);
+    if (겹침 && 이름 !== 수정중이름) {
+      템플릿오류.textContent = '같은 이름의 템플릿이 이미 있습니다.';
+      return;
+    }
+    if (수정중이름 && 이름 !== 수정중이름) {
+      템플릿오류.textContent = '이름은 바꿀 수 없습니다. 이름을 바꾸려면 새로 만들고 예전 것을 지워 주세요.';
+      return;
+    }
+
+    var 수정인가 = !!수정중이름;
+    템플릿생성.disabled = true;
+    템플릿생성.textContent = '저장 중…';
+    템플릿오류.textContent = '';
+
+    템플릿보내기({
+      action: 수정인가 ? 'update' : 'save',
+      template_name: 이름,
+      subject: 제목,
+      body: 본문
+    }, function () {
+      if (수정인가) {
+        템플릿들 = 템플릿들.map(function (하나) {
+          return 하나.name === 이름 ? { name: 이름, subject: 제목, body: 본문 } : 하나;
+        });
+      } else {
+        템플릿들.push({ name: 이름, subject: 제목, body: 본문 });
+      }
+      종류목록다시();
+      종류칸.value = 이름;
+      새이름.value = '';
+      새제목.value = '';
+      새본문.value = '';
+      // 만들자마자 그 템플릿이 골라진 상태로 원래 화면에 돌아간다
+      화면전환(null);
+    }).catch(function (오류) {
+      템플릿오류.textContent = '저장 실패: ' + 오류.message;
+    }).then(function () {
+      템플릿생성.disabled = false;
+      템플릿생성.textContent = 수정중이름 ? '저장하기' : '생성하기';
+    });
+  });
+
+
+  // ── 보낸 기록 ────────────────────────────────────────────
+  // 담당자별로 이 브라우저에 쌓는다. 제목으로 나열하고, 눌러서 펼치면
+  // 그때 뭘 넣었는지 보이고 그대로 불러올 수 있다.
+  var 기록목록칸 = document.getElementById('기록목록');
+  var 기록없음 = document.getElementById('기록없음');
+  var 기록최대 = 30;
+
+  function 기록저장키() {
+    return 'nap-reward-기록-' + (담당자숨김.value || '공용');
+  }
+
+  function 기록읽기() {
+    try {
+      var 원문 = localStorage.getItem(기록저장키());
+      var 값 = 원문 ? JSON.parse(원문) : [];
+      return Array.isArray(값) ? 값 : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function 기록쓰기(목록) {
+    try {
+      localStorage.setItem(기록저장키(), JSON.stringify(목록.slice(0, 기록최대)));
+    } catch (e) {
+      // 저장이 막혀 있어도 발송에는 지장이 없다
+    }
+  }
+
+  // 지금 폼에 적힌 값을 한 덩어리로 모은다
+  function 지금내용() {
+    var 네트워크사 = 고른네트워크사();
+    return {
+      때: Date.now(),
+      제목: 제목칸.value,
+      종류: 종류칸.value,
+      상품유형: 고른유형(),
+      광고주명: document.getElementById('광고주명').value,
+      뎁스: document.getElementById('뎁스').value,
+      캠페인ID: document.getElementById('캠페인ID').value,
+      OS: OS값.value,
+      프리퀀시: document.getElementById('프리퀀시').value,
+      시작일: document.getElementById('시작일').value,
+      시작시간: document.getElementById('시작시간').value,
+      시작일ASAP: document.getElementById('시작일ASAP').checked,
+      종료일: document.getElementById('종료일').value,
+      종료시간: document.getElementById('종료시간').value,
+      종료일별도: document.getElementById('종료일별도').checked,
+      메인문구: document.getElementById('메인문구').value,
+      서브문구: document.getElementById('서브문구').value,
+      상세문구: document.getElementById('상세문구').value,
+      네트워크사: 네트워크사,
+      단가맵: 단가맵칸.value,
+      첨부열쇠: 이번첨부열쇠,
+      첨부목록: 고른파일.map(function (파일) {
+        return { 이름: 파일.name, 크기: 파일.size };
+      })
+    };
+  }
+
+  function 기록남기기() {
+    var 목록 = 기록읽기();
+    목록.unshift(지금내용());
+    기록쓰기(목록);
+    소재정리(목록);
+  }
+
+  // 최근 10건이 가리키는 파일만 남긴다. 그보다 오래된 건은 글자 기록만 남는다
+  function 소재정리(목록) {
+    var 남길것 = (목록 || 기록읽기())
+      .slice(0, 파일보관최대)
+      .map(function (하나) { return 하나.첨부열쇠; })
+      .filter(Boolean);
+    if (이번첨부열쇠) 남길것.push(이번첨부열쇠);
+    보관정리(남길것).catch(function () {});
+  }
+
+  // 기록 한 건만 지운다. 보관해 둔 소재도 정리 단계에서 같이 빠진다
+  function 기록하나지우기(하나) {
+    var 목록 = 기록읽기().filter(function (것) { return 것.때 !== 하나.때; });
+    기록쓰기(목록);
+    소재정리(목록);
+    기록그리기();
+  }
+
+  function 소재표시(하나) {
+    var 목록 = 하나.첨부목록 || [];
+    if (!목록.length) return "";
+    return 목록.map(function (파일) { return 파일.이름; }).join(", ");
+  }
+
+  function 때표시(값) {
+    var d = new Date(Number(값) || 0);
+    if (!d.getTime()) return '';
+    var 두자리 = function (n) { return ('0' + n).slice(-2); };
+    return (d.getMonth() + 1) + '/' + d.getDate()
+      + ' ' + 두자리(d.getHours()) + ':' + 두자리(d.getMinutes());
+  }
+
+  function 상세줄(이름, 값) {
+    if (!값) return null;
+    var 줄 = document.createElement('div');
+    줄.className = '줄';
+    var 왼 = document.createElement('span');
+    왼.className = '이름';
+    왼.textContent = 이름;
+    var 오 = document.createElement('span');
+    오.className = '값';
+    오.textContent = 값;
+    줄.appendChild(왼);
+    줄.appendChild(오);
+    return 줄;
+  }
+
+  function 기록그리기() {
+    var 목록 = 기록읽기();
+    소재정리(목록);
+    기록목록칸.innerHTML = '';
+    기록없음.hidden = 목록.length > 0;
+
+    // 소재가 아직 보관돼 있는지는 뒤에서 한 번에 확인한다
+    var 살필것 = [];
+
+    목록.forEach(function (하나, 순번) {
+      var 줄 = document.createElement('li');
+
+      var 머리 = document.createElement('div');
+      머리.className = '기록머리';
+
+      var 화살 = document.createElement('span');
+      화살.className = '기록화살';
+      화살.textContent = '▶';
+
+      var 제목 = document.createElement('span');
+      제목.className = '기록제목';
+      제목.textContent = 하나.제목 || '(제목 없음)';
+      var 때 = document.createElement('span');
+      때.className = '기록때';
+      때.textContent = 때표시(하나.때)
+        + (하나.네트워크사 && 하나.네트워크사.length ? ' · ' + 하나.네트워크사.join(', ') : '');
+      제목.appendChild(때);
+
+      머리.appendChild(화살);
+      머리.appendChild(제목);
+      줄.appendChild(머리);
+
+      var 상세 = document.createElement('div');
+      상세.className = '기록상세';
+      상세.hidden = true;
+
+      var 묶음 = document.createElement('dl');
+      [
+        ['메일', 하나.종류],
+        ['광고주', 하나.광고주명],
+        ['뎁스', (하나.상품유형 ? 하나.상품유형 + ' / ' : '') + (하나.뎁스 || '')],
+        ['캠페인', 하나.캠페인ID],
+        ['OS', 하나.OS],
+        ['메인', 하나.메인문구],
+        ['소재', 소재표시(하나)]
+      ].forEach(function (쌍) {
+        var 만든줄 = 상세줄(쌍[0], 쌍[1]);
+        if (만든줄) 묶음.appendChild(만든줄);
+      });
+      if (소재표시(하나)) {
+        var 사라짐 = document.createElement('div');
+        사라짐.className = '소재사라짐';
+        사라짐.textContent = '보관 기간이 지나 소재 파일은 다시 올려 주셔야 합니다';
+        사라짐.hidden = true;
+        묶음.appendChild(사라짐);
+        살필것.push({ 열쇠: 하나.첨부열쇠, 표시: 사라짐 });
+      }
+
+      상세.appendChild(묶음);
+
+      var 불러오기 = document.createElement('button');
+      불러오기.type = 'button';
+      불러오기.className = '적용버튼';
+      불러오기.textContent = '이 내용 불러오기';
+      불러오기.addEventListener('click', function () {
+        기록불러오기(하나);
+      });
+      상세.appendChild(불러오기);
+
+      var 기록지움 = document.createElement('button');
+      기록지움.type = 'button';
+      기록지움.className = '적용버튼 지움';
+      기록지움.textContent = '삭제';
+      기록지움.addEventListener('click', function () {
+        if (!confirm('이 기록을 지울까요? 보관된 소재 파일도 함께 지워집니다.')) return;
+        기록하나지우기(하나);
+      });
+      상세.appendChild(기록지움);
+
+      줄.appendChild(상세);
+
+      머리.addEventListener('click', function () {
+        상세.hidden = !상세.hidden;
+        화살.textContent = 상세.hidden ? '▶' : '▼';
+      });
+
+      기록목록칸.appendChild(줄);
+    });
+
+    // 실제로 보관돼 있지 않은 건에만 붉은 표시를 켠다
+    if (살필것.length) {
+      보관열쇠들().then(function (열쇠들) {
+        살필것.forEach(function (한건) {
+          한건.표시.hidden = !!한건.열쇠 && 열쇠들.indexOf(한건.열쇠) !== -1;
+        });
+      }).catch(function () {});
+    }
+  }
+
+  // 기록 하나를 폼에 되돌려 넣는다. 소재 파일은 다시 올려야 한다
+  function 기록불러오기(하나) {
+    종류칸.value = 하나.종류 || '';
+    종류바뀜();
+
+    if (하나.상품유형) {
+      var 유형칸 = 상품유형칸.querySelector('input[value="' + 하나.상품유형 + '"]');
+      if (유형칸) 유형칸.checked = true;
+    }
+
+    document.getElementById('광고주명').value = 하나.광고주명 || '';
+    document.getElementById('뎁스').value = 하나.뎁스 || '';
+    document.getElementById('캠페인ID').value = 하나.캠페인ID || '';
+    document.getElementById('시작일').value = 하나.시작일 || '';
+    document.getElementById('시작시간').value = 하나.시작시간 || '';
+    document.getElementById('종료일').value = 하나.종료일 || '';
+    document.getElementById('종료시간').value = 하나.종료시간 || '';
+    document.getElementById('메인문구').value = 하나.메인문구 || '';
+    document.getElementById('서브문구').value = 하나.서브문구 || '';
+    document.getElementById('상세문구').value = 하나.상세문구 || '';
+
+    document.getElementById('프리퀀시').value = 하나.프리퀀시 || '';
+
+    var 쓴OS = String(하나.OS || '').split(',').map(function (t) { return t.trim(); });
+    OS칸.querySelectorAll('input[name="OS선택"]').forEach(function (칸) {
+      칸.checked = 쓴OS.indexOf(칸.value) !== -1;
+    });
+    OS반영();
+
+    [['시작일ASAP', '시작일', '시작시간'], ['종료일별도', '종료일', '종료시간']]
+      .forEach(function (한벌) {
+        var 체크 = document.getElementById(한벌[0]);
+        var 켬 = !!하나[한벌[0]];
+        if (체크.checked !== 켬) {
+          체크.checked = 켬;
+          체크.dispatchEvent(new Event('change'));
+        }
+      });
+
+    // 네트워크사 체크 되살리기
+    var 고를것 = 하나.네트워크사 || [];
+    폼.querySelectorAll('input[name="네트워크사"]').forEach(function (칸) {
+      칸.checked = 고를것.indexOf(칸.value) !== -1;
+    });
+
+    수동단가 = {};
+    적용체크 = {};
+    단가현황그리기();
+    미리보기접기();
+
+    // 보관해 둔 소재 파일이 있으면 같이 되살린다
+    고른파일 = [];
+    이번첨부열쇠 = null;
+    파일다시넣기();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (!하나.첨부열쇠) {
+      alert((하나.첨부목록 || []).length ? '불러왔습니다. 소재는 필요 시 추가 부탁드립니다.' : '불러왔습니다.');
+      return;
+    }
+
+    보관읽기(하나.첨부열쇠).then(function (파일들) {
+      if (!파일들 || !파일들.length) {
+        alert('불러왔습니다. 소재는 필요 시 추가 부탁드립니다.');
+        return;
+      }
+      이번첨부열쇠 = 하나.첨부열쇠;
+      고른파일 = 파일들.slice();
+      파일다시넣기();
+      alert('불러왔습니다.');
+    }).catch(function () {
+      alert('불러왔습니다. 소재는 필요 시 추가 부탁드립니다.');
+    });
+  }
+
+  document.getElementById('기록비우기').addEventListener('click', function (이벤트) {
+    이벤트.preventDefault();
+    if (!confirm('이 자리의 보낸 기록을 모두 지울까요? 보관해 둔 소재 파일도 함께 지워집니다.')) return;
+    기록쓰기([]);
+    고른파일 = [];
+    파일다시넣기();
+    보관정리([]).catch(function () {});
+    기록그리기();
+  });
 
   // 체크박스는 브라우저가 필수 검사를 해주지 않으니 직접 막는다
   폼.addEventListener('submit', function (이벤트) {
@@ -955,8 +2603,8 @@
       return;
     }
 
-    // 단가는 라이브 요청에서만 쓰는데, 숨은 칸이라 브라우저가 검사해 주지 않는다
-    if (!라이브그룹.disabled) {
+    // 단가는 숨은 칸이라 브라우저가 검사해 주지 않는다
+    if (!단가그룹.disabled) {
       var 맵 = {};
       try { 맵 = JSON.parse(단가맵칸.value || '{}'); } catch (e) {}
 
@@ -973,11 +2621,66 @@
         return;
       }
     }
+    var 보내는이 = 담당자찾기(담당자칸.value);
+    if (!보내는이) {
+      이벤트.preventDefault();
+      alert('담당자를 골라 주세요.');
+      return;
+    }
+    document.getElementById('발신자메일칸').value = 보내는이.email;
+
+    // 미리보기를 펼쳐 고쳤으면 그 내용을, 아니면 지금 값으로 새로 만들어 보낸다
+    var 템플릿 = 템플릿찾기(종류칸.value);
+    if (템플릿) {
+      if (미리보기칸.hidden) 미리보기그리기();
+      제목칸.value = 미리보기제목.textContent;
+      본문HTML칸.value = 미리보기본문.innerHTML;
+    }
+
+    // 제출하면 화면이 넘어가니, 넘어가기 전에 기록을 남긴다
+    기록남기기();
+
     보내기.disabled = true;
     보내기.textContent = '보내는 중…';
   });
 
-  종류바뀜();
+  // 메일을 보내고 돌아오면 브라우저가 직전에 적은 값을 되살려 놓는다.
+  // 보낸 내용은 옆 기록에 남으니 화면은 늘 빈 상태로 시작하게 한다.
+  function 폼비우기() {
+    var 열쇠 = 접근키칸.value;
+    var 자리 = 담당자숨김.value;
+
+    폼.reset();
+
+    // reset 은 숨은 칸까지 비우므로 로그인·자리 정보는 되돌려 놓는다
+    접근키칸.value = 열쇠;
+    담당자숨김.value = 자리;
+    제목칸.value = '';
+    본문HTML칸.value = '';
+    document.getElementById('발신자메일칸').value = '';
+
+    고른파일 = [];
+    파일다시넣기();
+
+    // ASAP·별도 요청을 끄면서 잠가 뒀던 날짜 칸도 같이 풀어 준다
+    ['시작일ASAP', '종료일별도'].forEach(function (아이디) {
+      document.getElementById(아이디).dispatchEvent(new Event('change'));
+    });
+
+    OS반영();
+    단가현황그리기();
+    미리보기제목.textContent = '';
+    미리보기본문.innerHTML = '';
+    종류바뀜();
+  }
+
+  종류목록다시();
+  폼비우기();
+
+  // 뒤로가기로 돌아오면 화면이 통째로 되살아나므로 그때도 비운다
+  window.addEventListener('pageshow', function (이벤트) {
+    if (이벤트.persisted) 폼비우기();
+  });
 })();
 </script>
 </body>
