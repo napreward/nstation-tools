@@ -170,6 +170,11 @@
     cursor: pointer;
   }
   .radios input { margin-right: 6px; }
+  /* 뎁스에 딸린 보조 선택지라 본 줄보다 작고 연하게 둔다 */
+  .초칸 { margin-top: 0; gap: 10px; padding: 0 0 2px; }
+  .초칸 label { font-size: 12px; color: var(--muted); }
+  .초칸 input { margin-right: 4px; width: 12px; height: 12px; }
+  .초괄호 { font-size: 12px; color: var(--muted); align-self: center; }
   .상세뎁스 { margin-top: 6px; }
   /* 위쪽 input[type=number] 규칙(width:100%)을 이기려면 선택자를 더 좁혀야 한다 */
   input[type="number"].단가직접값 {
@@ -535,7 +540,7 @@
 <body class="잠금">
 
 <!-- 버전과 만든 사람. 고칠 때 여기 글자만 바꾸면 됩니다 -->
-<div class="만든이">v1.2 (10/29) · 제작: 김유진</div>
+<div class="만든이">v1.3 (11/9) · 제작: 김유진</div>
 
 <div class="wrap">
 
@@ -658,6 +663,14 @@ OS : {{OS}}
             <label><input type="radio" name="상품유형" value="CPE">CPE</label>
             <label><input type="radio" name="상품유형" value="CPSNS">CPSNS</label>
             <label><input type="radio" name="상품유형" value="CPA">CPA</label>
+          </div>
+          <!-- CPCV 를 고르면 나타난다. 길이마다 단가가 다르다 -->
+          <div class="radios 초칸" id="초칸" hidden>
+            <span class="초괄호">(</span>
+            <label><input type="radio" name="초수" value="10">10초</label>
+            <label><input type="radio" name="초수" value="20">20초</label>
+            <label><input type="radio" name="초수" value="30">30초</label>
+            <span class="초괄호">)</span>
           </div>
           <input type="text" id="뎁스" name="뎁스" class="상세뎁스" placeholder="상세 뎁스 — 비우면 메일에 유형만 들어갑니다">
         </div>
@@ -1095,6 +1108,7 @@ OS : {{OS}}
     묶음전환(기간그룹, 설정.기간);
     묶음전환(단가그룹, 설정.단가);
     묶음전환(문구그룹, 설정.문구);
+    초보이기();
     프리퀀시보이기();
     보내기.disabled = false;
     보내기.textContent = '메일 보내기';
@@ -1130,10 +1144,51 @@ OS : {{OS}}
     document.getElementById('종료시간')
   );
 
+  function 시간모두다듬기() {
+    ['시작시간', '종료시간'].forEach(function (아이디) {
+      시간다듬기(document.getElementById(아이디));
+    });
+  }
+
+  // 시만 적어도 분을 채워 준다. 12 -> 12:00, 930 -> 09:30
+  function 시간다듬기(칸) {
+    var 값 = String(칸.value || '').trim();
+    if (!값) return;
+
+    var 시, 분;
+    var 숫자만 = /^[0-9]{1,4}$/.test(값) ? 값 : null;
+
+    if (숫자만 && 값.length <= 2) {
+      시 = 값;
+      분 = '0';
+    } else if (숫자만) {
+      시 = 값.slice(0, 값.length - 2);
+      분 = 값.slice(-2);
+    } else {
+      var 쪼갬 = 값.split(/[^0-9]+/).filter(Boolean);
+      if (!쪼갬.length) return;
+      시 = 쪼갬[0];
+      분 = 쪼갬.length > 1 ? 쪼갬[1] : '0';
+    }
+
+    var 시수 = Number(시);
+    var 분수 = Number(분);
+    if (!Number.isFinite(시수) || !Number.isFinite(분수)) return;
+    if (시수 > 23 || 분수 > 59) return;
+
+    칸.value = ('0' + 시수).slice(-2) + ':' + ('0' + 분수).slice(-2);
+  }
+
+  ['시작시간', '종료시간'].forEach(function (아이디) {
+    var 칸 = document.getElementById(아이디);
+    칸.addEventListener('blur', function () { 시간다듬기(칸); });
+  });
+
   // ── 상품 유형과 단가 ─────────────────────────────────────
   // 단가는 주소록 시트에서 네트워크사별로 따라옵니다. CPA 처럼 시트에 값이
   // 없는 유형은 "단가 직접 지정"으로 한 번에 적습니다.
   var 상품유형칸 = document.getElementById('상품유형칸');
+  var 초칸 = document.getElementById('초칸');
   var 단가현황 = document.getElementById('단가현황');
   var 단가안내 = document.getElementById('단가안내');
   var 직접지정줄 = document.getElementById('직접지정줄');
@@ -1154,6 +1209,52 @@ OS : {{OS}}
     return 선택 ? 선택.value : '';
   }
 
+  // CPCV 영상 길이. 안 골랐거나 CPCV 가 아니면 빈 값
+  function 고른초() {
+    if (고른유형() !== 'CPCV') return '';
+    var 선택 = 초칸.querySelector('input[name="초수"]:checked');
+    return 선택 ? 선택.value : '';
+  }
+
+  // 시트에서 단가를 찾을 때 쓰는 이름. CPCV 는 길이까지 붙는다(CPCV20)
+  function 단가유형() {
+    var 유형 = 고른유형();
+    var 초 = 고른초();
+    return 초 ? 유형 + 초 : 유형;
+  }
+
+  // CPCV 일 때만 길이 줄을 보여 준다
+  function 초보이기() {
+    var 쓸때 = 고른유형() === 'CPCV';
+    초칸.hidden = !쓸때;
+
+    if (!쓸때) {
+      초칸.querySelectorAll('input[name="초수"]').forEach(function (칸) {
+        칸.checked = false;
+      });
+      초칸.style.marginLeft = '';
+      return;
+    }
+    초칸맞추기();
+  }
+
+  // CPCV 글자 바로 아래에서 시작하도록 들여쓴다.
+  // 창 너비에 따라 CPCV 자리가 달라져서 그때그때 재서 맞춘다.
+  function 초칸맞추기() {
+    if (초칸.hidden) return;
+    var 칸 = 상품유형칸.querySelector('input[value="CPCV"]');
+    var 라벨 = 칸 ? 칸.parentElement : null;
+    if (!라벨) return;
+
+    초칸.style.marginLeft = '';
+    var 기준 = 초칸.parentElement.getBoundingClientRect().left;
+    var 왼쪽 = 라벨.getBoundingClientRect().left;
+    var 들여쓰기 = Math.round(왼쪽 - 기준);
+    if (들여쓰기 > 0) 초칸.style.marginLeft = 들여쓰기 + 'px';
+  }
+
+  window.addEventListener('resize', 초칸맞추기);
+
   function 고른네트워크사() {
     var 값들 = [];
     폼.querySelectorAll('input[name="네트워크사"]:checked').forEach(function (칸) {
@@ -1167,7 +1268,14 @@ OS : {{OS}}
     var 표 = 단가정보[이름];
     if (!표) return null;
     var 값 = Number(표[유형]);
-    return Number.isFinite(값) && 값 > 0 ? 값 : null;
+    if (Number.isFinite(값) && 값 > 0) return 값;
+
+    // 길이별 칸이 비어 있으면 CPCV 칸을 대신 본다
+    if (유형.indexOf('CPCV') === 0 && 유형 !== 'CPCV') {
+      var 기본 = Number(표['CPCV']);
+      if (Number.isFinite(기본) && 기본 > 0) return 기본;
+    }
+    return null;
   }
 
   // 실제로 나갈 값. 적용해 둔 게 있으면 그게 우선이다
@@ -1178,7 +1286,7 @@ OS : {{OS}}
   }
 
   function 단가현황그리기() {
-    var 유형 = 고른유형();
+    var 유형 = 단가유형();
     var 고른곳 = 고른네트워크사();
 
     단가현황.innerHTML = '';
@@ -1269,7 +1377,14 @@ OS : {{OS}}
     // 유형이 바뀌면 덮어쓴 값은 의미가 없어진다
     수동단가 = {};
     적용체크 = {};
+    초보이기();
     프리퀀시보이기();
+    단가현황그리기();
+  });
+
+  초칸.addEventListener('change', function () {
+    수동단가 = {};
+    적용체크 = {};
     단가현황그리기();
   });
 
@@ -1336,7 +1451,8 @@ OS : {{OS}}
 
   // 유형과 상세를 "CPI(리워드)" 로 합친다. 상세를 비우면 유형만 쓴다
   function 뎁스표시() {
-    var 유형 = 고른유형();
+    var 초 = 고른초();
+    var 유형 = 고른유형() + (초 ? ' ' + 초 + '초' : '');
     var 상세 = document.getElementById('뎁스').value.trim();
     if (유형 && 상세) return 글자막기(유형 + '(' + 상세 + ')');
     return 글자막기(유형 || 상세 || '');
@@ -1406,6 +1522,7 @@ OS : {{OS}}
   }
 
   function 미리보기그리기() {
+    시간모두다듬기();
     var 템플릿 = 템플릿찾기(종류칸.value);
     if (!템플릿) return;
 
@@ -2334,6 +2451,7 @@ OS : {{OS}}
       제목: 제목칸.value,
       종류: 종류칸.value,
       상품유형: 고른유형(),
+      초수: 고른초(),
       광고주명: document.getElementById('광고주명').value,
       뎁스: document.getElementById('뎁스').value,
       캠페인ID: document.getElementById('캠페인ID').value,
@@ -2519,6 +2637,11 @@ OS : {{OS}}
       var 유형칸 = 상품유형칸.querySelector('input[value="' + 하나.상품유형 + '"]');
       if (유형칸) 유형칸.checked = true;
     }
+    초보이기();
+    if (하나.초수) {
+      var 초선택 = 초칸.querySelector('input[name="초수"][value="' + 하나.초수 + '"]');
+      if (초선택) 초선택.checked = true;
+    }
 
     document.getElementById('광고주명').value = 하나.광고주명 || '';
     document.getElementById('뎁스').value = 하나.뎁스 || '';
@@ -2607,6 +2730,12 @@ OS : {{OS}}
     if (!고른유형()) {
       이벤트.preventDefault();
       alert('뎁스의 상품 유형을 골라 주세요.');
+      return;
+    }
+
+    if (고른유형() === 'CPCV' && !고른초()) {
+      이벤트.preventDefault();
+      alert('CPCV 는 10초·20초·30초 중 하나를 골라 주세요.');
       return;
     }
 
