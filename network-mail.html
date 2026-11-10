@@ -1459,6 +1459,14 @@ OS : {{OS}}
     return '<b style="background-color:#ffef3d">' + 첫날 + ' ~ ' + 끝날 + '</b>';
   }
 
+  // 참여방법처럼 길게 쓰는 칸이라 항목명 아래 줄부터 보이게 한다.
+  // 여러 줄로 적으면 그 줄바꿈도 메일에 그대로 살린다.
+  function 상세문구HTML() {
+    var 글 = document.getElementById('상세문구').value.trim();
+    if (!글) return '';
+    return '<br>' + 글자막기(글).replace(/\n/g, '<br>');
+  }
+
   // 폼에 적힌 값들을 {{항목}} 이름으로 모은다. 값은 이미 HTML 로 안전한 상태
   function 값모으기(단가표시) {
     return {
@@ -1471,7 +1479,7 @@ OS : {{OS}}
       '단가': '<span data-var="단가">' + 글자막기(단가표시) + '</span>',
       '메인문구': 글자막기(document.getElementById('메인문구').value),
       '서브문구': 글자막기(document.getElementById('서브문구').value),
-      '상세문구': 글자막기(document.getElementById('상세문구').value),
+      '상세문구': 상세문구HTML(),
       '이름': 담당자이름(),
       '맺음말': 맺음말표시(),
       '보내는사람': 보내는사람표시(),
