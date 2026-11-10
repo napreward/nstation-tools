@@ -612,7 +612,7 @@
         <div class="템플릿칸" id="템플릿칸" hidden>
           <p class="hint" style="margin:0 0 10px">
             바꿔 넣을 자리를 <code>{{광고주명}}</code> 처럼 적어주세요.
-            쓸 수 있는 이름: 광고주명 · 뎁스 · 캠페인ID · OS · 프리퀀시 · 기간 · 기간줄 · 단가 · 메인문구 · 서브문구 · 상세문구 · 이름 · 맺음말 · 보내는사람 · 서명
+            쓸 수 있는 이름: 광고주명 · 뎁스 · 캠페인ID · OS · 프리퀀시 · 기간 · 단가 · 메인문구 · 서브문구 · 상세문구 · 이름 · 맺음말 · 보내는사람 · 서명
           </p>
           <input type="text" id="새템플릿이름" placeholder="템플릿 이름 — 예) OK캐시백 라이브">
           <input type="text" id="새템플릿제목"
@@ -902,7 +902,7 @@ OS : {{OS}}
         '캠페인id : {{캠페인ID}}',
         'OS : {{OS}}',
         '프리퀀시 : {{프리퀀시}}',
-        '{{기간줄}}',
+        '기간 : {{기간}}',
         '단가 : {{단가}}원',
         '소재 : 첨부파일',
         '문구',
@@ -1453,15 +1453,10 @@ OS : {{OS}}
       : 글자막기(날짜(document.getElementById('종료일').value))
         + 시간(document.getElementById('종료시간').value);
 
-    return 첫날 + ' ~ ' + 끝날;
-  }
-
-  // 기간은 놓치면 안 되는 값이라 늘 굵게 + 형광으로 내보낸다.
-  // 라벨까지 함께 칠해야 해서 "기간 : " 도 이 안에서 만든다.
-  function 기간줄HTML() {
-    var 값 = 기간HTML();
-    if (!값 || 값.replace(/[~ ]/g, '') === '') return '';
-    return '<b style="background-color:#ffef3d">기간 : ' + 값 + '</b>';
+    // 놓치면 안 되는 값이라 날짜만 굵게 + 형광으로 내보낸다.
+    // 템플릿의 "기간 : " 라벨은 보통 글씨로 남는다.
+    if (!첫날 && !끝날) return '';
+    return '<b style="background-color:#ffef3d">' + 첫날 + ' ~ ' + 끝날 + '</b>';
   }
 
   // 폼에 적힌 값들을 {{항목}} 이름으로 모은다. 값은 이미 HTML 로 안전한 상태
@@ -1473,7 +1468,6 @@ OS : {{OS}}
       'OS': 글자막기(OS값.value),
       '프리퀀시': 글자막기(document.getElementById('프리퀀시').value),
       '기간': 기간HTML(),
-      '기간줄': 기간줄HTML(),
       '단가': '<span data-var="단가">' + 글자막기(단가표시) + '</span>',
       '메인문구': 글자막기(document.getElementById('메인문구').value),
       '서브문구': 글자막기(document.getElementById('서브문구').value),
