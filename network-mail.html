@@ -423,6 +423,23 @@
     border-radius: 4px;
   }
   .꾸미기 button:hover { background: #dfe4ea; }
+  .이모지묶음 { position: relative; display: inline-flex; }
+  .이모지판 {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    width: 196px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.12);
+  }
+  .이모지판 button { width: 28px; padding: 3px 0; background: none; font-size: 16px; }
   select.미리보기대상 { width: auto; max-width: 200px; padding: 4px 8px; font-size: 12px; }
   .제목줄 {
     margin: 0 0 10px;
@@ -792,8 +809,13 @@ OS : {{OS}}
               <div class="꾸미기">
                 <button type="button" data-꾸밈="bold"><b>B</b></button>
                 <button type="button" data-꾸밈="red" style="color:#d00000">A</button>
+                <button type="button" data-꾸밈="teal" style="color:#31859c">A</button>
                 <button type="button" data-꾸밈="mark" style="background:#ffef3d">형광</button>
                 <button type="button" data-꾸밈="clear">지우기</button>
+                <span class="이모지묶음">
+                  <button type="button" id="이모지열기" title="이모지 넣기">🙂</button>
+                  <div class="이모지판" id="이모지판" hidden></div>
+                </span>
               </div>
               <select id="미리보기대상" class="미리보기대상"></select>
             </div>
@@ -1634,7 +1656,10 @@ OS : {{OS}}
   });
 
   // 굵게 · 빨강 · 지우기
-  document.querySelectorAll('.꾸미기 button').forEach(function (버튼) {
+  // 아웃룩 테마의 청록. 다른 색으로 바꾸려면 이 값만 고치면 된다
+  var 청록 = '#31859c';
+
+  document.querySelectorAll('.꾸미기 button[data-꾸밈]').forEach(function (버튼) {
     버튼.addEventListener('mousedown', function (이벤트) {
       이벤트.preventDefault();
       미리보기본문.focus();
@@ -1643,6 +1668,8 @@ OS : {{OS}}
         document.execCommand('bold');
       } else if (종류 === 'red') {
         document.execCommand('foreColor', false, '#d00000');
+      } else if (종류 === 'teal') {
+        document.execCommand('foreColor', false, 청록);
       } else if (종류 === 'mark') {
         // 브라우저마다 형광펜 명령 이름이 달라서 둘 다 시도한다
         document.execCommand('styleWithCSS', false, true);
@@ -1655,6 +1682,39 @@ OS : {{OS}}
     });
   });
 
+
+  // ── 이모지 ───────────────────────────────────────────────
+  // 이모지는 그냥 글자라서 메일에서도 그대로 보인다.
+  var 이모지들 = ['🙂', '😊', '😅', '👍', '🙏', '✅', '❗', '⭐', '📌', '📎', '🔔', '⏰'];
+  var 이모지열기 = document.getElementById('이모지열기');
+  var 이모지판 = document.getElementById('이모지판');
+
+  이모지들.forEach(function (글자) {
+    var 단추 = document.createElement('button');
+    단추.type = 'button';
+    단추.textContent = 글자;
+    단추.addEventListener('mousedown', function (이벤트) {
+      // 기본 동작을 막아야 본문에 찍어둔 커서가 살아 있다
+      이벤트.preventDefault();
+      미리보기본문.focus();
+      document.execCommand('insertText', false, 글자);
+      이모지판.hidden = true;
+    });
+    이모지판.appendChild(단추);
+  });
+
+  이모지열기.addEventListener('mousedown', function (이벤트) {
+    이벤트.preventDefault();
+    이모지판.hidden = !이모지판.hidden;
+  });
+
+  // 다른 곳을 누르면 닫는다
+  document.addEventListener('mousedown', function (이벤트) {
+    if (이모지판.hidden) return;
+    if (이모지열기.contains(이벤트.target)) return;
+    if (이모지판.contains(이벤트.target)) return;
+    이모지판.hidden = true;
+  });
 
   // ── OS · 프리퀀시 · 전체선택 ─────────────────────────────
   var OS칸 = document.getElementById('OS칸');
