@@ -441,6 +441,16 @@
   }
   .이모지판 button { width: 28px; padding: 3px 0; background: none; font-size: 16px; }
   select.미리보기대상 { width: auto; max-width: 200px; padding: 4px 8px; font-size: 12px; }
+  .대상안내 { margin-left: auto; font-size: 12px; color: var(--muted); align-self: center; }
+  .고침안내 {
+    margin: 8px 0 0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #fff8e1;
+    font-size: 12px;
+    color: #8a6d00;
+  }
+  .고침안내 a { color: #8a6d00; }
   .제목줄 {
     margin: 0 0 10px;
     padding-bottom: 8px;
@@ -557,7 +567,7 @@
 <body class="잠금">
 
 <!-- 버전과 만든 사람. 고칠 때 여기 글자만 바꾸면 됩니다 -->
-<div class="만든이">v1.4 (11/10) · 제작: 김유진</div>
+<div class="만든이">v1.5 (11/13) · 제작: 김유진</div>
 
 <div class="wrap">
 
@@ -817,13 +827,19 @@ OS : {{OS}}
                   <div class="이모지판" id="이모지판" hidden></div>
                 </span>
               </div>
+              <span class="대상안내">단가 확인</span>
               <select id="미리보기대상" class="미리보기대상"></select>
             </div>
 
             <p class="제목줄">제목 : <span id="미리보기제목"></span></p>
             <div class="본문칸" id="미리보기본문" contenteditable="true"></div>
+            <p class="고침안내" id="고침안내" hidden>
+              고친 내용이 있어, 위 항목을 바꿔도 이 내용은 그대로 둡니다.
+              <a href="#" id="미리보기되돌리기">처음 내용으로 되돌리기</a>
+            </p>
             <p class="hint" style="margin:8px 0 0">
-              여기서 고친 내용 그대로 발송됩니다. 단가는 네트워크사마다 자동으로 바뀝니다.<br>
+              여기서 고친 내용이 <b>고른 매체 모두에 똑같이</b> 나갑니다. 따로 고치실 필요 없습니다.<br>
+              단가만 매체마다 자동으로 바뀝니다. 위 목록은 어느 매체 기준으로 볼지 고르는 곳입니다.<br>
               엑셀·아웃룩의 표와 그림을 그대로 붙여넣을 수 있습니다.
             </p>
           </div>
@@ -1567,12 +1583,12 @@ OS : {{OS}}
     return Number.isFinite(값) && 값 > 0 ? 값.toLocaleString('ko-KR') : '';
   }
 
-  function 미리보기그리기() {
-    시간모두다듬기();
-    var 템플릿 = 템플릿찾기(종류칸.value);
-    if (!템플릿) return;
+  // 미리보기를 직접 고쳤는지. 고쳤으면 함부로 덮어쓰지 않는다
+  var 미리보기손댐 = false;
+  var 고침안내 = document.getElementById('고침안내');
 
-    // 어느 네트워크사 기준으로 볼지 고르는 목록
+  // 어느 네트워크사 기준으로 볼지 고르는 목록
+  function 대상목록채우기() {
     var 고른곳 = 고른네트워크사();
     var 이전 = 미리보기대상.value;
     미리보기대상.innerHTML = '';
@@ -1584,11 +1600,48 @@ OS : {{OS}}
     });
     if (고른곳.indexOf(이전) !== -1) 미리보기대상.value = 이전;
     미리보기대상.hidden = 고른곳.length < 2;
+  }
+
+  // 본문은 손대지 않고 단가 자리만 고른 매체 값으로 바꾼다
+  function 단가자리갱신() {
+    var 값 = 첫단가표시();
+    미리보기본문.querySelectorAll('[data-var="단가"]').forEach(function (칸) {
+      칸.textContent = 값;
+    });
+  }
+
+  // 다시=true 면 고친 내용을 버리고 처음부터 새로 만든다
+  function 미리보기그리기(다시) {
+    시간모두다듬기();
+    var 템플릿 = 템플릿찾기(종류칸.value);
+    if (!템플릿) return;
+
+    대상목록채우기();
+
+    if (미리보기손댐 && !다시) {
+      단가자리갱신();
+      고침안내.hidden = false;
+      return;
+    }
 
     var 값들 = 값모으기(첫단가표시());
     미리보기제목.textContent = 채우기(템플릿.subject || '', 값들).replace(/<[^>]+>/g, '');
     미리보기본문.innerHTML = 채우기(템플릿.body || '', 값들).replace(/\n/g, '<br>');
+    미리보기손댐 = false;
+    고침안내.hidden = true;
   }
+
+  미리보기본문.addEventListener('input', function () {
+    미리보기손댐 = true;
+    고침안내.hidden = false;
+  });
+
+  document.getElementById('미리보기되돌리기').addEventListener('click', function (이벤트) {
+    이벤트.preventDefault();
+    if (!confirm('고친 내용을 버리고 처음 내용으로 되돌릴까요?')) return;
+    미리보기손댐 = false;
+    미리보기그리기(true);
+  });
 
   function 미리보기접기() {
     미리보기칸.hidden = true;
@@ -1605,7 +1658,10 @@ OS : {{OS}}
     }
   });
 
-  미리보기대상.addEventListener('change', 미리보기그리기);
+  // 이벤트 객체가 인자로 넘어가 다시 그리지 않도록 감싼다
+  미리보기대상.addEventListener('change', function () {
+    미리보기그리기();
+  });
 
   // 붙여넣은 이미지는 메일 프로그램이 막는 경우가 많아 미리 알려준다
   // 붙여넣은 그림은 data: 주소로 본문에 들어가고,
@@ -2892,6 +2948,8 @@ OS : {{OS}}
     단가현황그리기();
     미리보기제목.textContent = '';
     미리보기본문.innerHTML = '';
+    미리보기손댐 = false;
+    고침안내.hidden = true;
     종류바뀜();
   }
 
