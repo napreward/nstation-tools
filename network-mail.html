@@ -93,6 +93,16 @@
   .기록상세 .이름 { flex: none; width: 58px; color: var(--muted); }
   .기록상세 .값 { flex: 1; min-width: 0; color: var(--text); word-break: break-word; }
   .기록없음 { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+  /* 메일 종류가 보낼 곳을 정해 두는 경우의 안내 */
+  .고정매체안내 {
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #eef4ff;
+    font-size: 13px;
+    color: #1f3f7a;
+  }
+  .고정매체안내.없음 { background: #fdecec; color: var(--danger); }
   /* 보관 기간이 지나 소재가 사라진 건에만 켜진다 */
   .소재사라짐 { margin: 2px 0 8px; font-size: 11px; color: var(--danger); }
   .적용버튼.지움 { background: #f3f4f6; color: var(--danger); }
@@ -567,7 +577,7 @@
 <body class="잠금">
 
 <!-- 버전과 만든 사람. 고칠 때 여기 글자만 바꾸면 됩니다 -->
-<div class="만든이">v1.5 (11/13) · 제작: 김유진</div>
+<div class="만든이">v1.7 (11/18) · 제작: 김유진</div>
 
 <div class="wrap">
 
@@ -622,7 +632,7 @@
         <div class="템플릿칸" id="템플릿칸" hidden>
           <p class="hint" style="margin:0 0 10px">
             바꿔 넣을 자리를 <code>{{광고주명}}</code> 처럼 적어주세요.
-            쓸 수 있는 이름: 광고주명 · 뎁스 · 캠페인ID · OS · 프리퀀시 · 기간 · 단가 · 메인문구 · 서브문구 · 상세문구 · 이름 · 맺음말 · 보내는사람 · 서명
+            쓸 수 있는 이름: 광고주명 · 뎁스 · 캠페인명 · 캠페인ID · OS · 프리퀀시 · 기간 · 단가 · 메인문구 · 서브문구 · 상세문구 · 이름 · 맺음말 · 보내는사람 · 서명
           </p>
           <input type="text" id="새템플릿이름" placeholder="템플릿 이름 — 예) OK캐시백 라이브">
           <input type="text" id="새템플릿제목"
@@ -661,7 +671,9 @@ OS : {{OS}}
       <!-- 메일 종류를 고르기 전에는 아래를 통째로 감춘다 -->
       <div id="본문영역" hidden>
 
-        <div class="field">
+        <p class="고정매체안내" id="고정매체안내" hidden></p>
+
+        <div class="field" id="네트워크사칸">
           <div class="칸머리">
             <label class="title">네트워크사<span class="req">*</span></label>
             <label class="전체선택"><input type="checkbox" id="네트워크사전체">전체 선택</label>
@@ -701,6 +713,14 @@ OS : {{OS}}
           </div>
           <input type="text" id="뎁스" name="뎁스" class="상세뎁스" placeholder="상세 뎁스 — 비우면 메일에 유형만 들어갑니다">
         </div>
+
+        <!-- 템플릿이 {{캠페인명}} 을 쓸 때만 나타난다 -->
+        <fieldset id="그룹_캠페인명" style="border:0;padding:0;margin:0" disabled hidden>
+          <div class="field">
+            <label class="title" for="캠페인명">캠페인명<span class="req">*</span></label>
+            <input type="text" id="캠페인명" name="캠페인명" required>
+          </div>
+        </fieldset>
 
         <div class="field">
           <label class="title" for="캠페인ID">캠페인 ID<span class="req">*</span></label>
@@ -895,6 +915,7 @@ OS : {{OS}}
   var 기간그룹 = document.getElementById('그룹_기간');
   var 단가그룹 = document.getElementById('그룹_단가');
   var 문구그룹 = document.getElementById('그룹_문구');
+  var 캠페인명그룹 = document.getElementById('그룹_캠페인명');
   var 목록칸 = document.getElementById('네트워크사목록');
   var 보내기 = document.getElementById('보내기');
   var 안내 = document.getElementById('안내');
@@ -941,6 +962,7 @@ OS : {{OS}}
         '',
         '{{광고주명}} {{뎁스}} 캠페인 라이브 부탁드리겠습니다.',
         '',
+        '캠페인명 : {{캠페인명}}',
         '캠페인id : {{캠페인ID}}',
         'OS : {{OS}}',
         '프리퀀시 : {{프리퀀시}}',
@@ -1114,6 +1136,7 @@ OS : {{OS}}
     var 본문 = 템플릿.body || '';
     var 있나 = function (이름) { return 항목.indexOf(이름) !== -1; };
     return {
+      캠페인명: 있나('캠페인명'),
       OS: 있나('OS'),
       기간: 있나('기간'),
       단가: 있나('단가'),
@@ -1128,6 +1151,65 @@ OS : {{OS}}
     요소.hidden = !켬;
   }
 
+  // 메일 종류에 따라 보낼 곳이 정해져 있으면 여기에 적는다.
+  // 왼쪽은 메일 종류 이름, 오른쪽은 주소록 시트의 network_name 이다.
+  var 고정매체 = {
+    'OK캐시백 라이브': 'OCB'
+  };
+
+  var 고정매체안내 = document.getElementById('고정매체안내');
+  var 네트워크사칸 = document.getElementById('네트워크사칸');
+
+  function 지금고정() {
+    return 고정매체[종류칸.value] || '';
+  }
+
+  // 직전에 어느 곳으로 묶여 있었는지. 풀 때 그 체크를 되돌리는 데 쓴다
+  var 이전고정 = '';
+
+  // 정해진 곳만 켜고 네트워크사 고르는 칸은 감춘다
+  function 고정반영() {
+    var 고정 = 지금고정();
+
+    if (!고정) {
+      네트워크사칸.hidden = false;
+      고정매체안내.hidden = true;
+
+      // 묶여 있던 체크를 그대로 두면 엉뚱한 곳으로 나갈 수 있다
+      if (이전고정) {
+        폼.querySelectorAll('input[name="네트워크사"]').forEach(function (칸) {
+          칸.checked = false;
+        });
+        이전고정 = '';
+        네트워크사전체반영();
+        단가현황그리기();
+      }
+      return;
+    }
+
+    이전고정 = 고정;
+
+    네트워크사칸.hidden = true;
+    고정매체안내.hidden = false;
+
+    var 찾은칸 = null;
+    폼.querySelectorAll('input[name="네트워크사"]').forEach(function (칸) {
+      var 같나 = 칸.value.trim().toLowerCase() === 고정.trim().toLowerCase();
+      칸.checked = 같나;
+      if (같나) 찾은칸 = 칸;
+    });
+
+    if (찾은칸) {
+      고정매체안내.className = '고정매체안내';
+      고정매체안내.textContent = '이 메일은 ' + 찾은칸.value + ' 로만 나갑니다. 네트워크사는 고르지 않으셔도 됩니다.';
+    } else {
+      고정매체안내.className = '고정매체안내 없음';
+      고정매체안내.textContent = '주소록 시트에 "' + 고정 + '" 네트워크사가 없어 보낼 수 없습니다. 시트에 추가해 주세요.';
+    }
+
+    단가현황그리기();
+  }
+
   function 종류바뀜() {
     var 값 = 종류칸.value;
     var 템플릿 = 템플릿찾기(값);
@@ -1136,6 +1218,7 @@ OS : {{OS}}
     if (!설정) {
       본문영역.hidden = true;
       미리보기접기();
+      묶음전환(캠페인명그룹, false);
       묶음전환(OS그룹, false);
       묶음전환(기간그룹, false);
       묶음전환(단가그룹, false);
@@ -1146,12 +1229,14 @@ OS : {{OS}}
     }
 
     본문영역.hidden = false;
+    묶음전환(캠페인명그룹, 설정.캠페인명);
     묶음전환(OS그룹, 설정.OS);
     묶음전환(기간그룹, 설정.기간);
     묶음전환(단가그룹, 설정.단가);
     묶음전환(문구그룹, 설정.문구);
     초보이기();
     프리퀀시보이기();
+    고정반영();
     보내기.disabled = false;
     보내기.textContent = '메일 보내기';
   }
@@ -1327,6 +1412,48 @@ OS : {{OS}}
     return 시트단가(이름, 유형);
   }
 
+  // 네트워크사가 하나뿐일 때 쓰는 단가 칸. 적은 값이 곧 그 곳의 단가다
+  function 한곳단가그리기(이름, 유형) {
+    var 줄 = document.createElement('li');
+
+    var 곳 = document.createElement('span');
+    곳.className = '곳';
+    곳.textContent = 이름;
+    줄.appendChild(곳);
+
+    var 칸 = document.createElement('input');
+    칸.type = 'number';
+    칸.className = '단가직접값';
+    칸.min = '0';
+    칸.placeholder = '직접 입력';
+
+    var 처음값 = 단가찾기(이름, 유형);
+    if (처음값 !== null) 칸.value = 처음값;
+
+    function 맵맞추기() {
+      var 값 = Number(칸.value);
+      var 맵 = {};
+      if (Number.isFinite(값) && 값 > 0) {
+        수동단가[이름] = 값;
+        맵[이름] = 값;
+      } else {
+        delete 수동단가[이름];
+      }
+      단가맵칸.value = JSON.stringify(맵);
+    }
+
+    칸.addEventListener('input', 맵맞추기);
+    줄.appendChild(칸);
+
+    var 단위 = document.createElement('span');
+    단위.className = '단가단위';
+    단위.textContent = '원';
+    줄.appendChild(단위);
+
+    단가현황.appendChild(줄);
+    맵맞추기();
+  }
+
   function 단가현황그리기() {
     var 유형 = 단가유형();
     var 고른곳 = 고른네트워크사();
@@ -1350,6 +1477,14 @@ OS : {{OS}}
       안내.className = '비었음';
       안내.textContent = '네트워크사를 고르면 얼마로 나가는지 표시됩니다.';
       단가현황.appendChild(안내);
+      return;
+    }
+
+    // 보낼 곳이 하나로 정해진 종류는 고르고 적용할 게 없으니 바로 적게 한다
+    if (지금고정() && 고른곳.length === 1) {
+      직접지정줄.hidden = true;
+      단가전체칸.hidden = true;
+      한곳단가그리기(고른곳[0], 유형);
       return;
     }
 
@@ -1488,6 +1623,7 @@ OS : {{OS}}
     return {
       '광고주명': 글자막기(document.getElementById('광고주명').value),
       '뎁스': 뎁스표시(),
+      '캠페인명': 글자막기(document.getElementById('캠페인명').value),
       '캠페인ID': 글자막기(document.getElementById('캠페인ID').value),
       'OS': 글자막기(OS값.value),
       '프리퀀시': 글자막기(document.getElementById('프리퀀시').value),
@@ -2100,6 +2236,12 @@ OS : {{OS}}
       목록칸.appendChild(라벨);
     });
 
+    // 목록을 새로 만들었으니 정해진 곳이 있으면 다시 켜 준다
+    if (typeof 고정반영 === 'function' && 지금고정()) {
+      고정반영();
+      return;
+    }
+
     단가현황그리기();
 
     if (갱신중) {
@@ -2595,6 +2737,7 @@ OS : {{OS}}
       초수: 고른초(),
       광고주명: document.getElementById('광고주명').value,
       뎁스: document.getElementById('뎁스').value,
+      캠페인명: document.getElementById('캠페인명').value,
       캠페인ID: document.getElementById('캠페인ID').value,
       OS: OS값.value,
       프리퀀시: document.getElementById('프리퀀시').value,
@@ -2711,6 +2854,7 @@ OS : {{OS}}
         ['메일', 하나.종류],
         ['광고주', 하나.광고주명],
         ['뎁스', (하나.상품유형 ? 하나.상품유형 + ' / ' : '') + (하나.뎁스 || '')],
+        ['캠페인명', 하나.캠페인명],
         ['캠페인', 하나.캠페인ID],
         ['OS', 하나.OS],
         ['메인', 하나.메인문구],
@@ -2786,6 +2930,7 @@ OS : {{OS}}
 
     document.getElementById('광고주명').value = 하나.광고주명 || '';
     document.getElementById('뎁스').value = 하나.뎁스 || '';
+    document.getElementById('캠페인명').value = 하나.캠페인명 || '';
     document.getElementById('캠페인ID').value = 하나.캠페인ID || '';
     document.getElementById('시작일').value = 하나.시작일 || '';
     document.getElementById('시작시간').value = 하나.시작시간 || '';
@@ -2821,6 +2966,7 @@ OS : {{OS}}
 
     수동단가 = {};
     적용체크 = {};
+    고정반영();
     단가현황그리기();
     미리보기접기();
 
@@ -2864,7 +3010,10 @@ OS : {{OS}}
     var 고른것 = 폼.querySelectorAll('input[name="네트워크사"]:checked');
     if (!고른것.length) {
       이벤트.preventDefault();
-      alert('네트워크사를 한 곳 이상 선택해 주세요.');
+      var 고정 = 지금고정();
+      alert(고정
+        ? '주소록 시트에 "' + 고정 + '" 네트워크사가 없습니다. 시트에 추가한 뒤 다시 보내 주세요.'
+        : '네트워크사를 한 곳 이상 선택해 주세요.');
       return;
     }
 
