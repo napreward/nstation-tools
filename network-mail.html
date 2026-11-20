@@ -342,6 +342,16 @@
     white-space: nowrap;
   }
   .전체선택 input { margin-right: 4px; }
+  .묶기줄 {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .묶기요약 { color: var(--accent); font-weight: 600; }
   .칸머리 > .시트링크 { margin-left: auto; }
   .담당자메일 {
     flex: none;
@@ -577,7 +587,7 @@
 <body class="잠금">
 
 <!-- 버전과 만든 사람. 고칠 때 여기 글자만 바꾸면 됩니다 -->
-<div class="만든이">v1.7 (11/18) · 제작: 김유진</div>
+<div class="만든이">v1.9 (11/20) · 제작: 김유진</div>
 
 <div class="wrap">
 
@@ -684,6 +694,11 @@ OS : {{OS}}
           <div class="checks" id="네트워크사목록">
             <p class="note">불러오는 중…</p>
           </div>
+          <label class="묶기줄" id="묶기줄" hidden>
+            <input type="checkbox" id="묶어보내기" name="묶어보내기" value="on" checked>
+            같은 단가끼리 묶어서 한 통으로 보내기
+            <span class="묶기요약" id="묶기요약"></span>
+          </label>
         </div>
 
         <hr>
@@ -966,7 +981,6 @@ OS : {{OS}}
         '캠페인id : {{캠페인ID}}',
         'OS : {{OS}}',
         '프리퀀시 : {{프리퀀시}}',
-        '단가 : {{단가}}원',
         '',
         '{{맺음말}}',
         '감사합니다.',
@@ -1454,7 +1468,45 @@ OS : {{OS}}
     맵맞추기();
   }
 
+  var 묶기줄 = document.getElementById('묶기줄');
+  var 묶어보내기 = document.getElementById('묶어보내기');
+  var 묶기요약 = document.getElementById('묶기요약');
+
+  // 지금 고른 곳들이 몇 통으로 나가는지 알려 준다.
+  // n8n 도 같은 기준(단가)으로 묶으므로 숫자가 서로 맞는다.
+  function 묶기반영() {
+    var 고른곳 = 고른네트워크사();
+
+    if (고른곳.length < 2 || 지금고정()) {
+      묶기줄.hidden = true;
+      return;
+    }
+    묶기줄.hidden = false;
+
+    if (!묶어보내기.checked) {
+      묶기요약.textContent = '→ ' + 고른곳.length + '통';
+      return;
+    }
+
+    var 유형 = 단가유형();
+    var 본값 = {};
+    고른곳.forEach(function (이름) {
+      var 값 = 단가그룹.disabled ? 0 : 단가찾기(이름, 유형);
+      본값[String(값 === null ? '없음' : 값)] = true;
+    });
+
+    묶기요약.textContent = '→ ' + Object.keys(본값).length + '통';
+  }
+
+  묶어보내기.addEventListener('change', 묶기반영);
+
+  // 단가가 바뀌면 묶이는 모양도 달라지므로 함께 다시 센다
   function 단가현황그리기() {
+    단가현황속그리기();
+    묶기반영();
+  }
+
+  function 단가현황속그리기() {
     var 유형 = 단가유형();
     var 고른곳 = 고른네트워크사();
 
